@@ -1,4 +1,4 @@
-package edu.gdou.gym_java.utils;
+package edu.gdou.gym_java.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
