@@ -35,3 +35,4 @@ build/
 
 ### config ###
 !**/src/main/resources/config/application.yml
+/src/main/resources/config/application.yml
