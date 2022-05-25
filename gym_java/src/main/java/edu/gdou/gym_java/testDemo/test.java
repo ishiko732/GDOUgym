@@ -1,9 +1,8 @@
-package edu.gdou.gym_java.controller;
+package edu.gdou.gym_java.testDemo;
 
 import edu.gdou.gym_java.entity.User;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
-import edu.gdou.gym_java.exception.UnauthorizedException;
-import edu.gdou.gym_java.services.UserService;
+import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.utils.JWTUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -29,15 +28,9 @@ public class test {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
-    public ResponseBean login(@RequestParam("username") String username,
-                              @RequestParam("password") String password) {
-        User userBean = userService.getUser(username);
-        if (userBean.getPassword().equals(password)) {
-            return new ResponseBean(200, "Login success", JWTUtil.sign(username, password));
-        } else {
-            return new ResponseBean(200, "Login failed", null);
-        }
+    @RequestMapping("/")
+    public String hello() {
+        return "test-wu";
     }
 
     @GetMapping("/article")
@@ -57,15 +50,15 @@ public class test {
     }
 
     @GetMapping("/require_role")
-    @RequiresRoles("admin")
+    @RequiresRoles("超级管理员")
     public ResponseBean requireRole() {
         return new ResponseBean(200, "You are visiting require_role", null);
     }
 
     @GetMapping("/require_permission")
-    @RequiresPermissions(logical = Logical.AND, value = {"view", "edit"})
+    @RequiresPermissions(logical = Logical.AND, value = {"基础权限", "超级权限"})
     public ResponseBean requirePermission() {
-        return new ResponseBean(200, "You are visiting permission require edit,view", null);
+        return new ResponseBean(200, "You are visiting permission require 基础权限, 超级权限", null);
     }
 
     @RequestMapping(path = "/401")

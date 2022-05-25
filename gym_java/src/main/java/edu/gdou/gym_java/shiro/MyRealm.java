@@ -1,7 +1,7 @@
 package edu.gdou.gym_java.shiro;
 
-import edu.gdou.gym_java.entity.User;
-import edu.gdou.gym_java.services.UserService;
+import edu.gdou.gym_java.entity.model.User;
+import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.utils.JWTUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -12,8 +12,6 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -44,8 +42,8 @@ public class MyRealm extends AuthorizingRealm {
         String username = JWTUtil.getUsername(principals.toString());
         User user = userService.getUser(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRole(user.getRole());
-        Set<String> permission = new HashSet<>(Arrays.asList(user.getPermission().split(",")));
+        simpleAuthorizationInfo.addRole(user.getRole().getRole());
+        Set<String> permission = user.getRole().getPermissions();
         simpleAuthorizationInfo.addStringPermissions(permission);
         return simpleAuthorizationInfo;
     }
