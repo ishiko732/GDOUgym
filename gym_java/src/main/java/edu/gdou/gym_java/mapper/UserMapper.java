@@ -37,4 +37,7 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(property = "uid",column = "uid")
     })
     User getById(@Param("id")Long id);
+
+    //根据用户名[可选]查询管理员用户
+    List<User> queryManagerByName(String username);
 }

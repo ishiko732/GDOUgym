@@ -13,6 +13,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -47,6 +48,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return null;
         }
         return user;
+    }
+
+    @Override
+    public List<User> queryManagerByUsername(String username) {
+        return getBaseMapper().queryManagerByName(username);
     }
 
 }

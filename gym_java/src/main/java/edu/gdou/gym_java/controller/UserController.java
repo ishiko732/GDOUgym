@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -68,5 +69,11 @@ public class UserController {
             return new ResponseBean(200, "注册失败", null);
         }
 
+    }
+
+    @RequestMapping(value = "/queryManagerByName",method = RequestMethod.POST)
+    public ResponseBean queryManagerByName(@RequestParam("username")String username){
+        List<User> users = userService.queryManagerByUsername(username);
+        return new ResponseBean(200,users.size()>0?"查询成功":"查询结果为空",users);
     }
 }
