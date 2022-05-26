@@ -19,22 +19,22 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
     @Select("select * from User")
     @Results({
-            @Result(property = "uid",column = "uid")
+            @Result(property = "id",column = "id")
     })
     List<User> getUserList ();
 
     @Select("select * from User where name=#{name}")
     @Results({
-            @Result(property = "uid",column = "uid"),
+            @Result(property = "id",column = "id"),
             @Result(property = "roleId",column = "role_id"),
             @Result(property = "role",javaType = Role.class,column="role_id",
                     one = @One(select="edu.gdou.gym_java.mapper.RoleMapper.getById")),
     })
     User getUserByName(@Param("name")String name);
 
-    @Select("select * from User where uid=#{id}")
+    @Select("select * from User where id=#{id}")
     @Results({
-            @Result(property = "uid",column = "uid")
+            @Result(property = "id",column = "id")
     })
     User getById(@Param("id")Long id);
 
