@@ -34,4 +34,5 @@ build/
 
 
 ### config ###
-!**/src/main/resources/config/application.yml
+/src/main/java/edu/gdou/gym_java/config/CodeGenerator.java
+/src/main/resources/config/application.yml
