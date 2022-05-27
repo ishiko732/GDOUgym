@@ -55,4 +55,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return getBaseMapper().queryManagerByName(username);
     }
 
+    @Override
+    public Boolean addManager(User user) {
+        val md5_password = md5.md5(user.getPassword());
+        user.setPassword(md5_password);
+        val insert = getBaseMapper().insert(user);
+        return insert == 1;
+    }
+
+    @Override
+    public Boolean deleteManager(Integer ID) {
+        val delete = getBaseMapper().deleteById(ID);
+        return delete == 1;
+    }
+
+    @Override
+    public User queryUserByID(Integer ID) {
+        return getBaseMapper().selectById(ID);
+    }
+
 }

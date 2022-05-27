@@ -19,4 +19,7 @@ public interface UserService extends IService<User> {
     Boolean register(@NonNull User user);
     User getUser(@NonNull String username);
     List<User> queryManagerByUsername(String username);
+    Boolean addManager(User user);
+    Boolean deleteManager(Integer ID);
+    User queryUserByID(Integer ID);
 }

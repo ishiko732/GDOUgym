@@ -71,9 +71,40 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "/queryManagerByName",method = RequestMethod.POST)
+    @PostMapping("/queryManagerByName")
     public ResponseBean queryManagerByName(@RequestParam("username")String username){
         List<User> users = userService.queryManagerByUsername(username);
         return new ResponseBean(200,users.size()>0?"查询成功":"查询结果为空",users);
+    }
+
+    @PostMapping("/addManager")
+    public ResponseBean addManager(@RequestParam("username") String username,
+                                   @RequestParam("password") String password,
+                                   @RequestParam("role") String role){
+        if (("Teacher".equalsIgnoreCase(role) || "Student".equalsIgnoreCase(role))) {
+            return new ResponseBean(401, "选择的权限非管理员", null);
+        }
+        val role_entity = roleService.getIdByInfo(role);
+        val manager = new User(null, username, password, role_entity.getId(), role_entity);
+        if (userService.addManager(manager)) {
+            return new ResponseBean(200, "管理员添加成功！", null);
+        } else {
+            return new ResponseBean(200, "管理员添加失败", null);
+        }
+    }
+
+    @PostMapping("/deleteManager")
+    public ResponseBean deleteManager(@RequestParam("ID")String ID){
+        int managerID = Integer.parseInt(ID);
+        User user = userService.queryUserByID(managerID);
+        if (user!=null && user.getRoleId()!=6 && user.getRoleId()!=7){
+            if(userService.deleteManager(managerID)){
+                return new ResponseBean(200, "管理员删除成功！", null);
+            }else {
+                return new ResponseBean(200, "管理员删除失败", null);
+            }
+        }else {
+            return new ResponseBean(401, "该用户不存在或者该用户不是管理员", null);
+        }
     }
 }
