@@ -1,5 +1,7 @@
 package edu.gdou.gym_java.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.gdou.gym_java.entity.model.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.NonNull;
@@ -22,4 +24,5 @@ public interface UserService extends IService<User> {
     Boolean addManager(User user);
     Boolean deleteManager(Integer ID);
     User queryUserByID(Integer ID);
+    IPage<User> selectUserPage(Page<User> page);
 }

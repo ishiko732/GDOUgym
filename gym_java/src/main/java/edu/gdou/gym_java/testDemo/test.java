@@ -1,9 +1,7 @@
 package edu.gdou.gym_java.testDemo;
 
-import edu.gdou.gym_java.entity.User;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.service.UserService;
-import edu.gdou.gym_java.utils.JWTUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;

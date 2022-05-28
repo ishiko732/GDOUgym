@@ -1,5 +1,7 @@
 package edu.gdou.gym_java.service.serviceImpl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.mapper.UserMapper;
@@ -74,4 +76,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return getBaseMapper().selectById(ID);
     }
 
+    @Override
+    public IPage<User> selectUserPage(Page<User> page) {
+        return getBaseMapper().selectPageUsers(page);
+    }
 }
