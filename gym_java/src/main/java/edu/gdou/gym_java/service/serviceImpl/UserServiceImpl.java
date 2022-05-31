@@ -20,6 +20,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -57,7 +58,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         val md5_password = md5.md5(user.getPassword());
         user.setPassword(md5_password);
         val insert = getBaseMapper().insert(user);
-        return insert == 1;
+        if (insert==1){
+            return getBaseMapper().insertUserInfo(user.getId(),user.getName());
+        }else{
+            return false;
+        }
     }
 
     @Override
@@ -101,8 +106,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Boolean changePassword(@NonNull String username, @Nullable String prePassword, String newPassword, Boolean isForced) {
         User user = getUser(username);
-        String pre_md5 = "";
-        String new_md5 = "";
+        String pre_md5 ;
+        String new_md5 ;
         if (isForced) {
             pre_md5=user.getPassword();
         }else if (prePassword!=null){
@@ -118,6 +123,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }else{
             return false;
         }
+    }
 
+    @Override
+    public Map<String, Object> selectInfoByUid(@NonNull Integer id) {
+        return getBaseMapper().selectInfoByUid(id);
     }
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.gdou.gym_java.entity.model.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.NonNull;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
@@ -28,4 +29,5 @@ public interface UserService extends IService<User> {
     User queryUserByID(Integer ID);
     IPage<User> selectUserPage(Page<User> page);
     Boolean changePassword(@NonNull String username, @Nullable String prePassword, String newPassword, Boolean isForced);
+    Map<String,Object> selectInfoByUid(@NonNull Integer id);
 }

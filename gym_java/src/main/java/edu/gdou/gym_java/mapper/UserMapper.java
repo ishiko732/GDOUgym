@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -45,8 +46,8 @@ public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 查询普通用户信息,不包含密码信息
-     * @param page
-     * @return
+     * @param page 分页
+     * @return IPage
      */
     @Select("select id,name,role_id from User where role_id in (6,7)")
     @Results({
@@ -56,4 +57,11 @@ public interface UserMapper extends BaseMapper<User> {
                     one = @One(select="edu.gdou.gym_java.mapper.RoleMapper.getById")),
     })
     IPage<User> selectPageUsers(Page page);
+
+
+    @Select("select * from UserInfo where uid=#{uid}")
+    Map<String,Object> selectInfoByUid(@Param("uid")int uid);
+
+    @Insert("insert into UserInfo(uid, name) values (#{uid},#{name})")
+    Boolean insertUserInfo(@Param("uid")int uid,@Param("name")String name);
 }
