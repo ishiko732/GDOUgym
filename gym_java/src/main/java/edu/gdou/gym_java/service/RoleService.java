@@ -4,6 +4,8 @@ import edu.gdou.gym_java.entity.model.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Set;
+
 /**
  * <p>
  * 角色表 服务类
@@ -14,4 +16,5 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface RoleService extends IService<Role> {
     Role getIdByInfo(String name);
+    Set<Role> listRoles();
 }

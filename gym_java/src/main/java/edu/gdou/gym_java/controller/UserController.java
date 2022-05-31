@@ -1,6 +1,7 @@
 package edu.gdou.gym_java.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
@@ -142,6 +143,32 @@ public class UserController {
             return new ResponseBean(401, "该用户不存在或者该用户不是管理员", null);
         }
     }
+
+    /**
+     * 更新角色
+     * @param ID 用户id
+     * @param RID 角色id
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "changeRole",method = RequestMethod.POST)
+    @RequiresPermissions(logical = Logical.AND, value = {"更新管理员角色"})
+    public ResponseBean updateRole(@RequestParam("ID")String ID,@RequestParam("RID")String RID){
+        int managerID = Integer.parseInt(ID);
+        int roleID =Integer.parseInt(RID);
+        User user = userService.queryUserByID(managerID);
+        if (user!=null && roleID>=1 && roleID<=7){
+            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id",user.getId()).set("role_id",roleID);
+            if (userService.update(null,updateWrapper)){
+                return new ResponseBean(200, "修改角色信息成功！", null);
+            }else{
+                return new ResponseBean(200, "修改角色信息失败！", null);
+            }
+        }else {
+            return new ResponseBean(401, "该用户不存在", null);
+        }
+    }
+
 
 
     /**

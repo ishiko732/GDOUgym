@@ -6,6 +6,8 @@ import edu.gdou.gym_java.service.RoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 /**
  * <p>
  * 角色表 服务实现类
@@ -19,5 +21,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public Role getIdByInfo(String name) {
         return getBaseMapper().getIdByName(name);
+    }
+
+    @Override
+    public Set<Role> listRoles() {
+        return getBaseMapper().listRoles();
     }
 }
