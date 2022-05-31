@@ -19,3 +19,9 @@ create view user_role_permissions as
               from permission
                        join role as r on (pid & r.permissions)= pid
               group by r.id) rp on User.role_id = rp.id;
+
+# 创建虚表--用户-信息表
+create view user_info as
+    select UserInfo.*,password,role_id
+    from User,UserInfo
+    where User.id=UserInfo.uid;
