@@ -27,4 +27,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public Set<Role> listRoles() {
         return getBaseMapper().listRoles();
     }
+
+    @Override
+    public Set<String> getPermissionsById(int id) {
+        return getBaseMapper().getPermissionByRid(id);
+    }
 }

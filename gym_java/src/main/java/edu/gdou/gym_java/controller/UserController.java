@@ -51,7 +51,7 @@ public class UserController {
     @RequestMapping(value = "/currentUser",method=RequestMethod.GET)
     @RequiresAuthentication
     public ResponseBean currentUser(){
-        final val user = userService.currentUser();
+        val user = userService.currentUser();
         return new ResponseBean(200, "当前登录的用户信息", user);
     }
 
@@ -95,9 +95,9 @@ public class UserController {
      */
     @RequestMapping(value = "changePassword",method = RequestMethod.POST)
     @RequiresPermissions(logical = Logical.OR, value = {"修改密码", "修改密码_强制"})
-    public ResponseBean changePasswordByUsername(String username,
-                                                 String prePassword,
-                                                 String newPassword){
+    public ResponseBean changePasswordByUsername(@RequestParam("username")String username,
+                                                 @RequestParam(value = "pre",required = false)String prePassword,
+                                                 @RequestParam(value = "new")String newPassword){
         val currentUser = userService.currentUser();
         boolean isForced = currentUser.getRole().getPermissions().contains("修改密码_强制");
         String name = isForced?username:currentUser.getName();

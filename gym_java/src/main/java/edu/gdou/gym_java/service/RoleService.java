@@ -17,4 +17,5 @@ import java.util.Set;
 public interface RoleService extends IService<Role> {
     Role getIdByInfo(String name);
     Set<Role> listRoles();
+    Set<String> getPermissionsById(int id);
 }
