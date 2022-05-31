@@ -16,8 +16,11 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,11 +50,7 @@ public class UserController {
     @RequestMapping(value = "/currentUser",method=RequestMethod.GET)
     @RequiresAuthentication
     public ResponseBean currentUser(){
-        String token = (String) SecurityUtils.getSubject().getPrincipal();
-        String username = JWTUtil.getUsername(token);
-        assert username != null;
-        User user = userService.getUser(username);
-        user.setPassword(null);
+        final val user = userService.currentUser();
         return new ResponseBean(200, "当前登录的用户信息", user);
     }
 
@@ -84,8 +83,27 @@ public class UserController {
         } else {
             return new ResponseBean(200, "注册失败", null);
         }
-
     }
+
+    /**
+     * 修改密码
+     * @param username 用户名 (没有强制权限，只能修改自身的用户密码)
+     * @param prePassword 原先密码 (如果当前用户权限包括强制修改密码可跳过验证)
+     * @param newPassword 新密码
+     * @return 修改逻辑
+     */
+    @RequestMapping(value = "changePassword",method = RequestMethod.POST)
+    @RequiresPermissions(logical = Logical.OR, value = {"修改密码", "修改密码_强制"})
+    public ResponseBean changePasswordByUsername(String username,
+                                                 String prePassword,
+                                                 String newPassword){
+        val currentUser = userService.currentUser();
+        boolean isForced = currentUser.getRole().getPermissions().contains("修改密码_强制");
+        String name = isForced?username:currentUser.getName();
+        val ret =userService.changePassword(username,prePassword,newPassword,isForced);
+        return new ResponseBean(200,ret?"修改成功":"验证原密码失败","修改的用户为:"+name);
+    }
+
     @PostMapping("/queryManagerByName")
     public ResponseBean queryManagerByName(@RequestParam("username")String username){
         List<User> users = userService.queryManagerByUsername(username);

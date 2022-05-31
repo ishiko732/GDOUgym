@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.gdou.gym_java.entity.model.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.Map;
  * @since 2022-05-25
  */
 public interface UserService extends IService<User> {
+    User currentUser();
     Boolean register(@NonNull User user);
     User getUser(@NonNull String username);
     List<User> queryManagerByUsername(String username);
@@ -25,4 +27,5 @@ public interface UserService extends IService<User> {
     Boolean deleteManager(Integer ID);
     User queryUserByID(Integer ID);
     IPage<User> selectUserPage(Page<User> page);
+    Boolean changePassword(@NonNull String username, @Nullable String prePassword, String newPassword, Boolean isForced);
 }
