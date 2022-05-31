@@ -54,7 +54,21 @@ public class UserController {
         val user = userService.currentUser();
         return new ResponseBean(200, "当前登录的用户信息", user);
     }
-
+    /**
+     * 获取当前用户的信息
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "/currentUserInfo",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequiresAuthentication
+    public ResponseBean queryUserInfoByUid(){
+        val user = userService.currentUser();
+        val map = userService.selectInfoByUid(user.getId());
+        if (map.containsKey("name")){
+            return new ResponseBean(200, "获取到的用户信息("+map.get("name")+")", map);
+        }else{
+            return new ResponseBean(200, "未获取到用户信息", null);
+        }
+    }
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseBean login(@RequestParam("username") String username,
                               @RequestParam("password") String password) {
@@ -184,5 +198,21 @@ public class UserController {
 //        System.out.println("当前每页显示数:" + userMyPage.getSize());
         val users = userMyPage.getRecords();
         return new ResponseBean(200, "获取到的用户信息", users);
+    }
+
+    /**
+     * 获取用户的信息
+     * @param ID uid
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "/queryUserInfo",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequiresPermissions(logical = Logical.AND, value = {"查询用户个人信息"})
+    public ResponseBean queryUserInfoByUid(@RequestParam("ID")String ID){
+        val map = userService.selectInfoByUid(Integer.parseInt(ID));
+        if (map!=null && map.containsKey("name")){
+            return new ResponseBean(200, "获取到的用户信息("+map.get("name")+")", map);
+        }else{
+            return new ResponseBean(200, "未获取到用户信息", null);
+        }
     }
 }
