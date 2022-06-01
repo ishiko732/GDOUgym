@@ -39,15 +39,15 @@ public class Swagger2Configuration {
 
     private ApiInfo apiInfo() {
         /*作者信息*/
-        Contact contact = new Contact("村雨遥", "https://cunyu1943.github.io", "747731461@qq.com");
+        Contact contact = new Contact("GDOU", "https://github.com/GDOU-LYF/GDOUgym", "liuyuanfeng1@stu.gdou.edu.cn");
         return new ApiInfo(
-                "Swagger 测试接口文档",
-                "Spring Boot 集成 Swagger 测试接口文档",
+                "海大体育馆接口文档",
+                "",
                 "v1.0",
-                "https://cunyu1943.github.io",
+                "https://github.com/GDOU-LYF/GDOUgym",
                 contact,
-                "Apache 2.0",
-                "http://www.apache.org/licenses/LICENSE-2.0",
+                "MIT license",
+                "https://github.com/GDOU-LYF/GDOUgym/blob/master/LICENSE",
                 new ArrayList()
         );
     }
