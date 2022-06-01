@@ -1,6 +1,7 @@
 package edu.gdou.gym_java.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
@@ -16,8 +17,11 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,14 +51,24 @@ public class UserController {
     @RequestMapping(value = "/currentUser",method=RequestMethod.GET)
     @RequiresAuthentication
     public ResponseBean currentUser(){
-        String token = (String) SecurityUtils.getSubject().getPrincipal();
-        String username = JWTUtil.getUsername(token);
-        assert username != null;
-        User user = userService.getUser(username);
-        user.setPassword(null);
+        val user = userService.currentUser();
         return new ResponseBean(200, "当前登录的用户信息", user);
     }
-
+    /**
+     * 获取当前用户的信息
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "/currentUserInfo",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequiresAuthentication
+    public ResponseBean queryUserInfoByUid(){
+        val user = userService.currentUser();
+        val map = userService.selectInfoByUid(user.getId());
+        if (map.containsKey("name")){
+            return new ResponseBean(200, "获取到的用户信息("+map.get("name")+")", map);
+        }else{
+            return new ResponseBean(200, "未获取到用户信息", null);
+        }
+    }
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseBean login(@RequestParam("username") String username,
                               @RequestParam("password") String password) {
@@ -84,8 +98,27 @@ public class UserController {
         } else {
             return new ResponseBean(200, "注册失败", null);
         }
-
     }
+
+    /**
+     * 修改密码
+     * @param username 用户名 (没有强制权限，只能修改自身的用户密码)
+     * @param prePassword 原先密码 (如果当前用户权限包括强制修改密码可跳过验证)
+     * @param newPassword 新密码
+     * @return 修改逻辑
+     */
+    @RequestMapping(value = "changePassword",method = RequestMethod.POST)
+    @RequiresPermissions(logical = Logical.OR, value = {"修改密码", "修改密码_强制"})
+    public ResponseBean changePasswordByUsername(@RequestParam("username")String username,
+                                                 @RequestParam(value = "pre",required = false)String prePassword,
+                                                 @RequestParam(value = "new")String newPassword){
+        val currentUser = userService.currentUser();
+        boolean isForced = currentUser.getRole().getPermissions().contains("修改密码_强制");
+        String name = isForced?username:currentUser.getName();
+        val ret =userService.changePassword(username,prePassword,newPassword,isForced);
+        return new ResponseBean(200,ret?"修改成功":"验证原密码失败","修改的用户为:"+name);
+    }
+
     @PostMapping("/queryManagerByName")
     public ResponseBean queryManagerByName(@RequestParam("username")String username){
         List<User> users = userService.queryManagerByUsername(username);
@@ -125,6 +158,32 @@ public class UserController {
         }
     }
 
+    /**
+     * 更新角色
+     * @param ID 用户id
+     * @param RID 角色id
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "changeRole",method = RequestMethod.POST)
+    @RequiresPermissions(logical = Logical.AND, value = {"更新管理员角色"})
+    public ResponseBean updateRole(@RequestParam("ID")String ID,@RequestParam("RID")String RID){
+        int managerID = Integer.parseInt(ID);
+        int roleID =Integer.parseInt(RID);
+        User user = userService.queryUserByID(managerID);
+        if (user!=null && roleID>=1 && roleID<=7){
+            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id",user.getId()).set("role_id",roleID);
+            if (userService.update(null,updateWrapper)){
+                return new ResponseBean(200, "修改角色信息成功！", null);
+            }else{
+                return new ResponseBean(200, "修改角色信息失败！", null);
+            }
+        }else {
+            return new ResponseBean(401, "该用户不存在", null);
+        }
+    }
+
+
 
     /**
      * 查询普通用户信息，不包括密码
@@ -139,5 +198,21 @@ public class UserController {
 //        System.out.println("当前每页显示数:" + userMyPage.getSize());
         val users = userMyPage.getRecords();
         return new ResponseBean(200, "获取到的用户信息", users);
+    }
+
+    /**
+     * 获取用户的信息
+     * @param ID uid
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "/queryUserInfo",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequiresPermissions(logical = Logical.AND, value = {"查询用户个人信息"})
+    public ResponseBean queryUserInfoByUid(@RequestParam("ID")String ID){
+        val map = userService.selectInfoByUid(Integer.parseInt(ID));
+        if (map!=null && map.containsKey("name")){
+            return new ResponseBean(200, "获取到的用户信息("+map.get("name")+")", map);
+        }else{
+            return new ResponseBean(200, "未获取到用户信息", null);
+        }
     }
 }

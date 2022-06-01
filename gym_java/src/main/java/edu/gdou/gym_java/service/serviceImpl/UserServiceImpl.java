@@ -7,15 +7,20 @@ import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.mapper.UserMapper;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.testDemo.test;
+import edu.gdou.gym_java.utils.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
 import edu.gdou.gym_java.utils.SpringContextHolder;
 import lombok.NonNull;
 import lombok.val;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -31,8 +36,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private static final Logger LOGGER = LogManager.getLogger(test.class);
     private final MD5 md5;
 
-    public UserServiceImpl() {
-        md5 = new MD5();
+    public UserServiceImpl(MD5 md5) {
+        this.md5 = md5;
+    }
+
+    @Override
+    public User currentUser() {
+        String token = (String) SecurityUtils.getSubject().getPrincipal();
+        String username = JWTUtil.getUsername(token);
+        if (username!=null){
+            User user = getUser(username);
+            user.setPassword(null);
+            return user;
+        }else{
+            return null;
+        }
     }
 
     @Override
@@ -40,7 +58,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         val md5_password = md5.md5(user.getPassword());
         user.setPassword(md5_password);
         val insert = getBaseMapper().insert(user);
-        return insert == 1;
+        if (insert==1){
+            return getBaseMapper().insertUserInfo(user.getId(),user.getName());
+        }else{
+            return false;
+        }
     }
 
     @Override
@@ -79,5 +101,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public IPage<User> selectUserPage(Page<User> page) {
         return getBaseMapper().selectPageUsers(page);
+    }
+
+    @Override
+    public Boolean changePassword(@NonNull String username, @Nullable String prePassword, String newPassword, Boolean isForced) {
+        User user = getUser(username);
+        String pre_md5 ;
+        String new_md5 ;
+        if (isForced) {
+            pre_md5=user.getPassword();
+        }else if (prePassword!=null){
+            pre_md5=md5.md5(prePassword);
+        }else{
+            return false;
+        }
+        new_md5 = md5.md5(newPassword);
+
+        if (user.getPassword().equals(pre_md5)){
+            user.setPassword(new_md5);
+            return getBaseMapper().updateById(user)!=0;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Map<String, Object> selectInfoByUid(@NonNull Integer id) {
+        return getBaseMapper().selectInfoByUid(id);
     }
 }
