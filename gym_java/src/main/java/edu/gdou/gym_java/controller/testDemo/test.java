@@ -1,4 +1,4 @@
-package edu.gdou.gym_java.testDemo;
+package edu.gdou.gym_java.controller.testDemo;
 
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.service.UserService;

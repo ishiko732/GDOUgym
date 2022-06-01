@@ -1,4 +1,4 @@
-package edu.gdou.gym_java.testDemo;
+package edu.gdou.gym_java.controller.testDemo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

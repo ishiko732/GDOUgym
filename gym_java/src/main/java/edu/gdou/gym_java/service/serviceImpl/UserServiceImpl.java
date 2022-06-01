@@ -6,16 +6,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.mapper.UserMapper;
 import edu.gdou.gym_java.service.UserService;
-import edu.gdou.gym_java.testDemo.test;
+import edu.gdou.gym_java.controller.testDemo.test;
 import edu.gdou.gym_java.utils.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
-import edu.gdou.gym_java.utils.SpringContextHolder;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +31,8 @@ import java.util.Objects;
  * @since 2022-05-25
  */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-    private static final Logger LOGGER = LogManager.getLogger(test.class);
     private final MD5 md5;
 
     public UserServiceImpl(MD5 md5) {
