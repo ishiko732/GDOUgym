@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.gdou.gym_java.mapper.FieldMapper">
+
+    <select id="queryFieldByType" resultType="edu.gdou.gym_java.entity.model.Field">
+        select * from Field
+        <where>
+            <if test="tid!='' and tid!=null">tid=#{tid}</if>
+        </where>
+    </select>
+
+    <select id="queryFieldById" resultType="edu.gdou.gym_java.entity.model.Field">
+        select * from Field
+        <where>
+            <if test="fid!='' and fid!=null">fid=#{fid}</if>
+        </where>
+    </select>
+
+    <select id="queryDateByField" resultType="edu.gdou.gym_java.entity.model.FieldDate">
+        select * from Field_date
+        <where>
+            <if test="fid!='' and fid!=null">fid=#{fid}</if>
+            <if test="date!=null">and date=#{date}</if>
+            <if test="inode!='' and inode!=null">and inode=#{inode}</if>
+        </where>
+    </select>
+
+    <insert id="addDate"  parameterType="edu.gdou.gym_java.entity.model.FieldDate" useGeneratedKeys="true" keyProperty="id">
+        insert into Field_date values(null, #{inode}, #{date},#{field.fid});
+    </insert>
+
+    <select id="queryTimeByFdId" resultType="edu.gdou.gym_java.entity.model.TimeArrange">
+        select * from Time_arrange
+        <where>
+            <if test="fdid!='' and fdid!=null">fdid=#{fdid}</if>
+        </where>
+order by inode
+    </select>
+
+    <insert id="addTime" parameterType="edu.gdou.gym_java.entity.model.TimeArrange">
+        insert into Time_arrange values(null, #{startTime}, #{endTime},#{inode},#{status},#{fdid});
+    </insert>
+
+    <select id="queryType" resultType="edu.gdou.gym_java.entity.model.FieldType">
+        select * from Field_type
+    </select>
+    <select id="queryTypeById" resultType="edu.gdou.gym_java.entity.model.FieldType">
+        select * from Field_type
+        <where>
+            <if test="tid!='' and tid!=null">tid=#{tid}</if>
+        </where>
+    </select>
+</mapper>
