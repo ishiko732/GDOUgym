@@ -2,6 +2,7 @@ package edu.gdou.gym_java.controller.ur;
 
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.service.RoleService;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/role")
+@Slf4j
 public class RoleController {
     private final RoleService roleService;
 

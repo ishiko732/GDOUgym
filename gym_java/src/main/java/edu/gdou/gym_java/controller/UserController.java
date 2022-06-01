@@ -3,25 +3,21 @@ package edu.gdou.gym_java.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.MyPage;
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.service.RoleService;
 import edu.gdou.gym_java.service.UserService;
-import edu.gdou.gym_java.testDemo.test;
 import edu.gdou.gym_java.utils.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,16 +33,16 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
-    private static final Logger LOGGER = LogManager.getLogger(test.class);
     private final UserService userService;
     private final RoleService roleService;
     private final MD5 md5;
 
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService, RoleService roleService,MD5 md5) {
         this.userService = userService;
         this.roleService = roleService;
-        this.md5 = new MD5();
+        this.md5 = md5;
     }
     @RequestMapping(value = "/currentUser",method=RequestMethod.GET)
     @RequiresAuthentication
@@ -60,7 +56,7 @@ public class UserController {
      */
     @RequestMapping(value = "/currentUserInfo",method = {RequestMethod.GET,RequestMethod.POST})
     @RequiresAuthentication
-    public ResponseBean queryUserInfoByUid(){
+    public ResponseBean currentUserInfoByUid(){
         val user = userService.currentUser();
         val map = userService.selectInfoByUid(user.getId());
         if (map.containsKey("name")){
@@ -80,6 +76,7 @@ public class UserController {
         if (user.getPassword().equals(md5_password)) {
             return new ResponseBean(200, "Login success", JWTUtil.sign(username, md5_password));
         } else {
+            log.info("用户尝试登录失败：账号"+username+"密码："+password);
             return new ResponseBean(200, "Login failed", null);
         }
     }
@@ -91,11 +88,16 @@ public class UserController {
         if (!("Teacher".equalsIgnoreCase(role) || "Student".equalsIgnoreCase(role))) {
             return new ResponseBean(401, "越权注册", null);
         }
+        User user = userService.getUser(username);
+        if (Objects.nonNull(user)) {
+            return new ResponseBean(200, "用户已注册", null);
+        }
         val role_entity = roleService.getIdByInfo(role);
         val register_user = new User(null, username, password, role_entity.getId(), role_entity);
         if (userService.register(register_user)) {
             return new ResponseBean(200, "注册成功！", null);
         } else {
+            log.info("用户尝试注册失败：账号"+username+"密码："+password+"角色："+role);
             return new ResponseBean(200, "注册失败", null);
         }
     }
@@ -120,6 +122,7 @@ public class UserController {
     }
 
     @PostMapping("/queryManagerByName")
+    @RequiresPermissions(logical = Logical.AND, value = {"查询管理员信息"})
     public ResponseBean queryManagerByName(@RequestParam("username")String username){
         List<User> users = userService.queryManagerByUsername(username);
         return new ResponseBean(200,users.size()>0?"查询成功":"查询结果为空",users);
