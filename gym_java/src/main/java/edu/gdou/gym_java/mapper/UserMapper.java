@@ -62,6 +62,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select * from UserInfo where uid=#{uid}")
     Map<String,Object> selectInfoByUid(@Param("uid")int uid);
 
-    @Insert("insert into UserInfo(uid, name) values (#{uid},#{name})")
+    @Insert("insert into UserInfo(uid, uname) values (#{uid},#{name})")
     Boolean insertUserInfo(@Param("uid")int uid,@Param("name")String name);
 }
