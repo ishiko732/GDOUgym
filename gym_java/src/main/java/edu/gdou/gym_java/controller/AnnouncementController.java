@@ -76,11 +76,12 @@ public class AnnouncementController {
         if(aid==null && type == null){
             return new ResponseBean(200, "未指定公告", null);
         }
-        val uid = userService.currentUser().getId();
+        val currentUser = userService.currentUser();
+        val uid = currentUser.getId();
         boolean ret= false;
         if (aid!=null){
             val aid_int =Integer.parseInt(aid);
-            if (announcementService.checkAnnouncementIsNew(aid_int)){
+            if ("SM".equalsIgnoreCase(currentUser.getRole().getInfo())||announcementService.checkAnnouncementIsNew(aid_int)){
                 ret =announcementService.updateAnnouncement(aid_int,uid,content);
             }else{
                 return new ResponseBean(200, "试图修改历史记录信息，不被允许", null);
