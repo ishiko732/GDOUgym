@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("equipment_rent_standard")
+@TableName("Equipment_rent_standard")
 @ApiModel(value = "EquipmentRentStandard对象", description = "")
 public class EquipmentRentStandard {
     @ApiModelProperty("器材租用标准id")
