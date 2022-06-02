@@ -1,0 +1,7 @@
+生成jar包: mvn install
+运行: cd /home/ubuntu/gym/ && nohup java -Dfile.encoding=utf-8 -jar gym_java-0.0.1-SNAPSHOT.jar >temp.txt &
+
+查看pid: ps -ef|grep gym_java-0.0.1-SNAPSHOT.jar
+关闭进程： kill -s 9 pid
+
+sftp://1.15.187.187//home/ubuntu/gym/gym_java-0.0.1-SNAPSHOT.jar

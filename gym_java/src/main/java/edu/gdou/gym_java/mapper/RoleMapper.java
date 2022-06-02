@@ -30,4 +30,12 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     @Select("select * from role where info=#{name}")
     Role getIdByName(@Param("name") String name);
+
+    @Select("select * from role")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "permissions", javaType = Set.class, column = "id",
+                    many = @Many(select = "edu.gdou.gym_java.mapper.RoleMapper.getPermissionByRid"))
+    })
+    Set<Role> listRoles();
 }

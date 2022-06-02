@@ -3,6 +3,7 @@ package edu.gdou.gym_java.shiro;
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.utils.JWTUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authc.*;
@@ -15,9 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class MyRealm extends AuthorizingRealm {
 
-    private static final Logger LOGGER = LogManager.getLogger(MyRealm.class);
 
     private UserService userService;
 
