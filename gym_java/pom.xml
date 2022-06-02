@@ -96,7 +96,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
         <!-- excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -107,6 +106,13 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.2</version>
+        </dependency>
+        <!--一个工具包-->
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
         </dependency>
     </dependencies>
 
