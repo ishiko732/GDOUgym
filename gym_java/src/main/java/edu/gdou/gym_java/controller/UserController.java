@@ -130,6 +130,7 @@ public class UserController {
      * @return ResponseBean
      */
     @PostMapping("/exportUser")
+    @RequiresPermissions(logical = Logical.AND, value = {"导入学生信息", "导入教师信息"})
     public ResponseBean excelReader(@RequestParam(value = "file",required = false) MultipartFile excel,
                                     @RequestParam(value="map",required = false) Map<String,String> map) {
         if (excel!=null){
