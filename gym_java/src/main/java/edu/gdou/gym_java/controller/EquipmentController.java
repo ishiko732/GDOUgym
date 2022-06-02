@@ -2,6 +2,7 @@ package edu.gdou.gym_java.controller;
 
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.Equipment;
+import edu.gdou.gym_java.service.EquipmentRentStandardService;
 import edu.gdou.gym_java.service.EquipmentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,10 @@ import java.util.List;
 @RequestMapping("/equipment")
 public class EquipmentController {
     private final EquipmentService equipmentService;
-    public EquipmentController(EquipmentService equipmentService){
+    private final EquipmentRentStandardService equipmentRentStandardService;
+    public EquipmentController(EquipmentService equipmentService,EquipmentRentStandardService equipmentRentStandardService){
         this.equipmentService = equipmentService;
+        this.equipmentRentStandardService = equipmentRentStandardService;
     }
 
     @GetMapping("/queryEquipment")
@@ -46,6 +49,20 @@ public class EquipmentController {
             return new ResponseBean(200,equipmentService.addEquipment(new Equipment(null,name,types,Integer.parseInt(number)))?"添加成功":"添加失败",null);
         }else{
             return new ResponseBean(200,"添加失败，输入的数量有误",null);
+        }
+    }
+
+    @GetMapping("/queryEquipmentRentStandard")
+    public ResponseBean responseBean(){
+        return new ResponseBean(200,"查询成功",equipmentRentStandardService.queryEquipmentRentStandard());
+    }
+
+    @GetMapping("/queryEquipmentRentStandardByEid")
+    public ResponseBean responseBean(@RequestParam("eid")String eid){
+        if (StringUtils.isNumeric(eid)){
+            return new ResponseBean(200,"查询成功",equipmentRentStandardService.queryEquipmentRentStandardByEid(Integer.parseInt(eid)));
+        }else{
+            return new ResponseBean(200,"输入的eid为非数字",null);
         }
     }
 }
