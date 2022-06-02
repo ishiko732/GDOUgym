@@ -5,6 +5,9 @@ import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.service.AnnouncementService;
 import edu.gdou.gym_java.service.UserService;
 import lombok.val;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +40,7 @@ public class AnnouncementController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/type", method = {RequestMethod.GET})
+    @RequiresAuthentication
     public ResponseBean announcementType() {
         val types = announcementService.queryAnnouncementType();
         return new ResponseBean(200, "公告种类名称", types);
@@ -49,6 +53,7 @@ public class AnnouncementController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/insertAnnouncement", method = {RequestMethod.POST})
+    @RequiresPermissions(logical = Logical.AND, value = {"创建公告"})
     public ResponseBean insertAnnouncement(@RequestParam("type") String type,
                                            @RequestParam("content") String content) {
         val uid = userService.currentUser().getId();
@@ -64,6 +69,7 @@ public class AnnouncementController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/updateAnnouncement", method = {RequestMethod.POST})
+    @RequiresPermissions(logical = Logical.AND, value = {"修改公告"})
     public ResponseBean updateAnnouncement(@RequestParam(value = "aid",required = false) String aid,
                                            @RequestParam(value = "type",required = false) String type,
                                            @RequestParam("content") String content) {
@@ -73,7 +79,12 @@ public class AnnouncementController {
         val uid = userService.currentUser().getId();
         boolean ret= false;
         if (aid!=null){
-            ret =announcementService.updateAnnouncement(Integer.parseInt(aid),uid,content);
+            val aid_int =Integer.parseInt(aid);
+            if (announcementService.checkAnnouncementIsNew(aid_int)){
+                ret =announcementService.updateAnnouncement(aid_int,uid,content);
+            }else{
+                return new ResponseBean(200, "试图修改历史记录信息，不被允许", null);
+            }
         }else{
             val announcements = announcementService.queryNewAnnouncement(type);
             if(!announcements.isEmpty()){
@@ -90,6 +101,7 @@ public class AnnouncementController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryNewAnnouncement", method = {RequestMethod.GET})
+    @RequiresPermissions(logical = Logical.AND, value = {"查询最新公告"})
     public ResponseBean queryNewAnnouncement(@RequestParam(value = "type",required = false) String type) {
         val dates = announcementService.queryNewAnnouncement(type);
         return new ResponseBean(200, "最新公告", dates);
@@ -101,6 +113,7 @@ public class AnnouncementController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryAnnouncementLogs", method = {RequestMethod.GET})
+    @RequiresPermissions(logical = Logical.AND, value = {"查询公告历史记录"})
     public ResponseBean queryAnnouncementLogs(@RequestParam(value = "type",required = false) String type) {
         if(Objects.isNull(type)){
             return new ResponseBean(200, "未指定公告", null);

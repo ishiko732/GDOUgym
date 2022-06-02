@@ -58,4 +58,8 @@ order by createDate,updateDate,aid;
 select *
 from Announcement
 where type like '馆内罚款'
-order by createDate desc ,updateDate desc
+order by createDate desc ,updateDate desc;
+
+
+# 验证当前aid是否为最新的公告
+select exists(select aid from new_announcement where aid = 6) as ret

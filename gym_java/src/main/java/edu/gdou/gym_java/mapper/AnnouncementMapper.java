@@ -26,7 +26,7 @@ public interface AnnouncementMapper extends BaseMapper<Announcement> {
     @Insert("insert into Announcement(uid, type,content) values (#{uid},#{type},#{text})")
     boolean insertAnnouncement(@Param("type") String type, @Param("uid") int uid, @Param("text") String content);
 
-    @Update("update Announcement set content=#{text},uid=#{uid} where aid=#{aid}")
+    @Update("update Announcement set content=#{text} , uid=#{uid} where aid=#{aid}")
     boolean updateAnnouncement(@Param("aid") int aid, @Param("uid") int uid, @Param("text") String content);
 
     @Select({
@@ -50,5 +50,8 @@ public interface AnnouncementMapper extends BaseMapper<Announcement> {
 
     @Select("select * from Announcement_type")
     Set<String> queryAnnouncementType();
+
+    @Select("select exists(select aid from new_announcement where aid = #{aid}) as ret")
+    boolean checkAnnouncementIsNew(@Param("aid") int aid);
 
 }

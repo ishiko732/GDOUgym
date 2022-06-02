@@ -29,4 +29,6 @@ public interface AnnouncementService extends IService<Announcement> {
     List<Announcement> queryAnnouncementLogs(@Param("type") @NonNull String type);
 
     Set<String> queryAnnouncementType();
+
+    boolean checkAnnouncementIsNew(@Param("aid") int aid);
 }

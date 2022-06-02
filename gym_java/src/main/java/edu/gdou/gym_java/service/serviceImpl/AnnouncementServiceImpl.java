@@ -45,4 +45,9 @@ public class AnnouncementServiceImpl extends ServiceImpl<AnnouncementMapper, Ann
     public Set<String> queryAnnouncementType() {
         return getBaseMapper().queryAnnouncementType();
     }
+
+    @Override
+    public boolean checkAnnouncementIsNew(int aid) {
+        return getBaseMapper().checkAnnouncementIsNew(aid);
+    }
 }
