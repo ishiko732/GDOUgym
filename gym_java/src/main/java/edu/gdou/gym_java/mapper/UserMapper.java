@@ -63,8 +63,14 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select * from UserInfo where uid=#{uid}")
     Map<String,Object> selectInfoByUid(@Param("uid")int uid);
 
+    @Select("select * from UserInfo where id=#{id}")
+    Map<String,Object> selectInfoById(@Param("id")String id);
+
     @Insert("insert into UserInfo(uid, uname) values (#{uid},#{name})")
     Boolean insertUserInfo(@Param("uid")int uid,@Param("name")String name);
+
+    @Insert("update UserInfo set uid=#{uid}, uname=#{name} where id=#{id}")
+    Boolean updateUserInfo(@Param("id")String id,@Param("uid")int uid,@Param("name")String name);
 
     @Insert({"<script>",
             "insert into UserInfo(<foreach collection=\"map\" item=\"value\" index=\"key\" separator=\",\">",

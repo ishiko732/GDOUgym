@@ -91,15 +91,16 @@ public class UserController {
 
     /**
      * 注册
-     * TODO 需求变更，注册需要验证学号信息并绑定
      * @param username 用户名
      * @param password 密码
+     * @param id 学工号 需要验证学号信息并绑定
      * @param role 角色
      * @return ResponseBean
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseBean register(@RequestParam("username") String username,
                                  @RequestParam("password") String password,
+                                 @RequestParam("id") String id,
                                  @RequestParam("role") String role) {
         if (!("Teacher".equalsIgnoreCase(role) || "Student".equalsIgnoreCase(role))) {
             return new ResponseBean(401, "越权注册", null);
@@ -110,10 +111,14 @@ public class UserController {
         }
         val role_entity = roleService.getIdByInfo(role);
         val register_user = new User(null, username, password, role_entity.getId(), role_entity);
-        if (userService.register(register_user)) {
+        val aBoolean = userService.register(register_user, id);
+        if(aBoolean == null){
+            log.info("用户尝试注册失败：账号"+username+"，密码："+password+"，角色："+role+"学号："+id);
+            return new ResponseBean(200, "学工号不在系统内部，请联系用户管理员添加", null);
+        }else if(aBoolean){
             return new ResponseBean(200, "注册成功！", null);
         } else {
-            log.info("用户尝试注册失败：账号"+username+"密码："+password+"角色："+role);
+            log.info("用户尝试注册失败：账号"+username+"，密码："+password+"，角色："+role+"学号："+id);
             return new ResponseBean(200, "注册失败", null);
         }
     }

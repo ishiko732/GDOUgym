@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public interface UserService extends IService<User> {
     User currentUser();
-    Boolean register(@NonNull User user);
+    Boolean register(@NonNull User user,@NonNull String id);
     User getUser(@NonNull String username);
     List<User> queryManagerByUsername(String username);
     Boolean addManager(User user);

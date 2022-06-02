@@ -56,15 +56,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
+    /**
+     * 注册信息
+     * @param user 用户信息
+     * @param id 学工号
+     * @return true 插入成功，false 插入失败，null 学工号未得到验证
+     */
     @Override
-    public Boolean register(User user) {
+    public Boolean register(User user,String id) {
         val md5_password = md5.md5(user.getPassword());
         user.setPassword(md5_password);
-        val insert = getBaseMapper().insert(user);
-        if (insert==1){
-            return getBaseMapper().insertUserInfo(user.getId(),user.getName());
+        //验证学工号
+        val map = getBaseMapper().selectInfoById(id);
+        if (map!=null){
+            val insert = getBaseMapper().insert(user);
+            if (insert==1){
+                return getBaseMapper().updateUserInfo(map.get("id").toString(),user.getId(),user.getName());
+            }else{
+                return false;
+            }
         }else{
-            return false;
+            return null;
         }
     }
 
