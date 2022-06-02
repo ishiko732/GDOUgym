@@ -65,6 +65,13 @@ public class UserController {
             return new ResponseBean(200, "未获取到用户信息", null);
         }
     }
+
+    /**
+     * 登录 （普通用户或管理员登录）
+     * @param username 用户名
+     * @param password 密码
+     * @return ResponseBean
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseBean login(@RequestParam("username") String username,
                               @RequestParam("password") String password) {
@@ -81,6 +88,14 @@ public class UserController {
         }
     }
 
+    /**
+     * 注册
+     * TODO 需求变更，注册需要验证学号信息并绑定
+     * @param username 用户名
+     * @param password 密码
+     * @param role 角色
+     * @return ResponseBean
+     */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseBean register(@RequestParam("username") String username,
                                  @RequestParam("password") String password,
