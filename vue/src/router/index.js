@@ -17,7 +17,22 @@ const routes = [
       {
         path: '/home/equipmentManagement',
         name: 'equipmentManagement',
-        component:()=>import('../views/equipmentManagement'),
+        component:()=>import('../views/equipment/equipmentManagement'),
+      },
+      {
+        path: '/home/eventManagement',
+        name: 'eventManagement',
+        component:()=>import('../views/event/eventManagement'),
+      },
+      {
+        path: '/home/siteManagement',
+        name: 'siteManagement',
+        component:()=>import('../views/site/siteManagement'),
+      },
+      {
+        path: '/home/userManagement',
+        name: 'userManagement',
+        component:()=>import('../views/user/userManagement'),
       }
     ]
   },

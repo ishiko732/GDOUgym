@@ -1,12 +1,12 @@
 <template>
 <div>
-  123132
+  赛事管理
 </div>
 </template>
 
 <script>
 export default {
-  name: "equipmentManagement"
+
 }
 </script>
 
