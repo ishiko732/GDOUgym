@@ -12,15 +12,16 @@ import edu.gdou.gym_java.utils.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -115,6 +116,26 @@ public class UserController {
             log.info("用户尝试注册失败：账号"+username+"密码："+password+"角色："+role);
             return new ResponseBean(200, "注册失败", null);
         }
+    }
+
+    /**
+     * 导入用户信息
+     * @param excel excel文件
+     * @param map 导入信息（单条）
+     * @return ResponseBean
+     */
+    @PostMapping("/exportUser")
+    public ResponseBean excelReader(@RequestParam(value = "file",required = false) MultipartFile excel,
+                                    @RequestParam(value="map",required = false) Map<String,String> map) {
+        if (excel!=null){
+            val map1 = userService.exportInfoByFile(excel);
+            return new ResponseBean(200,map1!=null?"导入信息":"导入失败",map1);
+        }
+        if(map!=null){
+            val map1 = userService.exportInfo(Collections.singletonList(map));
+            return new ResponseBean(200,map1!=null?"导入信息":"导入失败",map1);
+        }
+        return new ResponseBean(200,"导入失败",null);
     }
 
     /**

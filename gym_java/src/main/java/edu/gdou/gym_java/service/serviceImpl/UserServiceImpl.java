@@ -14,13 +14,17 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * <p>
@@ -62,6 +66,66 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }else{
             return false;
         }
+    }
+
+    @Override
+    public Map<String,Integer> exportInfo(List<Map<String, String>> mapList) {
+//        mapList.stream().mapToInt(map -> getBaseMapper().exportInfo(map)).sum();
+        int insert_cnt =0 ;
+        int update_cnt =0 ;
+        val row = getBaseMapper().getUserInfoRow();
+        for (Map<String, String> map : mapList) {
+//            val remove_key = map.keySet().removeAll(row);// 取差集，x属于用户数据，但x不属于数据库的数据
+            map.keySet().removeIf(key->!row.contains(key));
+            try{
+                insert_cnt+=getBaseMapper().exportInfo(map);
+            }catch (Exception e){
+                val id = map.get("id");
+                map.remove("id");
+                val info = getBaseMapper().updateInfo(id, map);
+                if(info!=0){
+                    update_cnt+=info;
+                    log.warn("更新"+id+"到用户表成功："+map);
+                }else {
+                    log.error("导入到用户表失败："+map);
+                }
+            }
+        }
+        Map<String,Integer> ret =new HashMap<>();
+        ret.put("insert",insert_cnt);
+        ret.put("update",update_cnt);
+        return ret;
+    }
+    @Override
+    public Map<String,Integer> exportInfoByFile(MultipartFile excel){
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(excel.getInputStream());
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            List<Map<String,String>> mapList=new ArrayList<>();
+            if (sheet.getPhysicalNumberOfRows()==0){
+                return null;
+            }
+            XSSFRow header = sheet.getRow(0);
+            for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                XSSFRow row = sheet.getRow(i);
+                Map<String,String> map=new HashMap<>();
+                for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
+                    val headerCell = header.getCell(j);
+                    val cell = row.getCell(j);
+                    if (headerCell!=null && cell!=null ){
+                        map.put(headerCell.toString(), cell.toString());
+                    }
+                }
+                if (map.containsKey("id")&&!"".equals(map.get("id"))){
+                    mapList.add(map);
+                }
+            }
+            //System.out.println("导入成功："+exportInfo(mapList)+"条");
+            return this.exportInfo(mapList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

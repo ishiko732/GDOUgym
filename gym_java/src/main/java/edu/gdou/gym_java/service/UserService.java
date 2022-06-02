@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.NonNull;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -30,4 +31,6 @@ public interface UserService extends IService<User> {
     IPage<User> selectUserPage(Page<User> page);
     Boolean changePassword(@NonNull String username, @Nullable String prePassword, String newPassword, Boolean isForced);
     Map<String,Object> selectInfoByUid(@NonNull Integer id);
+    Map<String,Integer> exportInfo(List<Map<String,String>> mapList) ;
+    Map<String,Integer> exportInfoByFile(MultipartFile excel);
 }
