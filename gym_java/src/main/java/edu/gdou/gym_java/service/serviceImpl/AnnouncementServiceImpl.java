@@ -42,7 +42,7 @@ public class AnnouncementServiceImpl extends ServiceImpl<AnnouncementMapper, Ann
     }
 
     @Override
-    public Set<Announcement> queryAnnouncementType() {
+    public Set<String> queryAnnouncementType() {
         return getBaseMapper().queryAnnouncementType();
     }
 }

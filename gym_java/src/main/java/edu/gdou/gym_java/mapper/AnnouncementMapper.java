@@ -49,6 +49,6 @@ public interface AnnouncementMapper extends BaseMapper<Announcement> {
     List<Announcement> queryAnnouncementLogs(@Param("type") @NonNull String type);
 
     @Select("select * from Announcement_type")
-    Set<Announcement> queryAnnouncementType();
+    Set<String> queryAnnouncementType();
 
 }

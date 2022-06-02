@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 /**
  * <p>
  * 公告表 前端控制器
@@ -99,7 +101,10 @@ public class AnnouncementController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryAnnouncementLogs", method = {RequestMethod.GET})
-    public ResponseBean queryAnnouncementLogs(@RequestParam("type") String type) {
+    public ResponseBean queryAnnouncementLogs(@RequestParam(value = "type",required = false) String type) {
+        if(Objects.isNull(type)){
+            return new ResponseBean(200, "未指定公告", null);
+        }
         val dates = announcementService.queryAnnouncementLogs(type);
         return new ResponseBean(200, "公告历史", dates);
     }
