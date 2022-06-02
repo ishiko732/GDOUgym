@@ -12,7 +12,14 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: Home
+    component: Home,
+    children:[
+      {
+        path: '/home/equipmentManagement',
+        name: 'equipmentManagement',
+        component:()=>import('../views/equipmentManagement'),
+      }
+    ]
   },
   
 ]
