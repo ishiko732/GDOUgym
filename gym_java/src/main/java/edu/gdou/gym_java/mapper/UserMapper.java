@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -62,6 +63,31 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select * from UserInfo where uid=#{uid}")
     Map<String,Object> selectInfoByUid(@Param("uid")int uid);
 
+    @Select("select * from UserInfo where id=#{id}")
+    Map<String,Object> selectInfoById(@Param("id")String id);
+
     @Insert("insert into UserInfo(uid, uname) values (#{uid},#{name})")
     Boolean insertUserInfo(@Param("uid")int uid,@Param("name")String name);
+
+    @Insert("update UserInfo set uid=#{uid}, uname=#{name} where id=#{id}")
+    Boolean updateUserInfo(@Param("id")String id,@Param("uid")int uid,@Param("name")String name);
+
+    @Insert({"<script>",
+            "insert into UserInfo(<foreach collection=\"map\" item=\"value\" index=\"key\" separator=\",\">",
+            "${key} </foreach> )",
+            "values (",
+            "<foreach collection=\"map\" item=\"value\" index=\"key\" separator=\",\">",
+            "#{value} </foreach> )",
+            "</script>"})
+    int exportInfo(@Param("map")Map<String,String> map);
+
+    @Update({"<script>",
+            "update UserInfo set <foreach collection=\"map\" item=\"value\" index=\"key\" separator=\",\">",
+            "${key}=#{value} </foreach>",
+            "where id=#{id}",
+            "</script>"})
+    int updateInfo(@Param("id") String id,@Param("map")Map<String,String> map);
+
+    @Select("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE table_name = 'UserInfo'")
+    Set<String> getUserInfoRow();
 }

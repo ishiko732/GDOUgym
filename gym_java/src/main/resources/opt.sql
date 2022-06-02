@@ -62,4 +62,12 @@ order by createDate desc ,updateDate desc;
 
 
 # 验证当前aid是否为最新的公告
-select exists(select aid from new_announcement where aid = 6) as ret
+select exists(select aid from new_announcement where aid = 6) as ret;
+
+# 查询列名
+SELECT
+    COLUMN_NAME
+FROM
+    information_schema.COLUMNS
+WHERE
+        table_name = 'UserInfo';
