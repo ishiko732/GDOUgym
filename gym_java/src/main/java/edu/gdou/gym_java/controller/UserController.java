@@ -254,8 +254,23 @@ public class UserController {
     @RequiresPermissions(logical = Logical.AND, value = {"查询用户个人信息"})
     public ResponseBean queryUserInfoByUid(@RequestParam("ID")String ID){
         val map = userService.selectInfoByUid(Integer.parseInt(ID));
-        if (map!=null && map.containsKey("name")){
-            return new ResponseBean(200, "获取到的用户信息("+map.get("name")+")", map);
+        if (map!=null && map.containsKey("uname")){
+            return new ResponseBean(200, "获取到的用户信息("+map.get("uname")+")", map);
+        }else{
+            return new ResponseBean(200, "未获取到用户信息", null);
+        }
+    }
+    /**
+     * 获取用户的信息
+     * @param ID uid
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "/queryUserInfoById",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequiresPermissions(logical = Logical.AND, value = {"查询用户个人信息"})
+    public ResponseBean queryUserInfoById(@RequestParam("ID")String ID){
+        val map = userService.selectInfoById(ID);
+        if (map!=null && map.containsKey("uname")){
+            return new ResponseBean(200, "获取到的用户信息("+map.get("uname")+")", map);
         }else{
             return new ResponseBean(200, "未获取到用户信息", null);
         }
