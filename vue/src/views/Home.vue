@@ -79,6 +79,11 @@ export default {
 </script>
 <style lang="less">
 .home_container{
+<<<<<<< HEAD
+  overflow-y:auto;
+  overflow-x:hidden;
+=======
+>>>>>>> fbcaced768181b543dd5b5402f73f71157f91be1
   .el-menu.el-menu--horizontal {
     border-bottom: none;
   }
@@ -86,13 +91,20 @@ export default {
     width: 248px;
     flex: 0 0 auto;
     background-color: rgba(84,92,100);
+<<<<<<< HEAD
+    .el-menu{
+=======
     .el-menu-item{
       overflow: hidden;
+>>>>>>> fbcaced768181b543dd5b5402f73f71157f91be1
     }
   }
   .router{
     flex-grow: 1;
+<<<<<<< HEAD
+=======
     width: 100%;
+>>>>>>> fbcaced768181b543dd5b5402f73f71157f91be1
   }
 }
 </style>
