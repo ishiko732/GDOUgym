@@ -20,21 +20,21 @@
                 text-color="#fff"
                 active-text-color="#ffd04b"
                 unique-opened>
-              <el-menu-item index="1">
+              <el-menu-item index="1" @click="userManagement">
                 <i class="el-icon-setting"></i>
-                <span slot="title" @click="userManagement">用户管理</span>
+                <span slot="title">用户管理</span>
               </el-menu-item>
-              <el-menu-item index="2">
+              <el-menu-item index="2" @click="siteManagement">
                 <i class="el-icon-setting"></i>
-                <span slot="title" @click="siteManagement">场地管理</span>
+                <span slot="title">场地管理</span>
               </el-menu-item>
-              <el-menu-item index="3">
+              <el-menu-item index="3" @click="eventManagement">
                 <i class="el-icon-setting"></i>
-                <span slot="title" @click="eventManagement">赛事管理</span>
+                <span slot="title">赛事管理</span>
               </el-menu-item>
-              <el-menu-item index="4">
+              <el-menu-item index="4" @click="equipmentManagement">
                 <i class="el-icon-setting"></i>
-                <span slot="title" @click="equipmentManagement">器材管理</span>
+                <span slot="title">器材管理</span>
               </el-menu-item>
             </el-menu>
           </el-col>
@@ -78,8 +78,11 @@ export default {
 </script>
 <style lang="less">
 .home_container{
+<<<<<<< HEAD
   overflow-y:auto;
   overflow-x:hidden;
+=======
+>>>>>>> fbcaced768181b543dd5b5402f73f71157f91be1
   .el-menu.el-menu--horizontal {
     border-bottom: none;
   }
@@ -87,11 +90,20 @@ export default {
     width: 248px;
     flex: 0 0 auto;
     background-color: rgba(84,92,100);
+<<<<<<< HEAD
     .el-menu{
+=======
+    .el-menu-item{
+      overflow: hidden;
+>>>>>>> fbcaced768181b543dd5b5402f73f71157f91be1
     }
   }
   .router{
     flex-grow: 1;
+<<<<<<< HEAD
+=======
+    width: 100%;
+>>>>>>> fbcaced768181b543dd5b5402f73f71157f91be1
   }
 }
 </style>
