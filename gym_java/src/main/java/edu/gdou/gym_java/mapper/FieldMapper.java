@@ -1,10 +1,7 @@
 package edu.gdou.gym_java.mapper;
 
-import edu.gdou.gym_java.entity.model.Field;
+import edu.gdou.gym_java.entity.model.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import edu.gdou.gym_java.entity.model.FieldDate;
-import edu.gdou.gym_java.entity.model.FieldType;
-import edu.gdou.gym_java.entity.model.TimeArrange;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.Date;
@@ -38,4 +35,28 @@ public interface FieldMapper extends BaseMapper<Field> {
     List<FieldType> queryType();
 
     FieldType queryTypeById(Integer tid);
+
+    boolean addField(Field field);
+
+    List<Field> fillFieldInType(Integer tid);
+
+    boolean updateField(Field field);
+
+    boolean updateStatus(Integer time_id, String status);
+
+    Boolean addCheck(FieldCheck fieldCheck);
+
+    TimeArrange queryTimeById(Integer timeId);
+
+    Boolean addOrderItem(OrderItem orderItem);
+
+    FieldCheck queryCheckById(Integer id);
+
+    Boolean updateCheck(FieldCheck fieldCheck);
+
+    OrderItem queryOrderItemByFcid(Integer id);
+
+    Boolean updateOrder(OrderItem orderItem);
+
+
 }
