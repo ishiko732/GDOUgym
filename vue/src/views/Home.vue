@@ -41,7 +41,7 @@
         </el-row>
       </div>
       <div class="router">
-        <router-view></router-view>
+        <router-view style="overflow: hidden"></router-view>
       </div>
     </div>
   </div>
@@ -73,6 +73,7 @@ export default {
     },
   },
   created() {
+
   },
 }
 </script>
