@@ -4,15 +4,15 @@
     <div class="title">体育馆器材查询>>></div>
     <div class="equipment_type">
       <span class="type">器材种类</span>
-      <el-input v-model="equipment_type" placeholder="请输入内容"></el-input>
+      <el-input v-model="equipment_type" placeholder="请输入器材种类"></el-input>
     </div>
     <div class="equipment_name">
       <span class="name">器材名称</span>
-      <el-input v-model="equipment_name" placeholder="请输入内容"></el-input>
+      <el-input v-model="equipment_name" placeholder="请输入器材名称"></el-input>
     </div>
     <div class="equipment_number">
       <span class="number">器材数量</span>
-      <el-input v-model="equipment_number" placeholder="请输入内容"></el-input>
+      <el-input v-model="equipment_number" placeholder="请输入器材数量"></el-input>
     </div>
   </div>
   <div class="second_container">
@@ -89,7 +89,7 @@ export default {
 
     },
     addEquipment(){
-
+      this.$router.push({path:"/home/addEquipment"})
     },
     deleteEquipment(){
 
