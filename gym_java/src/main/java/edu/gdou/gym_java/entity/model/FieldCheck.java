@@ -35,7 +35,7 @@ public class FieldCheck implements Serializable {
 
     @ApiModelProperty("提交时间")
     @TableField("time")
-    private LocalDateTime time;
+    private java.sql.Timestamp time;
 
     @ApiModelProperty("费用")
     @TableField("money")
@@ -49,13 +49,15 @@ public class FieldCheck implements Serializable {
     @TableField("name")
     private String name;
 
+    @ApiModelProperty("一卡通号码")
+    @TableField("idCard")
+    private String idCard;
+
     @TableField(exist = false)
     private Field field;
 
     @TableField(exist = false)
     private User user;
 
-    @TableField(exist = false)
-    private List<OrderItem> orderItemList;
 
 }
