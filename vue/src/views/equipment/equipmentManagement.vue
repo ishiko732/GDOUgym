@@ -81,7 +81,7 @@ export default {
         returned_number:"2",
         noreturn_number:"3"
       }],
-      showForStudent:false,
+      showForStudent:true,
     }
   },
   methods:{
@@ -115,7 +115,6 @@ export default {
 
 <style scoped lang="less">
 .first_container{
-  border: 1px solid dodgerblue;
   width: 50%;
   margin: 0 auto;
   margin-top: 50px;
@@ -130,7 +129,7 @@ export default {
     width: 60%;
     display: flex;
     .el-input{
-      width: 30%;
+      width: 40%;
       margin-left: 20px;
     }
     .type,.number,.name{
@@ -140,20 +139,19 @@ export default {
   .search{
     margin-top: 15px;
     margin-bottom: 15px;
-    margin-left: 34.5%;
+    margin-left: 37%;
     width: 30%;
   }
 }
 .second_container{
-  border: 1px solid greenyellow;
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
   margin-top: 10px;
   .el-table-column,.el-table{
     text-align: center;
   }
   .btns{
-    margin-left: 55%;
+    margin-left: 49.5%;
     margin-top: 10px;
     margin-bottom: 10px;
     display: flex;
