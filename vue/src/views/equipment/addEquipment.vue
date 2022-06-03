@@ -32,7 +32,9 @@ export default {
     }
   },
   methods:{
-    cancel(){},
+    cancel(){
+      this.$router.go(-1)
+    },
     save(){},
   }
 }
