@@ -50,6 +50,36 @@ const routes = [
         name: 'addEquipment',
         component:()=>import('../views/equipment/addEquipment'),
       },
+      {
+        //删除器材路由
+        path: '/home/deleteEquipment',
+        name: 'deleteEquipment',
+        component:()=>import('../views/equipment/deleteEquipment'),
+      },
+      {
+        //维修器材路由
+        path: '/home/fixEquipment',
+        name: 'fixEquipment',
+        component:()=>import('../views/equipment/fixEquipment'),
+      },
+      {
+        //回收器材路由
+        path: '/home/recycleEquipment',
+        name: 'recycleEquipment',
+        component:()=>import('../views/equipment/recycleEquipment'),
+      },
+      {
+        //租借器材路由
+        path: '/home/rentEquipment',
+        name: 'rentEquipment',
+        component:()=>import('../views/equipment/rentEquipment'),
+      },
+      {
+        //租借费用路由
+        path: '/home/price',
+        name: 'price',
+        component:()=>import('../views/equipment/price'),
+      },
     ]
   },
   

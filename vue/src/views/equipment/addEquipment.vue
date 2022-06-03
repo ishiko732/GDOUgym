@@ -32,7 +32,9 @@ export default {
     }
   },
   methods:{
-    cancel(){},
+    cancel(){
+      this.$router.go(-1)
+    },
     save(){},
   }
 }
@@ -41,7 +43,6 @@ export default {
 <style scoped lang="less">
 .container{
   margin: 0 auto;
-  border: 1px blue solid;
   width: 600px;
   height: 500px;
   margin-top: 5%;
