@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="width: 1650px;">
   <div class="first_container">
     <div class="title">体育馆器材查询</div>
     <div class="equipment_type">
@@ -17,41 +17,43 @@
     <el-button type="primary" @click="search" class="search">查询</el-button>
   </div>
   <div class="second_container">
-    <el-table
-        :data="equipment_data"
-        border
-        style="width: 100%">
-      <el-table-column
-          prop="type"
-          label="器材种类"
-          width="240">
-      </el-table-column>
-      <el-table-column
-          prop="name"
-          label="器材名称"
-          width="240">
-      </el-table-column>
-      <el-table-column
-          prop="number"
-          label="器材数量"
-          width="240">
-      </el-table-column>
-      <el-table-column
-          prop="available_number"
-          label="可用器材数量"
-          width="240">
-      </el-table-column>
-      <el-table-column
-          prop="returned_number"
-          label="已归还器材数量"
-          width="240">
-      </el-table-column>
-      <el-table-column
-          prop="noreturn_number"
-          label="未归还器材数量"
-          >
-      </el-table-column>
-    </el-table>
+    <div>
+      <el-table
+          :data="equipment_data"
+          border
+          style="width: 100%">
+        <el-table-column
+            prop="type"
+            label="器材种类"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="name"
+            label="器材名称"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="number"
+            label="器材数量"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="available_number"
+            label="可用器材数量"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="returned_number"
+            label="已归还器材数量"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="noreturn_number"
+            label="未归还器材数量"
+            >
+        </el-table-column>
+      </el-table>
+    </div>
     <div class="btns">
       <el-button type="primary"  round @click="price">租用收费</el-button>
       <el-button type="primary"  round @click="recycleEquipment">回收器材</el-button>
@@ -80,7 +82,76 @@ export default {
         available_number:"1",
         returned_number:"2",
         noreturn_number:"3"
-      }],
+      },
+        {
+          type: '2016-05-02',
+          name: '王小虎',
+          number: '上海市普陀区金沙江路 1518 弄',
+          available_number:"1",
+          returned_number:"2",
+          noreturn_number:"3"
+        },
+        {
+          type: '2016-05-02',
+          name: '王小虎',
+          number: '上海市普陀区金沙江路 1518 弄',
+          available_number:"1",
+          returned_number:"2",
+          noreturn_number:"3"
+        },
+        {
+          type: '2016-05-02',
+          name: '王小虎',
+          number: '上海市普陀区金沙江路 1518 弄',
+          available_number:"1",
+          returned_number:"2",
+          noreturn_number:"3"
+        },
+        {
+          type: '2016-05-02',
+          name: '王小虎',
+          number: '上海市普陀区金沙江路 1518 弄',
+          available_number:"1",
+          returned_number:"2",
+          noreturn_number:"3"
+        },{
+          type: '2016-05-02',
+          name: '王小虎',
+          number: '上海市普陀区金沙江路 1518 弄',
+          available_number:"1",
+          returned_number:"2",
+          noreturn_number:"3"
+        },
+        {
+          type: '2016-05-02',
+          name: '王小虎',
+          number: '上海市普陀区金沙江路 1518 弄',
+          available_number:"1",
+          returned_number:"2",
+          noreturn_number:"3"
+        },{
+          type: '2016-05-02',
+          name: '王小虎',
+          number: '上海市普陀区金沙江路 1518 弄',
+          available_number:"1",
+          returned_number:"2",
+          noreturn_number:"3"
+        },{
+          type: '2016-05-02',
+          name: '王小虎',
+          number: '上海市普陀区金沙江路 1518 弄',
+          available_number:"1",
+          returned_number:"2",
+          noreturn_number:"3"
+        },{
+          type: '2016-05-02',
+          name: '王小虎',
+          number: '上海市普陀区金沙江路 1518 弄',
+          available_number:"1",
+          returned_number:"2",
+          noreturn_number:"3"
+        }
+      ],
       showForStudent:true,
     }
   },
@@ -117,7 +188,6 @@ export default {
 .first_container{
   width: 50%;
   margin: 0 auto;
-  margin-top: 50px;
   .title{
     font-size: 30px;
     text-align: center;
@@ -145,15 +215,16 @@ export default {
 }
 .second_container{
   width: 70%;
+  margin-left: 230px;
   margin: 0 auto;
   margin-top: 10px;
   .el-table-column,.el-table{
     text-align: center;
   }
   .btns{
-    margin-left: 49.5%;
     margin-top: 10px;
     margin-bottom: 10px;
+    margin-left: 15%;
     display: flex;
   }
 }

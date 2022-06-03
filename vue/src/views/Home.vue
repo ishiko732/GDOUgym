@@ -1,52 +1,49 @@
 <template>
-  <div>
-    <div class="top">
-      <div>
-        <img src="https://www.gdou.edu.cn/img/logo1.png" class="icon">
-      </div>
-      <div>
-        <img src="https://www.gdou.edu.cn/img/logo2.png" class="text">
-      </div>
-
-    </div>
-<!--    <div class="nav">-->
-<!--      <el-menu class="el-menu-demo" mode="horizontal">-->
-<!--          <el-menu-item index="1" style="margin-left: 38%" @click="userManagement"-->
-<!--          :style="this.$route.path=='/home/userManagement'?'border-bottom: 2px solid #409EFF;':''">用户管理</el-menu-item>-->
-<!--          <el-menu-item index="2" @click="siteManagement"-->
-<!--          :style="this.$route.path=='/home/siteManagement'?'border-bottom: 2px solid #409EFF;':''">场地管理</el-menu-item>-->
-<!--          <el-menu-item index="3" @click="eventManagement"-->
-<!--          :style="this.$route.path=='/home/eventManagement'?'border-bottom: 2px solid #409EFF;':''">赛事管理</el-menu-item>-->
-<!--          <el-menu-item index="4" @click="equipmentManagement"-->
-<!--          :style="this.$route.path=='/home/equipmentManagement'?'border-bottom: 2px solid #409EFF;':''">器材管理</el-menu-item>-->
-<!--      </el-menu>-->
-<!--    </div>-->
-    <el-menu
-        class="el-menu-demo"
-        mode="horizontal"
-        background-color="rgba(14,44,116)"
-        text-color="#fff"
-        active-text-color="#ffd04b">
-      <el-menu-item index="1"></el-menu-item>
-    </el-menu>
-    <el-col :span="3">
+  <div class="home_container">
+    <div class="home_top">
       <el-menu
-          class="el-menu-vertical-demo"
-          background-color="#545c64"
+          class="el-menu-demo"
+          mode="horizontal"
+          background-color="#0099CC"
           text-color="#fff"
-          active-text-color="#ffd04b"
-          style="height: 1000px">
-        <el-menu-item index="1" @click="userManagement"
-                      :style="this.$route.path=='/home/userManagement'?'color: rgb(255, 208, 75);':''"> <i class="el-icon-setting"></i>用户管理</el-menu-item>
-        <el-menu-item index="2" @click="siteManagement"
-                      :style="this.$route.path=='/home/siteManagement'?'color: rgb(255, 208, 75);':''"> <i class="el-icon-setting"></i>场地管理</el-menu-item>
-        <el-menu-item index="3" @click="eventManagement"
-                      :style="this.$route.path=='/home/eventManagement'?'color: rgb(255, 208, 75);':''"> <i class="el-icon-setting"></i>赛事管理</el-menu-item>
-        <el-menu-item index="4" @click="equipmentManagement"
-                      :style="this.$route.path=='/home/equipmentManagement'?'color: rgb(255, 208, 75);':''"> <i class="el-icon-setting"></i>器材管理</el-menu-item>
+          active-text-color="#ffd04b">
+        <el-menu-item index="1"></el-menu-item>
       </el-menu>
-    </el-col>
-    <router-view></router-view>
+    </div>
+    <div style="display: flex">
+      <div class="home_nav">
+        <el-row>
+          <el-col>
+            <el-menu
+                class="el-menu-vertical-demo"
+                background-color="#545c64"
+                text-color="#fff"
+                active-text-color="#ffd04b"
+                unique-opened>
+              <el-menu-item index="1">
+                <i class="el-icon-setting"></i>
+                <span slot="title" @click="userManagement">用户管理</span>
+              </el-menu-item>
+              <el-menu-item index="2">
+                <i class="el-icon-setting"></i>
+                <span slot="title" @click="siteManagement">场地管理</span>
+              </el-menu-item>
+              <el-menu-item index="3">
+                <i class="el-icon-setting"></i>
+                <span slot="title" @click="eventManagement">赛事管理</span>
+              </el-menu-item>
+              <el-menu-item index="4">
+                <i class="el-icon-setting"></i>
+                <span slot="title" @click="equipmentManagement">器材管理</span>
+              </el-menu-item>
+            </el-menu>
+          </el-col>
+        </el-row>
+      </div>
+      <div class="router">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -79,23 +76,22 @@ export default {
   },
 }
 </script>
-<style lang="less" scoped>
-.el-menu-item{
-  font-size: 18px;
-}
-.nav{
-  font: normal 24px/45px "microsoft YaHei";
-}
-.top{
-  display: flex;
-  margin-left: 40%;
-  margin-top: 5px;
-  .text{
-    margin-left: 10px;
-    margin-top: 23%;
+<style lang="less">
+.home_container{
+  overflow-y:auto;
+  overflow-x:hidden;
+  .el-menu.el-menu--horizontal {
+    border-bottom: none;
   }
-}
-.el-menu.el-menu--horizontal {
-  border: none;
+  .home_nav{
+    width: 248px;
+    flex: 0 0 auto;
+    background-color: rgba(84,92,100);
+    .el-menu{
+    }
+  }
+  .router{
+    flex-grow: 1;
+  }
 }
 </style>
