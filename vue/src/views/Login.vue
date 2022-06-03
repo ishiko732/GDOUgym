@@ -57,7 +57,7 @@ export default {
 <style scoped lang="less">
 .container{
   margin: 0 auto;
-  width: 60%;
+  width: 80%;
   .top{
     margin-top: 20px;
     display: flex;
