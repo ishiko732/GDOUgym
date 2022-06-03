@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.gdou.gym_java.mapper.EquipmentMapper">
+
+    <select id="queryEquipment" resultType="edu.gdou.gym_java.entity.model.Equipment">
+        select * from equipment
+        <where>
+            <if test="name!='' and name!=null">name=#{name}</if>
+            <if test="types!='' and types!=null">types=#{types}</if>
+            <if test="number!='' and number!=null">number=#{number}</if>
+        </where>
+    </select>
+
+</mapper>
