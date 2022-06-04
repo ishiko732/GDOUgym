@@ -1,9 +1,6 @@
 package edu.gdou.gym_java.service.serviceImpl;
 
-import edu.gdou.gym_java.entity.model.Field;
-import edu.gdou.gym_java.entity.model.FieldDate;
-import edu.gdou.gym_java.entity.model.FieldType;
-import edu.gdou.gym_java.entity.model.TimeArrange;
+import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.mapper.FieldMapper;
 import edu.gdou.gym_java.service.FieldService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -52,8 +49,8 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     public void fill(FieldType fieldType) {
 
 
-        List<Field> fieldList  = getBaseMapper().queryFieldByType(fieldType.getTid());
 
+        List<Field> fieldList  = getBaseMapper().fillFieldInType(fieldType.getTid());
         fieldType.setFieldList(fieldList);
 
 
@@ -62,9 +59,9 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     @Override
     public Field queryFieldById(Integer fid) {
         Field field = getBaseMapper().queryFieldById(fid);
-
-        field.setFieldType(getBaseMapper().queryTypeById(field.getTid()));
-
+        if (field!=null){
+            field.setFieldType(getBaseMapper().queryTypeById(field.getTid()));
+        }
         return field;
     }
 
@@ -134,7 +131,55 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         return getBaseMapper().queryTypeById(tid);
     }
 
+    @Override
+    public boolean addField(Field field) {
+        return getBaseMapper().addField(field);
+    }
 
+    @Override
+    public boolean updateField(Field field) {
+        return getBaseMapper().updateField(field);
+    }
+
+    @Override
+    public boolean updateStatus(Integer time_id, String status) {
+        return getBaseMapper().updateStatus(time_id,status);
+    }
+
+    @Override
+    public Boolean addCheck(FieldCheck fieldCheck) {
+        return getBaseMapper().addCheck(fieldCheck);
+    }
+
+    @Override
+    public TimeArrange queryTimeById(Integer timeId) {
+        return getBaseMapper().queryTimeById(timeId);
+    }
+
+    @Override
+    public Boolean addOrderItem(OrderItem orderItem) {
+        return getBaseMapper().addOrderItem(orderItem);
+    }
+
+    @Override
+    public FieldCheck queryCheckById(Integer id) {
+        return getBaseMapper().queryCheckById(id);
+    }
+
+    @Override
+    public Boolean updateCheck(FieldCheck fieldCheck) {
+        return getBaseMapper().updateCheck(fieldCheck);
+    }
+
+    @Override
+    public OrderItem queryOrderItemByFcid(Integer id) {
+        return getBaseMapper().queryOrderItemByFcid(id);
+    }
+
+    @Override
+    public Boolean updateOrder(OrderItem orderItem) {
+        return getBaseMapper().updateOrder(orderItem);
+    }
 
 
 }

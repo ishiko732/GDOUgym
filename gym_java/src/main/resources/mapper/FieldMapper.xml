@@ -9,6 +9,13 @@
         </where>
     </select>
 
+    <select id="fillFieldInType" resultType="edu.gdou.gym_java.entity.model.Field">
+        select * from Field
+        <where>
+            <if test="tid!='' and tid!=null">tid=#{tid} and num > 0</if>
+        </where>
+    </select>
+
     <select id="queryFieldById" resultType="edu.gdou.gym_java.entity.model.Field">
         select * from Field
         <where>
@@ -50,4 +57,72 @@ order by inode
             <if test="tid!='' and tid!=null">tid=#{tid}</if>
         </where>
     </select>
+
+    <insert id="addField" parameterType="edu.gdou.gym_java.entity.model.Field" useGeneratedKeys="true" keyProperty="fid">
+    insert into Field values (null, #{tid}, #{money}, #{description}, #{num});
+    </insert>
+
+    <update id="updateStatus">
+        update Time_arrange
+        <set >
+            status = #{status},
+        </set>
+        where time_id = #{time_id}
+    </update>
+
+    <update id="updateField" parameterType="edu.gdou.gym_java.entity.model.Field">
+        update Field
+        <set >
+            money = #{money},
+            description = #{description},
+            num = #{num},
+        </set>
+        where fid = #{fid}
+    </update>
+<insert id="addCheck" parameterType="edu.gdou.gym_java.entity.model.FieldCheck" useGeneratedKeys="true" keyProperty="id">
+    insert into Field_check
+    <set >
+        money = #{money},
+        status = #{status},
+        uid = #{user.id},
+        name = #{name},
+        idCard = #{idCard}
+    </set>
+</insert>
+    <select id="queryTimeById" resultType="edu.gdou.gym_java.entity.model.TimeArrange">
+        select * from Time_arrange where time_id = #{timeId}
+    </select>
+    <insert id="addOrderItem" parameterType="edu.gdou.gym_java.entity.model.OrderItem">
+        insert into Order_item
+        <set >
+            fcid = #{fcid},
+            order_status = #{orderStatus},
+            time_id=#{timeId}
+        </set>
+    </insert>
+
+    <select id="queryCheckById" resultType="edu.gdou.gym_java.entity.model.FieldCheck">
+        select * from Field_check where id = #{id}
+    </select>
+
+    <update id="updateCheck" parameterType="edu.gdou.gym_java.entity.model.FieldCheck">
+    update Field_check
+        <set>
+        status=#{status}
+        </set>
+    where id = #{id}
+    </update>
+
+    <select id="queryOrderItemByFcid" resultType="edu.gdou.gym_java.entity.model.OrderItem">
+        select * from Order_item where fcid = #{id}
+    </select>
+
+    <update id="updateOrder" parameterType="edu.gdou.gym_java.entity.model.OrderItem">
+        update Order_item
+        <set>
+            order_status=#{orderStatus}
+        </set>
+        where oid = #{oid}
+    </update>
+
 </mapper>

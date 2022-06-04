@@ -1,10 +1,7 @@
 package edu.gdou.gym_java.service;
 
-import edu.gdou.gym_java.entity.model.Field;
+import edu.gdou.gym_java.entity.model.*;
 import com.baomidou.mybatisplus.extension.service.IService;
-import edu.gdou.gym_java.entity.model.FieldDate;
-import edu.gdou.gym_java.entity.model.FieldType;
-import edu.gdou.gym_java.entity.model.TimeArrange;
 
 import java.util.Date;
 import java.util.List;
@@ -30,5 +27,25 @@ public interface FieldService extends IService<Field> {
     List<FieldType> queryType();
 
     FieldType queryTypeById(Integer valueOf);
+
+    boolean addField(Field field);
+
+    boolean updateField(Field field);
+
+    boolean updateStatus(Integer valueOf, String status);
+
+    Boolean addCheck(FieldCheck fieldCheck);
+
+    TimeArrange queryTimeById(Integer valueOf);
+
+    Boolean addOrderItem(OrderItem orderItem);
+
+    FieldCheck queryCheckById(Integer id);
+
+    Boolean updateCheck(FieldCheck fieldCheck);
+
+    OrderItem queryOrderItemByFcid(Integer id);
+
+    Boolean updateOrder(OrderItem orderItem);
 
 }
