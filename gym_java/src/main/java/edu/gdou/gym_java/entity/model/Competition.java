@@ -77,7 +77,7 @@ public class Competition implements Serializable {
 
     @ApiModelProperty("赛事审核状态")
     @TableField(exist = false)
-    private Boolean isCheck;
+    private String isCheck;
 
     @ApiModelProperty("赛事取消状态")
     @TableField(exist = false)

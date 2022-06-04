@@ -18,8 +18,8 @@ import java.util.Set;
  */
 public interface CompetitionService extends IService<Competition> {
     Integer createEvent(int uid, String name, Timestamp timestamp,int eventLength,Double money,String context);
-    boolean cancelEvent(int cid,int uid,String context);
-    List<Competition> queryEvents(@Nullable Integer cid);
+    Boolean cancelEvent(int cid,int uid,String context);
+    Set<Competition> queryEvents(@Nullable Integer cid);
     Integer eventSetField(Set<Integer> fcIds);
     CompetitionField FieldUserLinkEvent(int cid, FieldCheck field, int uid,@Nullable String content);
     Boolean FieldEquipmentLinkEvent(Set<CompetitionEquipment> competitionEquipments);

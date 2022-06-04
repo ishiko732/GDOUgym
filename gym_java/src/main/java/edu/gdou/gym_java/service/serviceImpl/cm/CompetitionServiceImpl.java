@@ -37,39 +37,48 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
 
     /**
      * 创建赛事
-     * @param uid uid
-     * @param name 赛事名称
-     * @param timestamp 赛事时间
+     *
+     * @param uid         uid
+     * @param name        赛事名称
+     * @param timestamp   赛事时间
      * @param eventLength 赛事长度
-     * @param context 赛事内容
+     * @param context     赛事内容
      * @return 赛事id
      */
     @Override
-    public Integer createEvent(int uid, String name, Timestamp timestamp, int eventLength,Double money, String context) {
-        val competition = new Competition(null,uid, name, timestamp, eventLength, context, money,null,null, null, null);
+    public Integer createEvent(int uid, String name, Timestamp timestamp, int eventLength, Double money, String context) {
+        val competition = new Competition(null, uid, name, timestamp, eventLength, context, money, null, null, null, null);
         val insert = getBaseMapper().insert_competition(competition);
-        if (insert){
+        if (insert) {
             return checkService.init_check(competition.getId());
-        }else{
+        } else {
             return null;
         }
     }
 
     @Override
-    public boolean cancelEvent(int cid, int uid, String context) {
-        val check = checkService.queryByCid(cid);
-        if(check!=null && !check.getStatus().equals(CheckStatus.PASSED.getStatus())){
-            UpdateWrapper<CompetitionCheck> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id",check.getId()).set("status",CheckStatus.CANCELLED.getStatus());
-            checkService.update(null,updateWrapper);
+    public Boolean cancelEvent(int cid, int uid, String context) {
+        val competitions = queryEvents(cid);
+        if (competitions.size() == 0) {
+            return null;
         }
-        val cancel = new CompetitionCancel(null, uid, cid, context, null);
-        return cancelService.getBaseMapper().insert(cancel)==1;
+        val competition = competitions.iterator().next();
+        if (competition.getIsCancel()){
+            return false;
+        }
+        val check = checkService.queryByCid(cid);
+        if (check != null && !check.getStatus().equals(CheckStatus.PASSED.getStatus())) {
+            UpdateWrapper<CompetitionCheck> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", check.getId()).set("status", CheckStatus.CANCELLED.getStatus());
+            checkService.update(null, updateWrapper);
+        }
+        val cancel = new CompetitionCancel(null, cid, uid, context, null);
+        return cancelService.getBaseMapper().insert(cancel) == 1;
     }
 
     @Override
-    public List<Competition> queryEvents(Integer cid) {
-        return null;
+    public Set<Competition> queryEvents(Integer cid) {
+        return getBaseMapper().queryCompetition(cid);
     }
 
     @Override

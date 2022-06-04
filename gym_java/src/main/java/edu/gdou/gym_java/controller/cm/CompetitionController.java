@@ -3,6 +3,7 @@ package edu.gdou.gym_java.controller.cm;
 
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.service.UserService;
+import edu.gdou.gym_java.service.cm.CompetitionCancelService;
 import edu.gdou.gym_java.service.cm.CompetitionCheckService;
 import edu.gdou.gym_java.service.cm.CompetitionService;
 import edu.gdou.gym_java.utils.StringTimeStampUtils;
@@ -30,29 +31,50 @@ import javax.validation.Valid;
 public class CompetitionController {
     private final UserService userService;
     private final CompetitionService competitionService;
+    private final CompetitionCancelService cancelService;
 
-    public CompetitionController(UserService userService, CompetitionService competitionService) {
+    public CompetitionController(UserService userService, CompetitionService competitionService,CompetitionCancelService cancelService) {
         this.userService = userService;
         this.competitionService = competitionService;
+        this.cancelService = cancelService;
     }
 
-    @RequestMapping(value = "/create",method = RequestMethod.POST)
-    public ResponseBean createEvent(@RequestParam(value = "uid",required = false) String uid,
-                                    @Valid @RequestParam("event_name")String name,
-                                    @Valid @RequestParam(value = "event_time")String time,
-                                    @Valid @RequestParam("event_length")  Integer length,
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseBean createEvent(@RequestParam(value = "uid", required = false) String uid,
+                                    @Valid @RequestParam("event_name") String name,
+                                    @Valid @RequestParam(value = "event_time") String time,
+                                    @Valid @RequestParam("event_length") Integer length,
                                     @Valid @RequestParam("money") String money,
-                                    @RequestParam("context") String context){
+                                    @RequestParam("context") String context) {
         val user = userService.currentUser();
-        int uid_int ;
-        if (("AM").equals(user.getRole().getInfo())||("SM").equals(user.getRole().getInfo())){
+        int uid_int;
+        if ((("AM").equals(user.getRole().getInfo()) || ("SM").equals(user.getRole().getInfo()))&&uid!=null) {
             uid_int = Integer.parseInt(uid);
-        }else{
+        } else {
             uid_int = user.getId();
         }
         val timeStamp = StringTimeStampUtils.StringToTimeStamp(time);
         val cid = competitionService.createEvent(uid_int, name, timeStamp, length, Double.valueOf(money), context);
-        return new ResponseBean(200,"赛事审核id信息",cid);
+        return new ResponseBean(200, "赛事审核id信息", cid);
+    }
+
+    @RequestMapping(value = "/cancel", method = RequestMethod.POST)
+    public ResponseBean cancelEvent(@RequestParam("cid") String cid,
+                                    @RequestParam(value = "uid", required = false) String uid,
+                                    @RequestParam("context") String context) {
+        val user = userService.currentUser();
+        int uid_int;
+        if ((("AM").equals(user.getRole().getInfo()) || ("SM").equals(user.getRole().getInfo()))&&uid!=null) {
+            uid_int = Integer.parseInt(uid);
+        } else {
+            uid_int = user.getId();
+        }
+        int cid_int = Integer.parseInt(cid);
+        val cancelEvent = competitionService.cancelEvent(cid_int, uid_int, context);
+        if (cancelEvent==null){
+            return new ResponseBean(200, "赛事信息不存在", null);
+        }
+        return new ResponseBean(200, cancelEvent?"取消成功":"取消失败", cancelEvent);
     }
 
 }

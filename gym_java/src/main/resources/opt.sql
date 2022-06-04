@@ -71,3 +71,10 @@ FROM
     information_schema.COLUMNS
 WHERE
         table_name = 'UserInfo';
+
+## 赛事
+
+## 查询赛事情况
+select Competition.*,Ccheck.status as 'isCheck',exists(select id from Competition_cancel where cid=Competition.id) as 'isCancel'
+from Competition
+left join Competition_check Ccheck on Ccheck.cid=Competition.id;
