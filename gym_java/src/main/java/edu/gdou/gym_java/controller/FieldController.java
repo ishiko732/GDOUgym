@@ -6,6 +6,7 @@ import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
 import io.swagger.models.auth.In;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -150,13 +151,17 @@ public class FieldController {
         fieldCheck.setMoney(Integer.valueOf(money_par));
         fieldCheck.setStatus("审核中");
         fieldCheck.setUser(user);
-
-       Boolean addCheck = fieldService.addCheck(fieldCheck);
-                fieldService.updateStatus(Integer.valueOf(time_id),"预约中"); //编辑状态
-                OrderItem orderItem = new OrderItem();
-                orderItem.setTimeId(Integer.valueOf(time_id));
-                orderItem.setFcid(fieldCheck.getId());
-        Boolean addOrderItem  = fieldService.addOrderItem(orderItem);
+       Boolean addCheck = false;
+        Boolean addOrderItem =false;
+        TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(time_id));
+       if (timeArrange.getStatus().equals("空闲")){
+           addCheck= fieldService.addCheck(fieldCheck);
+           fieldService.updateStatus(Integer.valueOf(time_id),"预约中"); //编辑状态
+           OrderItem orderItem = new OrderItem();
+           orderItem.setTimeId(Integer.valueOf(time_id));
+           orderItem.setFcid(fieldCheck.getId());
+           addOrderItem  = fieldService.addOrderItem(orderItem);
+       }
         return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败",name);
     }
 
@@ -258,6 +263,42 @@ public class FieldController {
 
     }
             return new ResponseBean(200,"不存在该用户订单或不能取消该状态下的预约",null);
+    }
+
+    //赛事预约场地审核，审核项设置为审核中，日期安排项设置为预约中
+    //name页面用场地类型+场地描述+序号生成
+    @PostMapping("/orderFieldByCom")
+    public ResponseBean orderFieldByCom(@RequestParam("uid") String uid ,
+                                   @RequestParam(value = "card",required = false) String card ,
+                                   @RequestParam("timeIds") String ids[] ,
+                                   @RequestParam(value = "name") String name,
+                                   @RequestParam(value = "money",required = false,defaultValue = "0") String money_par){
+        FieldCheck fieldCheck = new FieldCheck();
+        User user = userService.queryUserByID(Integer.valueOf(uid));//用户
+        //新增审核
+        fieldCheck.setTime(new java.sql.Timestamp(System.currentTimeMillis()));
+        fieldCheck.setName("(赛事)"+name);
+        fieldCheck.setCard(card);
+        fieldCheck.setMoney(Integer.valueOf(money_par));
+        fieldCheck.setStatus("审核中");
+        fieldCheck.setUser(user);
+            for (int i = 0; i < ids.length; i++) {
+                TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(ids[i]));
+                if (!timeArrange.getStatus().equals("空闲")) {
+                    return new ResponseBean(200,"存在占用场地",null);
+                }
+        }
+        Boolean addCheck = fieldService.addCheck(fieldCheck);
+        Boolean addOrderItem =false;
+        for (int i = 0; i < ids.length; i++) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setTimeId(Integer.valueOf(ids[i]));
+            orderItem.setFcid(fieldCheck.getId());
+            addOrderItem  = fieldService.addOrderItem(orderItem);
+        }
+
+        return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败","(赛事)"+name);
+
     }
 
     //!!!暂时别用
