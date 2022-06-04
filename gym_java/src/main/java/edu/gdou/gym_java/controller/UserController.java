@@ -10,6 +10,7 @@ import edu.gdou.gym_java.service.RoleService;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.utils.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.shiro.authz.annotation.Logical;
@@ -19,10 +20,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <p>
@@ -234,15 +232,31 @@ public class UserController {
      * 查询普通用户信息，不包括密码
      * @return ResponseBean
      */
-    @PostMapping("/queryUsers")
-    public ResponseBean queryUsers() {
-        MyPage<User> myPage = new MyPage<User>(1, 5).setSelectInt(20);
+    @RequestMapping(value = "/queryUsers",method = RequestMethod.GET)
+    public ResponseBean queryUsers(@RequestParam("current") Integer current,
+                                   @RequestParam("size")Integer size,
+                                   @RequestParam("cnt")Integer cnt) {
+        MyPage<User> myPage = new MyPage<User>(current, size).setSelectInt(cnt);
         IPage<User> userMyPage = userService.selectUserPage(myPage);
 //        System.out.println("总条数:" + userMyPage.getTotal());
 //        System.out.println("当前页数: " + userMyPage.getCurrent());
 //        System.out.println("当前每页显示数:" + userMyPage.getSize());
+        Map<String,Object> map =new HashMap<>();
+        map.put("total",userMyPage.getTotal());
+        map.put("currentPage",userMyPage.getCurrent());
+        map.put("currentSize",userMyPage.getSize());
+        map.put("pages",userMyPage.getPages());
         val users = userMyPage.getRecords();
-        return new ResponseBean(200, "获取到的用户信息", users);
+        map.put("users",users);
+        val infos = new ArrayList<Map<Integer,Object>>();
+        for (User user : users) {
+            val objectMap = userService.selectInfoByUid(user.getId());
+            val infoMap = new HashMap<Integer, Object>();
+            infoMap.put(user.getId(),objectMap);
+            infos.add(infoMap);
+        }
+        map.put("infos",infos);
+        return new ResponseBean(200, "获取到的用户信息", map);
     }
 
     /**

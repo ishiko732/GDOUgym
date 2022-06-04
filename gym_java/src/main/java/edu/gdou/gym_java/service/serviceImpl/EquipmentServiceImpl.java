@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.gdou.gym_java.entity.model.Equipment;
 import edu.gdou.gym_java.mapper.EquipmentMapper;
 import edu.gdou.gym_java.service.*;
+import edu.gdou.gym_java.service.cm.CompetitionEquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

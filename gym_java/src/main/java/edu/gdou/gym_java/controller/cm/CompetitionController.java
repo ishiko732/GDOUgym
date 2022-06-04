@@ -1,6 +1,7 @@
 package edu.gdou.gym_java.controller.cm;
 
 
+import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.service.cm.CompetitionCancelService;
@@ -9,6 +10,7 @@ import edu.gdou.gym_java.service.cm.CompetitionService;
 import edu.gdou.gym_java.utils.StringTimeStampUtils;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -75,6 +77,21 @@ public class CompetitionController {
             return new ResponseBean(200, "赛事信息不存在", null);
         }
         return new ResponseBean(200, cancelEvent?"取消成功":"取消失败", cancelEvent);
+    }
+
+    @RequestMapping(value = "/queryEvent", method = RequestMethod.GET)
+    public ResponseBean queryEvents(@RequestParam(value = "cid",required = false) Integer cid,
+                                    @RequestParam(value = "name", required = false) String name,
+                                    @RequestParam(value = "uname",required = false) String uname,
+                                    @RequestParam(value = "start_time",required = false) String start,
+                                    @RequestParam(value = "end_time",required = false) String end){
+        TimeLimit timeLimit =null;
+        if(start!=null && end!=null){
+            timeLimit = new TimeLimit(StringTimeStampUtils.StringToTimeStamp(start), StringTimeStampUtils.StringToTimeStamp(end));
+        }
+        val competitions = competitionService.queryEvents(cid, name, uname, timeLimit);
+        return new ResponseBean(200,competitions!=null?"获取到数据":"未获取到数据",competitions);
+
     }
 
 }
