@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("equipment")
+@TableName("Equipment")
 @ApiModel(value = "Equipment对象", description = "")
 public class Equipment {
     private static final long serialVersionUID = 1L;

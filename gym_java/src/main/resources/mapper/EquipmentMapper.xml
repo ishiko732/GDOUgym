@@ -5,7 +5,7 @@
 <mapper namespace="edu.gdou.gym_java.mapper.EquipmentMapper">
 
     <select id="queryEquipment" resultType="edu.gdou.gym_java.entity.model.Equipment">
-        select * from equipment
+        select * from Equipment
         <where>
             <if test="name!='' and name!=null">name=#{name}</if>
             <if test="types!='' and types!=null">types=#{types}</if>
