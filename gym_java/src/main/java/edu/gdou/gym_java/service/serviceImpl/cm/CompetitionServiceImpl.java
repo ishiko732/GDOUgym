@@ -1,20 +1,21 @@
 package edu.gdou.gym_java.service.serviceImpl.cm;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.enums.CheckStatus;
 import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.mapper.CompetitionMapper;
 
+import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.service.cm.CompetitionCancelService;
 import edu.gdou.gym_java.service.cm.CompetitionCheckService;
 import edu.gdou.gym_java.service.cm.CompetitionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,13 +27,16 @@ import java.util.Set;
  * @since 2022-06-04
  */
 @Service
+@Slf4j
 public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Competition> implements CompetitionService {
     private final CompetitionCheckService checkService;
     private final CompetitionCancelService cancelService;
+    private final UserService userService;
 
-    public CompetitionServiceImpl(CompetitionCheckService checkService, CompetitionCancelService cancelService) {
+    public CompetitionServiceImpl(CompetitionCheckService checkService, CompetitionCancelService cancelService, UserService userService) {
         this.checkService = checkService;
         this.cancelService = cancelService;
+        this.userService = userService;
     }
 
     /**
@@ -58,7 +62,7 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
 
     @Override
     public Boolean cancelEvent(int cid, int uid, String context) {
-        val competitions = queryEvents(cid);
+        val competitions = queryEvents(cid, null, null, null);
         if (competitions.size() == 0) {
             return null;
         }
@@ -77,8 +81,15 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
     }
 
     @Override
-    public Set<Competition> queryEvents(Integer cid) {
-        return getBaseMapper().queryCompetition(cid);
+    public Set<Competition> queryEvents(Integer cid, String name, String uname, TimeLimit time) {
+        Integer uid =null;
+        if(uname!=null){
+            val user = userService.getUser(uname);
+            if (user!=null){
+                uid = user.getId();
+            }
+        }
+        return getBaseMapper().queryCompetition(cid,name,uid,time);
     }
 
     @Override

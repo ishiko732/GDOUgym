@@ -6,6 +6,9 @@ import edu.gdou.gym_java.service.cm.CompetitionEquipmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * <p>
  * 赛事器材表 服务实现类
@@ -16,5 +19,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CompetitionEquipmentServiceImpl extends ServiceImpl<CompetitionEquipmentMapper, CompetitionEquipment> implements CompetitionEquipmentService {
-
+    @Override
+    public Integer queryCompositionEquipmentCountByEid(Integer eid) {
+        int count = 0;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("eid",eid);
+        List<CompetitionEquipment> CompetitionEquipments = getBaseMapper().selectByMap(map);
+        for (CompetitionEquipment compositionEquipment : CompetitionEquipments) {
+            count+=compositionEquipment.getNumber();
+        }
+        return count;
+    }
 }
