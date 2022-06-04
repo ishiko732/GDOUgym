@@ -36,7 +36,7 @@ export default {
       this.$router.go(-1)
     },
     save(){},
-  }
+  },
 }
 </script>
 
@@ -61,7 +61,7 @@ export default {
       width: 50%;
       margin-left: 20px;
     }
-    .type,.number,name{
+    .type,.number,.name{
       line-height: 37px;
     }
   }
