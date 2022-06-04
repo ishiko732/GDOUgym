@@ -1,6 +1,6 @@
 <!--新增器材页面-->
 <template>
-  <div class="container">
+  <div class="container" style="height: 1000px;">
     <div class="title">新增器材</div>
     <div class="type_div">
       <span class="type">器材种类</span>
@@ -67,7 +67,7 @@ export default {
   }
   .btn{
     margin-top: 40px;
-    margin-left: 15%;
+    margin-left: 19%;
     display: flex;
     .el-button{
       margin-left: 20%;

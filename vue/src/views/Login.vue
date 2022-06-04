@@ -7,13 +7,15 @@
   <div class="body">
     <img src="https://jw.gdou.edu.cn/xtgl/dlycssz_cxDlycsszZp.html?zplx=3&t=1654220855681" class="bodyImg">
     <div class="username_password">
-      <div class="username_div">
-        <span class="username">用户名</span>
-        <el-input v-model="username" placeholder="请输入用户名"></el-input>
-      </div>
-      <div class="password_div">
-        <span class="password">密码&nbsp;&nbsp;&nbsp;</span>
-        <el-input v-model="password" placeholder="请输入密码"></el-input>
+
+        <div class="username_div">
+          <span class="username">用户名</span>
+          <el-input v-model="username" placeholder="请输入用户名"></el-input>
+        </div>
+        <div class="password_div">
+          <span class="password">密码&nbsp;&nbsp;&nbsp;</span>
+          <el-input v-model="password" placeholder="请输入密码"></el-input>
+
       </div>
       <Vcode :show="isShow" @success="success" ></Vcode>
       <el-button type="primary" @click="change">登录</el-button>
@@ -55,6 +57,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+
 .container{
   margin: 0 auto;
   width: 80%;
@@ -79,7 +82,15 @@ export default {
       flex: 1;
       .el-input{
         width: 70%;
-        margin-left: 20px;
+        margin-left: 60px;
+      }
+      .username{
+        position: absolute;
+        top:95px;
+      }
+      .password{
+        position: absolute;
+        top:190px;
       }
       .password_div,.username_div{
         margin-bottom: 50px;
