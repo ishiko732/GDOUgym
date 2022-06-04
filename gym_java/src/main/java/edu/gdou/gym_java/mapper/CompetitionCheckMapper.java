@@ -1,8 +1,9 @@
 package edu.gdou.gym_java.mapper;
 
+import edu.gdou.gym_java.entity.VO.Init_Competition;
 import edu.gdou.gym_java.entity.model.CompetitionCheck;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.*;
 
 /**
  * <p>
@@ -15,4 +16,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface CompetitionCheckMapper extends BaseMapper<CompetitionCheck> {
 
+    @Insert("insert into Competition_check(cid) values(#{cid})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int init_check(Init_Competition initCompetition);
+
+    @Select("select * from Competition_check where cid=#{cid}")
+    CompetitionCheck queryByCid(@Param("cid") int cid);
 }
