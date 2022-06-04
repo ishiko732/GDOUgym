@@ -44,7 +44,7 @@
 order by inode
     </select>
 
-    <insert id="addTime" parameterType="edu.gdou.gym_java.entity.model.TimeArrange">
+    <insert id="addTime" parameterType="edu.gdou.gym_java.entity.model.TimeArrange" useGeneratedKeys="true" keyProperty="timeId">
         insert into Time_arrange values(null, #{startTime}, #{endTime},#{inode},#{status},#{fdid});
     </insert>
 
@@ -86,7 +86,7 @@ order by inode
         status = #{status},
         uid = #{user.id},
         name = #{name},
-        idCard = #{idCard}
+        card = #{card}
     </set>
 </insert>
     <select id="queryTimeById" resultType="edu.gdou.gym_java.entity.model.TimeArrange">
@@ -96,7 +96,6 @@ order by inode
         insert into Order_item
         <set >
             fcid = #{fcid},
-            order_status = #{orderStatus},
             time_id=#{timeId}
         </set>
     </insert>
@@ -117,12 +116,33 @@ order by inode
         select * from Order_item where fcid = #{id}
     </select>
 
-    <update id="updateOrder" parameterType="edu.gdou.gym_java.entity.model.OrderItem">
-        update Order_item
+    <select id="queryCheckByUid" resultType="edu.gdou.gym_java.entity.model.FieldCheck">
+        select * from Field_check
+        <where>
+        <if test="uid!=0 and uid!=null">uid=#{uid}</if>
+        </where>
+    </select>
+
+    <select id="queryCheck" resultType="edu.gdou.gym_java.entity.model.FieldCheck">
+        select * from Field_check
+    </select>
+
+    <select id="updateCheckById" parameterType="edu.gdou.gym_java.entity.model.FieldCheck">
+        update Field_check
         <set>
-            order_status=#{orderStatus}
+            card=#{card}
         </set>
-        where oid = #{oid}
+        where id = #{id} and uid = #{user.id}
+    </select>
+
+    <update id="updateCheck" parameterType="edu.gdou.gym_java.entity.model.FieldCheck">
+        update Field_check
+        <set>
+            status=#{status}
+        </set>
+        where id = #{id} and uid = #{user.id}
     </update>
+
+
 
 </mapper>

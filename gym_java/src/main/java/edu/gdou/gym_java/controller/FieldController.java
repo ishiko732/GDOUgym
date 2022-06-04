@@ -5,6 +5,7 @@ import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
+import io.swagger.models.auth.In;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -126,15 +127,16 @@ public class FieldController {
         }
         //获取所有场的安排表
         List<FieldDate> fieldDateList = fieldService.search(fid,date);
-        map.put("name",fieldType.getTypeName().substring(0,1));
+        Field field = fieldService.queryFieldById(fid);
+        map.put("name",field.getDescription()+fieldType.getTypeName().substring(0,1));
         map.put("fieldDateList",fieldDateList);
             return new ResponseBean(200,fieldDateList.size()>0?"查询成功":"查询结果为空",map);
     }
 
-    //用户提交预约审核，生成订单，审核项设置为审核中，日期安排项设置为预约中，订单项设置为未支付
+    //用户提交预约审核，审核项设置为审核中，日期安排项设置为预约中
     @PostMapping("/orderField")
     public ResponseBean orderField(@RequestParam("uid") String uid ,
-                                   @RequestParam("idCard") String idCard ,
+                                   @RequestParam("card") String card ,
                                    @RequestParam("timeId") String time_id ,
                                        @RequestParam(value = "name") String name,
                                        @RequestParam("money") String money_par){
@@ -144,58 +146,121 @@ public class FieldController {
         //新增审核
         fieldCheck.setTime(new java.sql.Timestamp(System.currentTimeMillis()));
         fieldCheck.setName(name);
-        fieldCheck.setIdCard(idCard);
+        fieldCheck.setCard(card);
         fieldCheck.setMoney(Integer.valueOf(money_par));
         fieldCheck.setStatus("审核中");
         fieldCheck.setUser(user);
 
        Boolean addCheck = fieldService.addCheck(fieldCheck);
                 fieldService.updateStatus(Integer.valueOf(time_id),"预约中"); //编辑状态
-                //新增订单项
                 OrderItem orderItem = new OrderItem();
                 orderItem.setTimeId(Integer.valueOf(time_id));
                 orderItem.setFcid(fieldCheck.getId());
-        orderItem.setOrderStatus("审核中");
         Boolean addOrderItem  = fieldService.addOrderItem(orderItem);
         return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败",name);
     }
 
 
-    //后台审核通过，审核项设置为审核通过，日期安排项设置为占用，订单项设置为未支付
-    //后台审核不通过，审核项设置为审核退回，日期安排项设置为空闲，订单项设置为已取消
+    //后台审核通过，审核项设置为待支付，日期安排项设置为占用
+    //后台审核不通过，审核项设置为已退回，日期安排项设置为空闲
     @PostMapping("/checkOrder")
     public ResponseBean orderField(@RequestParam("id") String id ,
                                    @RequestParam("status") String status){
         FieldCheck fieldCheck = fieldService.queryCheckById(Integer.valueOf(id));
-        String orderStatus="";
         String arrangeStatus="";
         //更改审核状态
+        if (fieldCheck!=null){
         if (status.equals("审核通过")){
+            status = "待支付";
             fieldCheck.setStatus(status);
-             orderStatus="未支付";
              arrangeStatus="占用";
         }else if(status.equals("审核退回")) {
+            status = "已退回";
             fieldCheck.setStatus(status);
-             orderStatus="已取消";
              arrangeStatus="空闲";
         }else {
             return new ResponseBean(200,"审核状态输入错误",status);
         }
-
+        }
         //更新预约审核状态
         Boolean updateCheck = fieldService.updateCheck(fieldCheck);
         //根据审核id获取到订单，再更新订单状态
-        OrderItem orderItem = fieldService.queryOrderItemByFcid(Integer.valueOf(id));
-        orderItem.setOrderStatus(orderStatus);
-        Boolean updateOrder = fieldService.updateOrder(orderItem);
+        List<OrderItem> orderItemList = fieldService.queryOrderItemByFcid(Integer.valueOf(id));
+
         //根据订单里的安排表id更新时间段状态
-        Boolean updateArrange =fieldService.updateStatus(orderItem.getTimeId(),arrangeStatus); //编辑状态
+        for (int i=0;i<orderItemList.size();i++){
+          fieldService.updateStatus(orderItemList.get(i).getTimeId(),arrangeStatus); //编辑状态
+        }
 
 
-        return new ResponseBean(200,updateCheck&&updateOrder&&updateArrange?"审核成功":"审核失败",fieldCheck);
+        return new ResponseBean(200,updateCheck?"审核成功":"审核失败",fieldCheck);
     }
 
 
+    //管理员查询审核列表
+    @GetMapping("/queryCheck")
+    public ResponseBean queryCheck(){
+        List<FieldCheck> fieldCheckList = fieldService.queryCheck();
+        return new ResponseBean(200,fieldCheckList.size()>0?"查询成功":"查询结果为空",fieldCheckList);
+    }
+
+    //用户查询自己的审核列表
+     @PostMapping("/queryCheckByUid")
+     public ResponseBean queryCheckByUid(@RequestParam(value = "uid",defaultValue = "0",required = true)String uid){
+         List<FieldCheck> fieldCheckList = fieldService.queryCheckByUid(Integer.valueOf(uid));
+         return new ResponseBean(200,fieldCheckList.size()>0?"查询成功":"查询结果为空",fieldCheckList);
+       }
+
+    //用户根据id和uid修改预约(修改一卡通？)
+    @PostMapping("/updateCheckById")
+    public ResponseBean updateCheckById(@RequestParam(value = "uid",required = true)String uid,
+                                         @RequestParam(value = "id",required = true)String id,
+                                         @RequestParam(value = "card",required = true)String card){
+        FieldCheck fieldCheck = fieldService.queryCheckById(Integer.valueOf(id));
+        User user = userService.queryUserByID(Integer.valueOf(uid));
+        if (fieldCheck.getStatus().equals("审核中") &&fieldCheck!=null && user!=null){
+            fieldCheck.setCard(card);
+                fieldCheck.setUser(user);
+                fieldService.updateCheckById(fieldCheck);
+                fieldCheck.setUser(null);
+                    return new ResponseBean(200, "修改预约成功！", fieldCheck);
+
+        }
+        return new ResponseBean(200, "不存在该用户订单或不能取消该状态下的预约", null);
+    }
+
+
+    //用户根据id和uid取消预约审核
+    @PostMapping("/cancelCheckById")
+    public ResponseBean cancelCheckById(@RequestParam(value = "uid",required = true)String uid,
+                                        @RequestParam(value = "id",required = true)String id
+                                        ) {
+        FieldCheck fieldCheck = fieldService.queryCheckById(Integer.valueOf(id));
+        User user = userService.queryUserByID(Integer.valueOf(uid));
+        if (user != null&&fieldCheck!=null) {
+            fieldCheck.setUser(user);
+            if (fieldCheck.getStatus().equals("审核中")) {
+                fieldCheck.setStatus("已取消");
+                fieldService.updateCheck(fieldCheck);
+                fieldCheck.setUser(null);
+                return new ResponseBean(200, "取消预约成功", fieldCheck);
+            }else if (fieldCheck.getStatus().equals("待支付")) {
+                fieldCheck.setStatus("已取消");
+                fieldService.updateCheck(fieldCheck);
+                //根据订单里的安排表id更新时间段状态
+                List<OrderItem> orderItemList = fieldService.queryOrderItemByFcid(Integer.valueOf(id));
+                for (int i=0;i<orderItemList.size();i++){
+                    fieldService.updateStatus(orderItemList.get(i).getTimeId(),"空闲"); //编辑状态
+                }
+                fieldCheck.setUser(null);
+                return new ResponseBean(200, "取消预约成功", fieldCheck);
+        }
+
+    }
+            return new ResponseBean(200,"不存在该用户订单或不能取消该状态下的预约",null);
+    }
+
+    //!!!暂时别用
     //加载日期安排，无参数默认第一个类型第一个场地；带参数查询特定类型下的某个场地安排（tid场地类型id,fid场地id）
     @GetMapping("/queryDate")
     public ResponseBean queryDate(@RequestParam(value = "tid",required = false)String tid,@RequestParam(value="fid",required = false)String fid){
