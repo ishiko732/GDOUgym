@@ -9,36 +9,34 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 /**
  * <p>
- * 器材表
+ * 器材维修表
  * </p>
  *
  * @author lzh
- * @since 2022-06-02
+ * @since 2022-06-04
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("Equipment")
-@ApiModel(value = "Equipment对象", description = "")
-public class Equipment {
-    private static final long serialVersionUID = 1L;
-
+@TableName("Fix_equipment")
+@ApiModel(value = "Fix_equipment", description = "")
+public class FixEquipment {
     @ApiModelProperty("器材id")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "fid")
+    private Integer fid;
 
     @ApiModelProperty("器材名称")
     @TableField(value="name")
     private String name;
 
-    @ApiModelProperty("器材类型")
-    @TableField(value = "types")
-    private String types;
+    @ApiModelProperty("器材种类")
+    @TableField(value="type")
+    private String type;
 
-    @ApiModelProperty("器材数量")
-    @TableField(value = "number")
+    @ApiModelProperty("报修数量")
+    @TableField(value="number")
     private Integer number;
-
 }
