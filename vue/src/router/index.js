@@ -88,7 +88,11 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior () {
+    return { x: 0, y: 0 }
+  }
+
 })
 const VueRouterPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push (to) {

@@ -41,7 +41,7 @@
         </el-row>
       </div>
       <div class="router">
-        <router-view style="overflow: hidden"></router-view>
+        <router-view style="width: 1660px;"></router-view>
       </div>
     </div>
   </div>
@@ -77,34 +77,24 @@ export default {
   },
 }
 </script>
-<style lang="less">
-.home_container{
-<<<<<<< HEAD
-  overflow-y:auto;
-  overflow-x:hidden;
-=======
->>>>>>> fbcaced768181b543dd5b5402f73f71157f91be1
+<style lang="less" scoped>
+.home_container {
   .el-menu.el-menu--horizontal {
     border-bottom: none;
   }
-  .home_nav{
+  .home_nav {
     width: 248px;
     flex: 0 0 auto;
-    background-color: rgba(84,92,100);
-<<<<<<< HEAD
-    .el-menu{
-=======
-    .el-menu-item{
-      overflow: hidden;
->>>>>>> fbcaced768181b543dd5b5402f73f71157f91be1
+    background-color: rgba(84, 92, 100);
+    .el-menu {
+      .el-menu-item {
+        overflow: hidden;
+      }
     }
-  }
-  .router{
-    flex-grow: 1;
-<<<<<<< HEAD
-=======
-    width: 100%;
->>>>>>> fbcaced768181b543dd5b5402f73f71157f91be1
+
+    .router {
+      flex-grow: 1;
+    }
   }
 }
 </style>

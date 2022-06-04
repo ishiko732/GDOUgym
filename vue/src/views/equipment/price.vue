@@ -84,7 +84,7 @@ export default {
 .el-card{
   margin-top: 2%;
   margin-left: 20%;
-  width: 60%;
+  width: 50%;
   .name{
     margin-left: 41%;
     font-size: 22px;
