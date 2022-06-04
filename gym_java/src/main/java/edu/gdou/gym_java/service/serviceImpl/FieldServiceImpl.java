@@ -172,14 +172,27 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     }
 
     @Override
-    public OrderItem queryOrderItemByFcid(Integer id) {
+    public List<OrderItem> queryOrderItemByFcid(Integer id) {
         return getBaseMapper().queryOrderItemByFcid(id);
     }
 
+
+
     @Override
-    public Boolean updateOrder(OrderItem orderItem) {
-        return getBaseMapper().updateOrder(orderItem);
+    public List<FieldCheck> queryCheck() {
+        return getBaseMapper().queryCheck();
     }
+
+    @Override
+    public List<FieldCheck> queryCheckByUid(Integer uid) {
+        return getBaseMapper().queryCheckByUid(uid);
+    }
+
+    @Override
+    public Boolean updateCheckById(FieldCheck fieldCheck) {
+        return getBaseMapper().updateCheckById(fieldCheck);
+    }
+
 
 
 }

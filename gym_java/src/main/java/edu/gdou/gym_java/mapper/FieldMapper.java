@@ -54,9 +54,14 @@ public interface FieldMapper extends BaseMapper<Field> {
 
     Boolean updateCheck(FieldCheck fieldCheck);
 
-    OrderItem queryOrderItemByFcid(Integer id);
-
-    Boolean updateOrder(OrderItem orderItem);
+    List<OrderItem> queryOrderItemByFcid(Integer id);
 
 
+    List<FieldCheck> queryCheck();
+
+    List<FieldCheck> queryCheckByUid(Integer uid);
+
+    Boolean updateCheckById(FieldCheck fieldCheck);
+
+//  Boolean cancelCheckById(FieldCheck fieldCheck);
 }
