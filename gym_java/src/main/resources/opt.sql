@@ -106,3 +106,9 @@ left join Field_date Fd on Ta.fdid = Fd.id;
 # 根据赛事地点id查询器材
 select Competition_equipment.*
 from Competition_equipment;
+
+# 根据uid查询审核信息
+select Competition_check.*
+from Competition_check
+left join Competition C on C.id = Competition_check.cid
+where C.uid=1

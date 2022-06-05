@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 赛事审核表 服务实现类
@@ -28,5 +30,15 @@ public class CompetitionCheckServiceImpl extends ServiceImpl<CompetitionCheckMap
     @Override
     public CompetitionCheck queryByCid(int cid) {
         return getBaseMapper().queryByCid(cid);
+    }
+
+    @Override
+    public List<CompetitionCheck> queryList(String status) {
+        return getBaseMapper().queryList(status);
+    }
+
+    @Override
+    public List<CompetitionCheck> queryListByUid(String status,int uid) {
+        return getBaseMapper().queryListByUid(status,uid);
     }
 }

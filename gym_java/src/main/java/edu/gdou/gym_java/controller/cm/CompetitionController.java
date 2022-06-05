@@ -7,7 +7,7 @@ import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.CompetitionEquipment;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
-import edu.gdou.gym_java.service.cm.CompetitionCancelService;
+import edu.gdou.gym_java.service.cm.CompetitionCheckService;
 import edu.gdou.gym_java.service.cm.CompetitionService;
 import edu.gdou.gym_java.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -31,16 +31,16 @@ import java.util.*;
 public class CompetitionController {
     private final UserService userService;
     private final CompetitionService competitionService;
-    private final CompetitionCancelService cancelService;
+    private final CompetitionCheckService checkService;
     private final FieldService fieldService;
     private final Gson gson;
 
 
 
-    public CompetitionController(UserService userService, CompetitionService competitionService, CompetitionCancelService cancelService, FieldService fieldService, Gson gson) {
+    public CompetitionController(UserService userService, CompetitionService competitionService, CompetitionCheckService checkService, FieldService fieldService, Gson gson) {
         this.userService = userService;
         this.competitionService = competitionService;
-        this.cancelService = cancelService;
+        this.checkService = checkService;
         this.fieldService = fieldService;
         this.gson = gson;
     }
@@ -169,6 +169,17 @@ public class CompetitionController {
 
         val equipments = competitionService.fieldEquipmentLinkEvent(cfid, competitionEquipments);
         return new ResponseBean(200,"绑定器材数"+competitionEquipments.size(),equipments);
+    }
+
+    // 审核部分
+    @RequestMapping("/queryCheck")
+    public ResponseBean queryCheck(@RequestParam(value = "uid",required = false)String uid,
+                                   @RequestParam(value = "status",required = false)String status){
+        if(uid==null){
+            return new ResponseBean(200,"查询到审核数据",checkService.queryList(status));
+        }else{
+            return new ResponseBean(200,"查询到审核数据",checkService.queryListByUid(status,Integer.parseInt(uid)));
+        }
     }
 
 }

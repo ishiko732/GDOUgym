@@ -29,6 +29,28 @@ public interface CompetitionMapper extends BaseMapper<Competition> {
             "values (#{uid}, #{name}, #{competitionTime}, #{eventLength}, #{introduction}, #{money} )")
     Boolean insert_competition(Competition competition);
 
+    @Select({
+            "<script>",
+            "select Competition.*,Ccheck.status as 'isCheck'," ,
+            "exists(select id from Competition_cancel where cid=Competition.id) as 'isCancel'",
+            "from Competition",
+            "left join Competition_check Ccheck on Ccheck.cid=Competition.id",
+            "<where>",
+            "<if test='cid !=null'>",
+            "Competition.id = #{cid}",
+            "</if>",
+            "</where>",
+            "order by create_time,uid,id,name",
+            "</script>"
+    })
+    @Results({
+            @Result(property = "id",column = "id"),
+            @Result(property = "isCheck",column = "isCheck"),
+            @Result(property = "isCancel",column = "isCancel"),
+            @Result(property = "competitionFields",javaType = Set.class,column = "id",
+                    many=@Many(select = "edu.gdou.gym_java.mapper.CompetitionMapper.queryCompetitionFieldByCid"))
+    })
+    Set<Competition> queryCompetitionByCid(@Param("cid") Integer cid);
 
     @Select({
             "<script>",
