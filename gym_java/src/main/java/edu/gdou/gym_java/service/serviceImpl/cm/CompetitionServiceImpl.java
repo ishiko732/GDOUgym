@@ -1,6 +1,7 @@
 package edu.gdou.gym_java.service.serviceImpl.cm;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.google.gson.Gson;
 import edu.gdou.gym_java.entity.VO.RefereeAnnouncement;
 import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.enums.CheckStatus;
@@ -16,10 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>
@@ -37,18 +35,19 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
     private final CompetitionFieldService fieldService;
     private final CompetitionEquipmentService equipmentService;
     private final UserService userService;
+    private final Gson gson;
 
-    public CompetitionServiceImpl(CompetitionCheckService checkService, CompetitionCancelService cancelService, UserService userService, Environment environment, CompetitionFieldService fieldService, CompetitionEquipmentService equipmentService) {
+    public CompetitionServiceImpl(CompetitionCheckService checkService, CompetitionCancelService cancelService, UserService userService, Environment environment, CompetitionFieldService fieldService, CompetitionEquipmentService equipmentService, Gson gson) {
         this.checkService = checkService;
         this.cancelService = cancelService;
         this.userService = userService;
         this.fieldService = fieldService;
         this.equipmentService = equipmentService;
+        this.gson = gson;
     }
 
     /**
      * 创建赛事
-     *
      * @param uid         uid
      * @param name        赛事名称
      * @param timestamp   赛事时间
@@ -112,9 +111,12 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
             val competitionField = new CompetitionField();
             competitionField.setCid(cid);
             competitionField.setFcId(fcId);
-            val insert = fieldService.getBaseMapper().insert(competitionField);
-            if(insert!=0){
-                integers.add(competitionField.getId());
+            val field = fieldService.getBaseMapper().selectByMap(competitionField.getMap());
+            if(field==null||field.isEmpty()){
+                val insert = fieldService.getBaseMapper().insert(competitionField);
+                if(insert!=0){
+                    integers.add(competitionField.getId());
+                }
             }
         }
         return integers;

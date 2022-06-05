@@ -36,6 +36,7 @@ public class CompetitionController {
     private final Gson gson;
 
 
+
     public CompetitionController(UserService userService, CompetitionService competitionService, CompetitionCancelService cancelService, FieldService fieldService, Gson gson) {
         this.userService = userService;
         this.competitionService = competitionService;
@@ -107,7 +108,7 @@ public class CompetitionController {
     @RequestMapping(value = "/eventSetFields",method = RequestMethod.POST)
     public ResponseBean eventSetFields(@RequestBody Map<String,Object> map){
         val cid = Integer.parseInt(String.valueOf(map.get("cid")));
-        val ids = (List<Integer>)map.get("ids");
+        val ids = (List<Integer>)map.get("ids"); //这个是在审核中的场地信息
         val integers = competitionService.eventSetFields(cid, ids);
         return new ResponseBean(200,"返回成功绑定的赛事场地id信息",integers);
     }
