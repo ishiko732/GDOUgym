@@ -164,5 +164,15 @@ order by inode
         select * from Field_date where id = #{fdid}
     </select>
 
+<insert id="addType" parameterType="edu.gdou.gym_java.entity.model.FieldType" useGeneratedKeys="true" keyProperty="tid">
+    insert into Field_type
+        <set>
+        type_name=#{typeName}
+        </set>
+</insert>
+
+    <select id="queryTypeByName" resultType="java.lang.Integer">
+        select count(*) from Field_type where type_name = #{typeName}
+    </select>
 
 </mapper>

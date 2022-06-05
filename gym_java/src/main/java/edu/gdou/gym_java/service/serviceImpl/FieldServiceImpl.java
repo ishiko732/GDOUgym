@@ -299,4 +299,14 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         return false;
 
     }
+
+    @Override
+    public Boolean addType(FieldType fieldType) {
+        return getBaseMapper().addType(fieldType);
+    }
+
+    @Override
+    public Integer queryTypeByName(String typeName) {
+        return getBaseMapper().queryTypeByName(typeName);
+    }
 }

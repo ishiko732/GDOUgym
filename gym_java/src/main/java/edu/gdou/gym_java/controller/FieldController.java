@@ -47,6 +47,21 @@ public class FieldController {
         return new ResponseBean(200,fieldTypeList.size()>0?"查询成功":"查询结果为空",fieldTypeList);
     }
 
+    //添加场地类型
+    @PostMapping("/addType")
+    public ResponseBean addType(@RequestParam("typeName") String typeName){
+        FieldType fieldType = new FieldType();
+        fieldType.setTypeName(typeName);
+        Integer isExist=(fieldService.queryTypeByName(typeName));
+        if (isExist==1){
+            return new ResponseBean(200,"该类型已存在",null);
+        }else if (isExist>1){
+            return new ResponseBean(200,"数据错误",null);
+        }
+        Boolean addType = fieldService.addType(fieldType);
+        return new ResponseBean(200,addType?"添加成功":"添加失败",fieldType);
+    }
+
     //添加场地
     @PostMapping("/addField")
     public ResponseBean addField(@RequestParam(value = "money",defaultValue = "0") String money,

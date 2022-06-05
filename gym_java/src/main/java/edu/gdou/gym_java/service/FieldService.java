@@ -58,4 +58,8 @@ public interface FieldService extends IService<Field> {
     Boolean checkFlag(FieldCheck fieldCheck);
 
     Boolean checkNum(FieldCheck fieldCheck);
+
+    Boolean addType(FieldType fieldType);
+
+    Integer queryTypeByName(String typeName);
 }
