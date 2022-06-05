@@ -55,7 +55,7 @@
 
 <script>
 import Vcode from "vue-puzzle-vcode"
-import { GoLogin,GoRegister,Login,Register } from "@/request/api";
+import { Login,Register } from "@/request/api";
 
 export default {
   name: "Login",
