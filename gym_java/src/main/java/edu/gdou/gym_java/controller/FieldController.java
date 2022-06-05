@@ -2,14 +2,19 @@ package edu.gdou.gym_java.controller;
 
 
 import edu.gdou.gym_java.entity.bean.ResponseBean;
+import edu.gdou.gym_java.entity.enums.CheckStatus;
+import edu.gdou.gym_java.entity.enums.RoleEnums;
 import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
-import io.swagger.models.auth.In;
-import org.springframework.transaction.annotation.Transactional;
+import edu.gdou.gym_java.utils.TimeUtils;
+import lombok.val;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.*;
+
 
 /**
  * <p>
@@ -98,7 +103,7 @@ public class FieldController {
     @PostMapping("/listTimeByDate")
     public ResponseBean listTimeByDate(@RequestParam("tid") String tid ,
                                      @RequestParam(value = "fid",defaultValue = "0") String fid_par,
-                                       @RequestParam("date") String date_par){
+                                       @RequestParam(value = "date",required = false) String date_par){
         Map<String,Object> map = new HashMap<>();
         FieldType fieldType = fieldService.queryTypeById(Integer.parseInt(tid));
         List<Field> fieldList = fieldService.queryFieldByType(Integer.parseInt(tid));
@@ -109,22 +114,21 @@ public class FieldController {
             fid = fieldList.get(0).getFid();
         }
 
-        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+        Date date = new Date(System.currentTimeMillis());
         if (date_par != null) {
-            date = java.sql.Date.valueOf(date_par);
+            date = Date.valueOf(date_par);
         }
 
         //获取能获取的有效日期
-        Date current = new Date(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(current);
-        List<java.sql.Date> dateValid = new ArrayList<>();
+        calendar.setTime(TimeUtils.nowToTimeStamp());
+        List<Date> dateValid = new ArrayList<>();
         //可选日期
         calendar.add(Calendar.DATE, 0);
-        dateValid.add(new java.sql.Date(calendar.getTimeInMillis()));
+        dateValid.add(new Date(calendar.getTimeInMillis()));
         for(int i=0;i<6;i++){
             calendar.add(Calendar.DATE, 1);
-            dateValid.add(new java.sql.Date(calendar.getTimeInMillis()));
+            dateValid.add(new Date(calendar.getTimeInMillis()));
         }
         //获取所有场的安排表
         List<FieldDate> fieldDateList = fieldService.search(fid,date);
@@ -268,36 +272,44 @@ public class FieldController {
     //赛事预约场地审核，审核项设置为审核中，日期安排项设置为预约中
     //name页面用场地类型+场地描述+序号生成
     @PostMapping("/orderFieldByCom")
+    @RequiresAuthentication
     public ResponseBean orderFieldByCom(@RequestParam("uid") String uid ,
-                                   @RequestParam(value = "card",required = false) String card ,
-                                   @RequestParam("timeIds") String ids[] ,
+                                   @RequestParam("timeIds") String[] ids ,
                                    @RequestParam(value = "name") String name,
                                    @RequestParam(value = "money",required = false,defaultValue = "0") String money_par){
-        FieldCheck fieldCheck = new FieldCheck();
-        User user = userService.queryUserByID(Integer.valueOf(uid));//用户
+        val currentUser = userService.currentUser();
+        User user;
+        if (currentUser.getRole().getId()< RoleEnums.Student.getRid()){
+            // 如果该用户角色不是管理员，则用当前登录账号作为申请的user
+            user = userService.queryUserByID(Integer.valueOf(uid));
+        }else{
+            user = currentUser;
+        }
+        val objectMap = userService.selectInfoByUid(user.getId());
         //新增审核
-        fieldCheck.setTime(new java.sql.Timestamp(System.currentTimeMillis()));
-        fieldCheck.setName("(赛事)"+name);
-        fieldCheck.setCard(card);
-        fieldCheck.setMoney(Integer.valueOf(money_par));
-        fieldCheck.setStatus("审核中");
-        fieldCheck.setUser(user);
-            for (int i = 0; i < ids.length; i++) {
-                TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(ids[i]));
-                if (!timeArrange.getStatus().equals("空闲")) {
-                    return new ResponseBean(200,"存在占用场地",null);
-                }
+        val card=String.valueOf(objectMap.get("id"));
+        val status =CheckStatus.CHECKING.getStatus();
+        val com_name = "(赛事)" + name;
+        val money = Integer.valueOf(money_par);
+        val fieldCheck = new FieldCheck(null,null,money, status, com_name,card,null,user);
+        for (String id : ids) {
+            TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(id));
+            if (!timeArrange.getStatus().equals("空闲")) {
+                return new ResponseBean(200, "存在占用场地", null);
+            }
         }
         Boolean addCheck = fieldService.addCheck(fieldCheck);
         Boolean addOrderItem =false;
-        for (int i = 0; i < ids.length; i++) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setTimeId(Integer.valueOf(ids[i]));
-            orderItem.setFcid(fieldCheck.getId());
-            addOrderItem  = fieldService.addOrderItem(orderItem);
+        // 若添加审核失败，应当不做绑定时间操作
+        if (addCheck){
+            for (int i = 0; i < ids.length; i++) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setTimeId(Integer.valueOf(ids[i]));
+                orderItem.setFcid(fieldCheck.getId());
+                addOrderItem  = fieldService.addOrderItem(orderItem);
+            }
         }
-
-        return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败","(赛事)"+name);
+        return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败", com_name);
 
     }
 
@@ -307,16 +319,15 @@ public class FieldController {
     public ResponseBean queryDate(@RequestParam(value = "tid",required = false)String tid,@RequestParam(value="fid",required = false)String fid){
         Map<String,Object> map = new HashMap<>();
         List<FieldType> fieldTypeList = fieldService.queryType();
-        Date current = new Date(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(current);
-        List<java.sql.Date> dateValid = new ArrayList<>();
+        calendar.setTime(TimeUtils.nowToTimeStamp());
+        List<Date> dateValid = new ArrayList<>();
         //可选日期
         calendar.add(Calendar.DATE, 0);
-        dateValid.add(new java.sql.Date(calendar.getTimeInMillis()));
+        dateValid.add(new Date(calendar.getTimeInMillis()));
         for(int i=0;i<6;i++){
             calendar.add(Calendar.DATE, 1);
-            dateValid.add(new java.sql.Date(calendar.getTimeInMillis()));
+            dateValid.add(new Date(calendar.getTimeInMillis()));
         }
 
         FieldType fieldType=null;     //场地类型：需要填充场地
