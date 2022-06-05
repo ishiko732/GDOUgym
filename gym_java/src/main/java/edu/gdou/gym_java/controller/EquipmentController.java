@@ -77,7 +77,7 @@ public class EquipmentController {
             if (equipment==null){
                 return new ResponseBean(200,"需要维修的器材不存在",null);
             }else{
-                if (Integer.parseInt(number)<equipmentService.availableEquipmentCount(Integer.parseInt(eid))){
+                if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(Integer.parseInt(eid))){
                     FixEquipment fixEquipment = new FixEquipment(Integer.parseInt(eid), equipment.getName(), equipment.getTypes(), Integer.parseInt(number));
                     Boolean flag = fixEquipmentService.applyFixEquipment(fixEquipment);
                     return new ResponseBean(200,flag?"器材维修申报成功":"器材申报失败",null);
@@ -103,6 +103,21 @@ public class EquipmentController {
             }
         }else{
             return new ResponseBean(200,"输入的eid或number为非数字",null);
+        }
+    }
+
+    @PostMapping("/availableEquipmentCount")
+    public ResponseBean availableEquipmentCount(@RequestParam("eid")String eid){
+        if (StringUtils.isNumeric(eid)) {
+            Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
+            if (equipment != null) {
+                Integer count = equipmentService.availableEquipmentCount(equipment.getId());
+                return new ResponseBean(200,"该器材的可用数量为：",count);
+            }else{
+                return new ResponseBean(200,"该器材不存在",null);
+            }
+        }else{
+            return new ResponseBean(200,"输入的eid为空或为非数字",null);
         }
     }
 }
