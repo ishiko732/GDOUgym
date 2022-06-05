@@ -39,13 +39,5 @@ public class OrderItem implements Serializable {
     @TableField("time_id")
     private Integer timeId;
 
-    @ApiModelProperty("订单状态")
-    @TableField("order_status")
-    private String orderStatus;
-
-    @ApiModelProperty("创建时间")
-    @TableField("create_time")
-    private java.sql.Timestamp create_Time;
-
 
 }

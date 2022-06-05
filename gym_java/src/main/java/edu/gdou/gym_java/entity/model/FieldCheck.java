@@ -50,8 +50,8 @@ public class FieldCheck implements Serializable {
     private String name;
 
     @ApiModelProperty("一卡通号码")
-    @TableField("idCard")
-    private String idCard;
+    @TableField("card")
+    private String card;
 
     @TableField(exist = false)
     private Field field;
