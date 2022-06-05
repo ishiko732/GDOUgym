@@ -2,10 +2,14 @@ package edu.gdou.gym_java.controller;
 
 
 import edu.gdou.gym_java.entity.bean.ResponseBean;
+import edu.gdou.gym_java.entity.enums.CheckStatus;
+import edu.gdou.gym_java.entity.enums.RoleEnums;
 import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.utils.TimeUtils;
+import lombok.val;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -268,36 +272,44 @@ public class FieldController {
     //赛事预约场地审核，审核项设置为审核中，日期安排项设置为预约中
     //name页面用场地类型+场地描述+序号生成
     @PostMapping("/orderFieldByCom")
+    @RequiresAuthentication
     public ResponseBean orderFieldByCom(@RequestParam("uid") String uid ,
-                                   @RequestParam(value = "card",required = false) String card ,
-                                   @RequestParam("timeIds") String ids[] ,
+                                   @RequestParam("timeIds") String[] ids ,
                                    @RequestParam(value = "name") String name,
                                    @RequestParam(value = "money",required = false,defaultValue = "0") String money_par){
-        FieldCheck fieldCheck = new FieldCheck();
-        User user = userService.queryUserByID(Integer.valueOf(uid));//用户
+        val currentUser = userService.currentUser();
+        User user;
+        if (currentUser.getRole().getId()< RoleEnums.Student.getRid()){
+            // 如果该用户角色不是管理员，则用当前登录账号作为申请的user
+            user = userService.queryUserByID(Integer.valueOf(uid));
+        }else{
+            user = currentUser;
+        }
+        val objectMap = userService.selectInfoByUid(user.getId());
         //新增审核
-        fieldCheck.setTime(new java.sql.Timestamp(System.currentTimeMillis()));
-        fieldCheck.setName("(赛事)"+name);
-        fieldCheck.setCard(card);
-        fieldCheck.setMoney(Integer.valueOf(money_par));
-        fieldCheck.setStatus("审核中");
-        fieldCheck.setUser(user);
-            for (int i = 0; i < ids.length; i++) {
-                TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(ids[i]));
-                if (!timeArrange.getStatus().equals("空闲")) {
-                    return new ResponseBean(200,"存在占用场地",null);
-                }
+        val card=String.valueOf(objectMap.get("id"));
+        val status =CheckStatus.CHECKING.getStatus();
+        val com_name = "(赛事)" + name;
+        val money = Integer.valueOf(money_par);
+        val fieldCheck = new FieldCheck(null,null,money, status, com_name,card,null,user);
+        for (String id : ids) {
+            TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(id));
+            if (!timeArrange.getStatus().equals("空闲")) {
+                return new ResponseBean(200, "存在占用场地", null);
+            }
         }
         Boolean addCheck = fieldService.addCheck(fieldCheck);
         Boolean addOrderItem =false;
-        for (int i = 0; i < ids.length; i++) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setTimeId(Integer.valueOf(ids[i]));
-            orderItem.setFcid(fieldCheck.getId());
-            addOrderItem  = fieldService.addOrderItem(orderItem);
+        // 若添加审核失败，应当不做绑定时间操作
+        if (addCheck){
+            for (int i = 0; i < ids.length; i++) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setTimeId(Integer.valueOf(ids[i]));
+                orderItem.setFcid(fieldCheck.getId());
+                addOrderItem  = fieldService.addOrderItem(orderItem);
+            }
         }
-
-        return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败","(赛事)"+name);
+        return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败", com_name);
 
     }
 
