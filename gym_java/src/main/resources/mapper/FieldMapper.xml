@@ -140,7 +140,7 @@ order by inode
     </select>
 
     <select id="queryUserById" resultType="edu.gdou.gym_java.entity.model.User">
-        select * from user where id =#{uid}
+        select * from User where id =#{uid}
     </select>
 
 
