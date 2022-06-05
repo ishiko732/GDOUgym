@@ -1,11 +1,13 @@
 package edu.gdou.gym_java.mapper;
 
+import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.model.Announcement;
 import edu.gdou.gym_java.entity.model.Competition;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.lang.Nullable;
 
+import java.sql.Timestamp;
 import java.util.Set;
 
 /**
@@ -34,6 +36,16 @@ public interface CompetitionMapper extends BaseMapper<Competition> {
             "<if test='cid !=null'>",
             "Competition.id = #{cid}",
             "</if>",
+            "<if test='name !=null'>",
+            "and Competition.name like concat('%',#{name},'%')",
+            "</if>",
+            "<if test='uid !=null'>",
+            "and Competition.uid = #{uid}",
+            "</if>",
+            "<if test='time !=null'>",
+            "and (Competition.competition_time between #{time.start} and #{time.end}) ",
+            "and (timestampadd(minute ,60,Competition.competition_time) between #{time.start} and #{time.end})",
+            "</if>",
             "</where>",
             "order by create_time,uid,id,name",
             "</script>"
@@ -43,6 +55,6 @@ public interface CompetitionMapper extends BaseMapper<Competition> {
             @Result(property = "isCheck",column = "isCheck"),
             @Result(property = "isCancel",column = "isCancel"),
     })
-    Set<Competition> queryCompetition(@Param("cid") @Nullable Integer cid);
+    Set<Competition> queryCompetition(@Param("cid") @Nullable Integer cid, @Param("name")@Nullable String name, @Param("uid") Integer uid,@Nullable TimeLimit time);
 
 }

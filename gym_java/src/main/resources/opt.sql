@@ -78,3 +78,8 @@ WHERE
 select Competition.*,Ccheck.status as 'isCheck',exists(select id from Competition_cancel where cid=Competition.id) as 'isCancel'
 from Competition
 left join Competition_check Ccheck on Ccheck.cid=Competition.id;
+# where (competition_time between '2022-06-4 14:00:00' and '2022-06-4 15:05:00') and (timestampadd(minute ,60,competition_time) between '2022-06-4 14:00:00' and '2022-06-5 15:05:00');
+
+# 获取赛事时间段
+select *,timestampadd(minute ,60,competition_time) as competition_end_time
+from Competition;

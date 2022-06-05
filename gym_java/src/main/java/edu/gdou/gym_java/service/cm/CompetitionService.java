@@ -1,5 +1,6 @@
 package edu.gdou.gym_java.service.cm;
 
+import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.model.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.lang.Nullable;
@@ -19,7 +20,7 @@ import java.util.Set;
 public interface CompetitionService extends IService<Competition> {
     Integer createEvent(int uid, String name, Timestamp timestamp,int eventLength,Double money,String context);
     Boolean cancelEvent(int cid,int uid,String context);
-    Set<Competition> queryEvents(@Nullable Integer cid);
+    Set<Competition> queryEvents(@Nullable Integer cid, @Nullable String name, @Nullable String uname,@Nullable TimeLimit time);
     Integer eventSetField(Set<Integer> fcIds);
     CompetitionField FieldUserLinkEvent(int cid, FieldCheck field, int uid,@Nullable String content);
     Boolean FieldEquipmentLinkEvent(Set<CompetitionEquipment> competitionEquipments);
