@@ -15,7 +15,9 @@ import lombok.val;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -172,7 +174,7 @@ public class CompetitionController {
     }
 
     // 审核部分
-    @RequestMapping("/queryCheck")
+    @RequestMapping(value = "/queryCheck",method = RequestMethod.GET)
     public ResponseBean queryCheck(@RequestParam(value = "uid",required = false)String uid,
                                    @RequestParam(value = "status",required = false)String status){
         if(uid==null){
@@ -180,6 +182,14 @@ public class CompetitionController {
         }else{
             return new ResponseBean(200,"查询到审核数据",checkService.queryListByUid(status,Integer.parseInt(uid)));
         }
+    }
+
+    @RequestMapping(value = "/check",method = RequestMethod.GET)
+    public ResponseBean checkStatus(@RequestParam(value = "check_id") String id, @RequestParam(value = "status")String status,@RequestParam("reason") String reason){
+        val user = userService.currentUser();
+        val uid = user.getId();
+        val aBoolean = checkService.checkStatus(Integer.parseInt(id), uid, status, reason);
+        return new ResponseBean(200,"审核处理结果",aBoolean);
     }
 
 }
