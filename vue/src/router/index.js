@@ -37,6 +37,32 @@ const routes = [
         path: '/home/siteManagement',
         name: 'siteManagement',
         component:()=>import('../views/site/siteManagement'),
+        children:[
+          {
+            //场地安排路由
+            path:'/home/siteManagement/siteArrange',
+            name:'siteArrange',
+            component:()=>import('../views/site/siteArrange')
+          },
+          {
+            //场地类型管理路由
+            path:'/home/siteManagement/siteTypeManagement',
+            name:'siteArrange',
+            component:()=>import('../views/site/siteTypeManagement')
+          },
+          {
+            //预约审核路由
+            path:'/home/siteManagement/appointmentManagement',
+            name:'appointmentManagement',
+            component:()=>import('../views/site/appointmentManagement')
+          },
+          {
+            //通知管理路由
+            path:'/home/siteManagement/noticeManagement',
+            name:'noticeManagement',
+            component:()=>import('../views/site/noticeManagement')
+          },
+        ],
       },
       {
         //用户管理路由
