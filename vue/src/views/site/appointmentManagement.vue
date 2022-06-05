@@ -1,12 +1,12 @@
 <template>
-<div style="height:1000px">
-  用户管理
+<div>
+  预约审核
 </div>
 </template>
 
 <script>
 export default {
-  name: "userManagement"
+  name: "appointmentManagement"
 }
 </script>
 

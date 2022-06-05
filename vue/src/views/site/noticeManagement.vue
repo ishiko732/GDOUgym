@@ -1,12 +1,12 @@
 <template>
-<div style="height:1000px">
-  用户管理
+<div>
+  通知管理
 </div>
 </template>
 
 <script>
 export default {
-  name: "userManagement"
+  name: "noticeManagement"
 }
 </script>
 

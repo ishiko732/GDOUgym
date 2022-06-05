@@ -7,15 +7,17 @@ import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.mapper.CompetitionMapper;
 
 import edu.gdou.gym_java.service.UserService;
-import edu.gdou.gym_java.service.cm.CompetitionCancelService;
-import edu.gdou.gym_java.service.cm.CompetitionCheckService;
-import edu.gdou.gym_java.service.cm.CompetitionService;
+import edu.gdou.gym_java.service.cm.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,12 +33,16 @@ import java.util.Set;
 public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Competition> implements CompetitionService {
     private final CompetitionCheckService checkService;
     private final CompetitionCancelService cancelService;
+    private final CompetitionFieldService fieldService;
+    private final CompetitionEquipmentService equipmentService;
     private final UserService userService;
 
-    public CompetitionServiceImpl(CompetitionCheckService checkService, CompetitionCancelService cancelService, UserService userService) {
+    public CompetitionServiceImpl(CompetitionCheckService checkService, CompetitionCancelService cancelService, UserService userService, Environment environment, CompetitionFieldService fieldService, CompetitionEquipmentService equipmentService) {
         this.checkService = checkService;
         this.cancelService = cancelService;
         this.userService = userService;
+        this.fieldService = fieldService;
+        this.equipmentService = equipmentService;
     }
 
     /**
@@ -92,18 +98,74 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
         return getBaseMapper().queryCompetition(cid,name,uid,time);
     }
 
+    /**
+     * 绑定场地
+     * @param cid 赛事id
+     * @param fcIds 场地审核id
+     * @return 成功数
+     */
     @Override
-    public Integer eventSetField(Set<Integer> fcIds) {
-        return null;
+    public List<Integer> eventSetFields(Integer cid, List<Integer> fcIds) {
+        val integers = new ArrayList<Integer>();
+        for (Integer fcId : fcIds) {
+            val competitionField = new CompetitionField();
+            competitionField.setCid(cid);
+            competitionField.setFcId(fcId);
+            val insert = fieldService.getBaseMapper().insert(competitionField);
+            if(insert!=0){
+                integers.add(competitionField.getId());
+            }
+        }
+        return integers;
     }
 
+    /**
+     * 场地绑定裁判
+     * @param cfId 赛事场地id
+     * @param uid 用户id
+     * @param context 简介
+     * @return CompetitionField
+     */
     @Override
-    public CompetitionField FieldUserLinkEvent(int cid, FieldCheck field, int uid, String content) {
-        return null;
+    public CompetitionField fieldUserLinkEvent(int cfId, int uid, String context) {
+        val updateWrapper = new UpdateWrapper<CompetitionField>();
+        updateWrapper.eq("id",cfId).set("uid",uid).set("introduction",context);
+        fieldService.getBaseMapper().update(null,updateWrapper);
+        return fieldService.getById(cfId);
     }
 
+    /**
+     * 场地绑定器材
+     * @param cfid 赛事场地id
+     * @param competitionEquipments 器材-1对多
+     * @return Set<CompetitionEquipment> 正确插入的值
+     */
     @Override
-    public Boolean FieldEquipmentLinkEvent(Set<CompetitionEquipment> competitionEquipments) {
-        return null;
+    public List<CompetitionEquipment> fieldEquipmentLinkEvent(int cfid,List<CompetitionEquipment> competitionEquipments) {
+        for (CompetitionEquipment competitionEquipment : competitionEquipments) {
+            competitionEquipment.setId(null);
+            competitionEquipment.setCfid(cfid);
+            if (competitionEquipment.getNumber()>0){
+                val map = new HashMap<String, Object>();
+                map.put("cfid",cfid);
+                map.put("eid",competitionEquipment.getEid());
+                val select = equipmentService.getBaseMapper().selectByMap(map);
+                if (select!=null&&select.size()>0){
+                    val equipment = select.iterator().next();
+                    val updateWrapper = new UpdateWrapper<CompetitionEquipment>();
+                    val num = equipment.getNumber() + competitionEquipment.getNumber();
+                    updateWrapper.eq("id",equipment.getId()).set("number", num);
+                    if(equipmentService.getBaseMapper().update(null,updateWrapper)!=0){
+                        competitionEquipment.setId(equipment.getId());
+                        competitionEquipment.setNumber(num);
+                    }
+                }else{
+                    equipmentService.getBaseMapper().insert(competitionEquipment);
+                }
+            }
+        }
+        log.info(competitionEquipments.toString());
+        competitionEquipments.removeIf(competitionEquipment -> competitionEquipment.getId()==null);
+        return competitionEquipments;
     }
 }
