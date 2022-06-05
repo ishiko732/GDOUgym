@@ -129,6 +129,29 @@ public class CompetitionController {
         return new ResponseBean(200,competitionField.getUid().equals(cfid_int)?"绑定成功":"绑定失败",competitionField);
     }
 
+    @RequestMapping(value = "/updateUserEvent",method = RequestMethod.POST)
+    public ResponseBean updateUserEvent(@RequestParam(value = "cfId")String cfId,
+                                           @RequestParam(value = "uid")String uid,
+                                           @RequestParam(value = "context") String context) {
+        val cfid_int=Integer.parseInt(cfId);
+        val isBoolean = competitionService.updateUserEvent(cfid_int, Integer.parseInt(uid), context);
+        return new ResponseBean(200,isBoolean?"绑定成功":"绑定失败",isBoolean);
+    }
+
+    /**
+     * 查询裁判公告
+     * @param cid 赛事id
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "/queryRefereeAnnouncements",method = RequestMethod.GET)
+    public ResponseBean queryRefereeAnnouncements(@RequestParam(value = "cid",required = false)String cid) {
+        if(cid==null){
+            return new ResponseBean(200,"查询裁判公告信息", competitionService.queryRefereeAnnouncements(null));
+        }else{
+            return new ResponseBean(200,"查询裁判公告信息", competitionService.queryRefereeAnnouncements(Integer.parseInt(cid)));
+        }
+    }
+
     /**
      * 场地绑定器材
      * @param map RequestBody

@@ -1,6 +1,7 @@
 package edu.gdou.gym_java.service.serviceImpl.cm;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import edu.gdou.gym_java.entity.VO.RefereeAnnouncement;
 import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.enums.CheckStatus;
 import edu.gdou.gym_java.entity.model.*;
@@ -132,6 +133,17 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
         updateWrapper.eq("id",cfId).set("uid",uid).set("introduction",context);
         fieldService.getBaseMapper().update(null,updateWrapper);
         return fieldService.getById(cfId);
+    }
+
+    @Override
+    public boolean updateUserEvent(int cfId, int uid, String context) {
+        val competitionField = fieldUserLinkEvent(cfId, uid, context);
+        return competitionField.getIntroduction().equals(context);
+    }
+
+    @Override
+    public List<RefereeAnnouncement> queryRefereeAnnouncements(Integer cid) {
+        return getBaseMapper().queryRefereeAnnouncements(cid);
     }
 
     /**

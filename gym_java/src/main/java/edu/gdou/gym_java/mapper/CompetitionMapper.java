@@ -1,13 +1,16 @@
 package edu.gdou.gym_java.mapper;
 
+import edu.gdou.gym_java.entity.VO.RefereeAnnouncement;
 import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.model.Announcement;
 import edu.gdou.gym_java.entity.model.Competition;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import edu.gdou.gym_java.entity.model.CompetitionField;
 import org.apache.ibatis.annotations.*;
 import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -56,5 +59,19 @@ public interface CompetitionMapper extends BaseMapper<Competition> {
             @Result(property = "isCancel",column = "isCancel"),
     })
     Set<Competition> queryCompetition(@Param("cid") @Nullable Integer cid, @Param("name")@Nullable String name, @Param("uid") Integer uid,@Nullable TimeLimit time);
+
+
+    @Select({
+            "<script>",
+            "select *",
+            "from referee_announcements",
+            "<where>",
+            "<if test='cid !=null'>",
+            "cid=#{cid}",
+            "</if>",
+            "</where>",
+            "</script>"
+    })
+    List<RefereeAnnouncement> queryRefereeAnnouncements(@Param("cid") Integer cid);
 
 }

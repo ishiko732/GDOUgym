@@ -81,5 +81,16 @@ left join Competition_check Ccheck on Ccheck.cid=Competition.id;
 # where (competition_time between '2022-06-4 14:00:00' and '2022-06-4 15:05:00') and (timestampadd(minute ,60,competition_time) between '2022-06-4 14:00:00' and '2022-06-5 15:05:00');
 
 # 获取赛事时间段
+create view competition_time as
 select *,timestampadd(minute ,60,competition_time) as competition_end_time
 from Competition;
+
+
+# 根据cid查找裁判和公告
+alter view referee_announcements as
+select cid,Competition_field.id as cfId,fcId,Competition_field.uid,truename as judgment,Competition.name as competition_name,Competition_field.introduction,competition_time as starttime,timestampadd(minute ,60,competition_time) as endtime
+from Competition_field
+left join Competition on Competition_field.cid = Competition.id
+left join UserInfo UI on Competition_field.uid = UI.uid
+where Competition_field.uid is not null and timestampadd(minute ,60,competition_time) >= now()
+order by cid,fcId
