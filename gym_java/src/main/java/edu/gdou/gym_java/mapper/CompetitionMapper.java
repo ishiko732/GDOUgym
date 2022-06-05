@@ -5,6 +5,7 @@ import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.model.Announcement;
 import edu.gdou.gym_java.entity.model.Competition;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import edu.gdou.gym_java.entity.model.CompetitionEquipment;
 import edu.gdou.gym_java.entity.model.CompetitionField;
 import org.apache.ibatis.annotations.*;
 import org.springframework.lang.Nullable;
@@ -57,6 +58,8 @@ public interface CompetitionMapper extends BaseMapper<Competition> {
             @Result(property = "id",column = "id"),
             @Result(property = "isCheck",column = "isCheck"),
             @Result(property = "isCancel",column = "isCancel"),
+            @Result(property = "competitionFields",javaType = Set.class,column = "id",
+            many=@Many(select = "edu.gdou.gym_java.mapper.CompetitionMapper.queryCompetitionFieldByCid"))
     })
     Set<Competition> queryCompetition(@Param("cid") @Nullable Integer cid, @Param("name")@Nullable String name, @Param("uid") Integer uid,@Nullable TimeLimit time);
 
@@ -73,5 +76,29 @@ public interface CompetitionMapper extends BaseMapper<Competition> {
             "</script>"
     })
     List<RefereeAnnouncement> queryRefereeAnnouncements(@Param("cid") Integer cid);
+
+    @Select({
+            "<script>",
+            "select *",
+            "from competition_field_time",
+            "<where>",
+            "<if test='cid !=null'>",
+            "cid=#{cid}",
+            "</if>",
+            "</where>",
+            "</script>"
+    })
+    @Results({
+            @Result(property = "id",column = "id"),
+            @Result(property = "startTime",column = "startTime"),
+            @Result(property = "endTime",column = "endTime"),
+            @Result(property = "time",column = "time"),
+            @Result(property = "competitionEquipments",javaType = Set.class,column = "id",
+                    many=@Many(select = "edu.gdou.gym_java.mapper.CompetitionMapper.queryCompetitionEquipmentByCfid"))
+    })
+    Set<CompetitionField> queryCompetitionFieldByCid(@Param("cid") Integer cid);
+
+    @Select("select * from Competition_equipment where cfid=#{cfId}")
+    Set<CompetitionEquipment> queryCompetitionEquipmentByCfid(@Param("cfId") Integer cfId);
 
 }

@@ -93,4 +93,16 @@ from Competition_field
 left join Competition on Competition_field.cid = Competition.id
 left join UserInfo UI on Competition_field.uid = UI.uid
 where Competition_field.uid is not null and timestampadd(minute ,60,competition_time) >= now()
-order by cid,fcId
+order by cid,fcId;
+
+# 根据cid查找对应的场地信息
+create view competition_field_time as
+select Competition_field.*,fid,TIMESTAMP(Fd.date,Ta.start_time) as startTime,TIMESTAMP(Fd.date,Ta.end_time) as endTime
+from Competition_field
+left join Order_item Oi on Competition_field.fcId = Oi.fcid
+left join Time_arrange Ta on Oi.time_id = Ta.time_id
+left join Field_date Fd on Ta.fdid = Fd.id;
+
+# 根据赛事地点id查询器材
+select Competition_equipment.*
+from Competition_equipment;
