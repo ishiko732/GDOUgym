@@ -62,13 +62,7 @@ public class FixEquipmentServiceImpl  extends ServiceImpl<FixEquipmentMapper, Fi
 
     @Override
     public Integer queryFixEquipmentCountByFid(Integer fid) {
-        int count = 0;
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("fid",fid);
-        List<FixEquipment> fixEquipments = getBaseMapper().selectByMap(map);
-        for (FixEquipment fixEquipment : fixEquipments) {
-            count+=fixEquipment.getNumber();
-        }
-        return count;
+        FixEquipment fixEquipment = getBaseMapper().selectById(fid);
+        return fixEquipment.getNumber();
     }
 }

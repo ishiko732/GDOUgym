@@ -41,15 +41,9 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
     public Integer availableEquipmentCount(Integer eid) {
         Integer fixCount = fixEquipmentService.queryFixEquipmentCountByFid(eid);
         Integer compositionCount = compositionEquipmentService.queryCompositionEquipmentCountByEid(eid);
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("id",eid);
 
-        List<Equipment> equipments = getBaseMapper().selectByMap(map);
-        int sum = 0;
-        for (Equipment equipment : equipments) {
-            sum+=equipment.getNumber();
-        }
-        return sum-fixCount-compositionCount;
+        Equipment equipment = getBaseMapper().selectById(eid);
+        return equipment.getNumber()-fixCount-compositionCount;
     }
 
     @Override
