@@ -5,11 +5,12 @@ import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
-import io.swagger.models.auth.In;
-import org.springframework.transaction.annotation.Transactional;
+import edu.gdou.gym_java.utils.TimeUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.*;
+
 
 /**
  * <p>
@@ -98,7 +99,7 @@ public class FieldController {
     @PostMapping("/listTimeByDate")
     public ResponseBean listTimeByDate(@RequestParam("tid") String tid ,
                                      @RequestParam(value = "fid",defaultValue = "0") String fid_par,
-                                       @RequestParam("date") String date_par){
+                                       @RequestParam(value = "date",required = false) String date_par){
         Map<String,Object> map = new HashMap<>();
         FieldType fieldType = fieldService.queryTypeById(Integer.parseInt(tid));
         List<Field> fieldList = fieldService.queryFieldByType(Integer.parseInt(tid));
@@ -109,22 +110,21 @@ public class FieldController {
             fid = fieldList.get(0).getFid();
         }
 
-        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+        Date date = new Date(System.currentTimeMillis());
         if (date_par != null) {
-            date = java.sql.Date.valueOf(date_par);
+            date = Date.valueOf(date_par);
         }
 
         //获取能获取的有效日期
-        Date current = new Date(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(current);
-        List<java.sql.Date> dateValid = new ArrayList<>();
+        calendar.setTime(TimeUtils.nowToTimeStamp());
+        List<Date> dateValid = new ArrayList<>();
         //可选日期
         calendar.add(Calendar.DATE, 0);
-        dateValid.add(new java.sql.Date(calendar.getTimeInMillis()));
+        dateValid.add(new Date(calendar.getTimeInMillis()));
         for(int i=0;i<6;i++){
             calendar.add(Calendar.DATE, 1);
-            dateValid.add(new java.sql.Date(calendar.getTimeInMillis()));
+            dateValid.add(new Date(calendar.getTimeInMillis()));
         }
         //获取所有场的安排表
         List<FieldDate> fieldDateList = fieldService.search(fid,date);
@@ -307,16 +307,15 @@ public class FieldController {
     public ResponseBean queryDate(@RequestParam(value = "tid",required = false)String tid,@RequestParam(value="fid",required = false)String fid){
         Map<String,Object> map = new HashMap<>();
         List<FieldType> fieldTypeList = fieldService.queryType();
-        Date current = new Date(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(current);
-        List<java.sql.Date> dateValid = new ArrayList<>();
+        calendar.setTime(TimeUtils.nowToTimeStamp());
+        List<Date> dateValid = new ArrayList<>();
         //可选日期
         calendar.add(Calendar.DATE, 0);
-        dateValid.add(new java.sql.Date(calendar.getTimeInMillis()));
+        dateValid.add(new Date(calendar.getTimeInMillis()));
         for(int i=0;i<6;i++){
             calendar.add(Calendar.DATE, 1);
-            dateValid.add(new java.sql.Date(calendar.getTimeInMillis()));
+            dateValid.add(new Date(calendar.getTimeInMillis()));
         }
 
         FieldType fieldType=null;     //场地类型：需要填充场地
