@@ -55,5 +55,8 @@ public class CompetitionCheck implements Serializable {
     @TableField("check_time")
     private Timestamp checkTime;
 
+    @TableField(exist = false)
+    private Competition competition;
+
 
 }
