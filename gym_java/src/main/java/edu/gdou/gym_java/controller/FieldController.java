@@ -1,6 +1,7 @@
 package edu.gdou.gym_java.controller;
 
 
+import edu.gdou.gym_java.entity.VO.FieldCheckVo;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.enums.CheckStatus;
 import edu.gdou.gym_java.entity.enums.RoleEnums;
@@ -124,9 +125,9 @@ public class FieldController {
         calendar.setTime(TimeUtils.nowToTimeStamp());
         List<Date> dateValid = new ArrayList<>();
         //可选日期
-        calendar.add(Calendar.DATE, 0);
-        dateValid.add(new Date(calendar.getTimeInMillis()));
-        for(int i=0;i<6;i++){
+//        calendar.add(Calendar.DATE, 0);
+//        dateValid.add(new Date(calendar.getTimeInMillis()));
+        for(int i=0;i<7;i++){
             calendar.add(Calendar.DATE, 1);
             dateValid.add(new Date(calendar.getTimeInMillis()));
         }
@@ -192,7 +193,7 @@ public class FieldController {
         }
         }
         //更新预约审核状态
-        Boolean updateCheck = fieldService.updateCheck(fieldCheck);
+        Boolean updateCheck = fieldService.updateCheckStatusById(fieldCheck);
         //根据审核id获取到订单，再更新订单状态
         List<OrderItem> orderItemList = fieldService.queryOrderItemByFcid(Integer.valueOf(id));
 
@@ -209,15 +210,15 @@ public class FieldController {
     //管理员查询审核列表
     @GetMapping("/queryCheck")
     public ResponseBean queryCheck(){
-        List<FieldCheck> fieldCheckList = fieldService.queryCheck();
-        return new ResponseBean(200,fieldCheckList.size()>0?"查询成功":"查询结果为空",fieldCheckList);
+        List<FieldCheckVo> fieldCheckVos = fieldService.queryCheck();
+        return new ResponseBean(200,fieldCheckVos.size()>0?"查询成功":"查询结果为空",fieldCheckVos);
     }
 
     //用户查询自己的审核列表
      @PostMapping("/queryCheckByUid")
      public ResponseBean queryCheckByUid(@RequestParam(value = "uid",defaultValue = "0",required = true)String uid){
-         List<FieldCheck> fieldCheckList = fieldService.queryCheckByUid(Integer.valueOf(uid));
-         return new ResponseBean(200,fieldCheckList.size()>0?"查询成功":"查询结果为空",fieldCheckList);
+         List<FieldCheckVo> fieldCheckVos = fieldService.queryCheckByUid(Integer.valueOf(uid));
+         return new ResponseBean(200,fieldCheckVos.size()>0?"查询成功":"查询结果为空",fieldCheckVos);
        }
 
     //用户根据id和uid修改预约(修改一卡通？)
@@ -230,7 +231,7 @@ public class FieldController {
         if (fieldCheck.getStatus().equals("审核中") &&fieldCheck!=null && user!=null){
             fieldCheck.setCard(card);
                 fieldCheck.setUser(user);
-                fieldService.updateCheckById(fieldCheck);
+                fieldService.updateCheckCardById(fieldCheck);
                 fieldCheck.setUser(null);
                     return new ResponseBean(200, "修改预约成功！", fieldCheck);
 
@@ -310,8 +311,24 @@ public class FieldController {
             }
         }
         return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败", com_name);
-
     }
+
+    @GetMapping("/loadingDate")
+    public ResponseBean loadingDate(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(TimeUtils.nowToTimeStamp());
+        List<Date> dateValid = new ArrayList<>();
+        //可选日期
+//        calendar.add(Calendar.DATE, 0);
+//        dateValid.add(new Date(calendar.getTimeInMillis()));
+        for(int i=0;i<7;i++){
+            calendar.add(Calendar.DATE, 1);
+            dateValid.add(new Date(calendar.getTimeInMillis()));
+        }
+
+        return new ResponseBean(200,dateValid.size()==7?"查询成功":"查询结果为空",dateValid);
+    }
+
 
     //!!!暂时别用
     //加载日期安排，无参数默认第一个类型第一个场地；带参数查询特定类型下的某个场地安排（tid场地类型id,fid场地id）
@@ -323,9 +340,9 @@ public class FieldController {
         calendar.setTime(TimeUtils.nowToTimeStamp());
         List<Date> dateValid = new ArrayList<>();
         //可选日期
-        calendar.add(Calendar.DATE, 0);
-        dateValid.add(new Date(calendar.getTimeInMillis()));
-        for(int i=0;i<6;i++){
+//        calendar.add(Calendar.DATE, 0);
+//        dateValid.add(new Date(calendar.getTimeInMillis()));
+        for(int i=0;i<7;i++){
             calendar.add(Calendar.DATE, 1);
             dateValid.add(new Date(calendar.getTimeInMillis()));
         }
