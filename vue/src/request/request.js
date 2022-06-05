@@ -2,12 +2,17 @@
 import axios from "axios";
 
 const instance=axios.create({
-    baseURL:'127.0.0.1:8080'
+    baseURL:'http://1.15.187.187:8080'
 })
 
 //请求拦截器
 instance.interceptors.request.use(config=>{
-    config.headers.Authorization=window.localStorage.getItem("token")
+    if(JSON.stringify(localStorage)=="{}"){
+
+    }
+    else{
+        config.headers.Authorization=window.localStorage.getItem("token")
+    }
     return config
 })
 
