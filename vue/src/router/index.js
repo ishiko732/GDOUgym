@@ -99,4 +99,20 @@ VueRouter.prototype.push = function push (to) {
   return VueRouterPush.call(this, to).catch(err => err)
 }
 
+router.beforeEach((to,from,next)=>{
+  let token = localStorage.getItem("token");
+  if(to.path == "/login"){
+    next()
+  }else{
+    if(token){
+      next()
+    }else{
+      Vue.prototype.$message.error("未登录，无法访问，请先登录")
+      setTimeout(()=>{
+        next("/login")
+      },500)
+    }
+  }
+})
+
 export default router
