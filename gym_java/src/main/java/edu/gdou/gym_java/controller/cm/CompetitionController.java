@@ -3,11 +3,13 @@ package edu.gdou.gym_java.controller.cm;
 
 import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
+import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.service.cm.CompetitionCancelService;
 import edu.gdou.gym_java.service.cm.CompetitionService;
 import edu.gdou.gym_java.utils.TimeUtils;
 import lombok.val;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,12 +32,19 @@ public class CompetitionController {
     private final UserService userService;
     private final CompetitionService competitionService;
     private final CompetitionCancelService cancelService;
+    private final FieldService fieldService;
+    private final Environment environment;
 
-    public CompetitionController(UserService userService, CompetitionService competitionService,CompetitionCancelService cancelService) {
+
+    public CompetitionController(UserService userService, CompetitionService competitionService, CompetitionCancelService cancelService, FieldService fieldService, Environment environment) {
         this.userService = userService;
         this.competitionService = competitionService;
         this.cancelService = cancelService;
+        this.fieldService = fieldService;
+        this.environment = environment;
     }
+
+
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseBean createEvent(@RequestParam(value = "uid", required = false) String uid,
@@ -88,7 +97,8 @@ public class CompetitionController {
         }
         val competitions = competitionService.queryEvents(cid, name, uname, timeLimit);
         return new ResponseBean(200,competitions!=null?"获取到数据":"未获取到数据",competitions);
-
     }
+
+
 
 }

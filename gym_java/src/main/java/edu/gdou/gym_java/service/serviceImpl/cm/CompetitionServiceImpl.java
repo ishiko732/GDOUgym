@@ -9,13 +9,17 @@ import edu.gdou.gym_java.mapper.CompetitionMapper;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.service.cm.CompetitionCancelService;
 import edu.gdou.gym_java.service.cm.CompetitionCheckService;
+import edu.gdou.gym_java.service.cm.CompetitionFieldService;
 import edu.gdou.gym_java.service.cm.CompetitionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,12 +35,14 @@ import java.util.Set;
 public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Competition> implements CompetitionService {
     private final CompetitionCheckService checkService;
     private final CompetitionCancelService cancelService;
+    private final CompetitionFieldService fieldService;
     private final UserService userService;
 
-    public CompetitionServiceImpl(CompetitionCheckService checkService, CompetitionCancelService cancelService, UserService userService) {
+    public CompetitionServiceImpl(CompetitionCheckService checkService, CompetitionCancelService cancelService, UserService userService, Environment environment, CompetitionFieldService fieldService) {
         this.checkService = checkService;
         this.cancelService = cancelService;
         this.userService = userService;
+        this.fieldService = fieldService;
     }
 
     /**
@@ -92,14 +98,33 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
         return getBaseMapper().queryCompetition(cid,name,uid,time);
     }
 
+    /**
+     * 绑定场地
+     * @param cid 赛事id
+     * @param fcIds 场地审核id
+     * @return 成功数
+     */
     @Override
-    public Integer eventSetField(Set<Integer> fcIds) {
-        return null;
+    public List<Integer> eventSetFields(Integer cid, List<Integer> fcIds) {
+        val integers = new ArrayList<Integer>();
+        for (Integer fcId : fcIds) {
+            val competitionField = new CompetitionField();
+            competitionField.setCid(cid);
+            competitionField.setFcId(fcId);
+            val insert = fieldService.getBaseMapper().insert(competitionField);
+            if(insert!=0){
+                integers.add(competitionField.getId());
+            }
+        }
+        return integers;
     }
 
     @Override
-    public CompetitionField FieldUserLinkEvent(int cid, FieldCheck field, int uid, String content) {
-        return null;
+    public CompetitionField FieldUserLinkEvent(int cfId, int uid, String context) {
+        val updateWrapper = new UpdateWrapper<CompetitionField>();
+        updateWrapper.eq("id",cfId).set("uid",uid).set("introduction",context);
+        fieldService.getBaseMapper().update(null,updateWrapper);
+        return fieldService.getById(cfId);
     }
 
     @Override
