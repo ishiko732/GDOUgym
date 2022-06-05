@@ -1,9 +1,11 @@
 package edu.gdou.gym_java.service.serviceImpl;
 
+import edu.gdou.gym_java.entity.VO.FieldCheckVo;
 import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.mapper.FieldMapper;
 import edu.gdou.gym_java.service.FieldService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.gdou.gym_java.utils.TimeUtils;
 import org.springframework.stereotype.Service;
 import java.sql.*;
 import java.util.ArrayList;
@@ -179,18 +181,73 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
 
 
     @Override
-    public List<FieldCheck> queryCheck() {
-        return getBaseMapper().queryCheck();
+    public List<FieldCheckVo> queryCheck() {
+        List<FieldCheck> fieldCheckList = getBaseMapper().queryCheck();
+        List<FieldCheckVo> fieldCheckVos = new ArrayList<>();
+        for (int i=0;i<fieldCheckList.size();i++){
+            FieldCheckVo fieldCheckVo = new FieldCheckVo();
+            fieldCheckVo.setCard(fieldCheckList.get(i).getCard());
+            fieldCheckVo.setId(fieldCheckList.get(i).getId());
+            fieldCheckVo.setMoney(fieldCheckList.get(i).getMoney());
+            fieldCheckVo.setStatus(fieldCheckList.get(i).getStatus());
+            fieldCheckVo.setTime(TimeUtils.TimeStampToString(fieldCheckList.get(i).getTime()));
+            fieldCheckVo.setName(fieldCheckList.get(i).getName());
+            fieldCheckVo.setUserName(fieldCheckList.get(i).getUser().getName());
+            List<OrderItem> orderItemList  = getBaseMapper().
+                    queryOrderItemByFcid(fieldCheckList.get(i).getId());
+            List<TimeArrange> timeArrangeList = new ArrayList<>();
+
+            for (int j=0;j<orderItemList.size();j++){
+                TimeArrange timeArrange = getBaseMapper().queryTimeById(orderItemList.get(j).getTimeId());
+                timeArrangeList.add(timeArrange);
+            }
+            fieldCheckVo.setTimeArrangeList(timeArrangeList);
+            FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(0).getFdid());
+            fieldCheckVo.setDate(fieldDate.getDate().toString());
+            fieldCheckVos.add(fieldCheckVo);
+        }
+
+        return fieldCheckVos;
     }
 
     @Override
-    public List<FieldCheck> queryCheckByUid(Integer uid) {
-        return getBaseMapper().queryCheckByUid(uid);
+    public List<FieldCheckVo> queryCheckByUid(Integer uid) {
+
+        List<FieldCheck> fieldCheckList = getBaseMapper().queryCheckByUid(uid);
+        List<FieldCheckVo> fieldCheckVos = new ArrayList<>();
+        User user = getBaseMapper().queryUserById(uid);
+        for (int i=0;i<fieldCheckList.size();i++){
+            FieldCheckVo fieldCheckVo = new FieldCheckVo();
+            fieldCheckVo.setCard(fieldCheckList.get(i).getCard());
+            fieldCheckVo.setId(fieldCheckList.get(i).getId());
+            fieldCheckVo.setMoney(fieldCheckList.get(i).getMoney());
+            fieldCheckVo.setStatus(fieldCheckList.get(i).getStatus());
+            fieldCheckVo.setTime(TimeUtils.TimeStampToString(fieldCheckList.get(i).getTime()));
+            fieldCheckVo.setName(fieldCheckList.get(i).getName());
+            fieldCheckVo.setUserName(user.getName());
+            List<OrderItem> orderItemList  = getBaseMapper().
+                    queryOrderItemByFcid(fieldCheckList.get(i).getId());
+            List<TimeArrange> timeArrangeList = new ArrayList<>();
+
+            for (int j=0;j<orderItemList.size();j++){
+                TimeArrange timeArrange = getBaseMapper().queryTimeById(orderItemList.get(j).getTimeId());
+                timeArrangeList.add(timeArrange);
+            }
+            fieldCheckVo.setTimeArrangeList(timeArrangeList);
+            FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(0).getFdid());
+            fieldCheckVo.setDate(fieldDate.getDate().toString());
+            fieldCheckVos.add(fieldCheckVo);
+        }
+        return fieldCheckVos;
     }
 
     @Override
-    public Boolean updateCheckById(FieldCheck fieldCheck) {
-        return getBaseMapper().updateCheckById(fieldCheck);
+    public Boolean updateCheckCardById(FieldCheck fieldCheck) {
+        return getBaseMapper().updateCheckCardById(fieldCheck);
+    }
+    @Override
+    public Boolean updateCheckStatusById(FieldCheck fieldCheck) {
+        return getBaseMapper().updateCheckStatusById(fieldCheck);
     }
 
 
