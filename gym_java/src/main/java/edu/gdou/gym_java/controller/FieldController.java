@@ -125,9 +125,9 @@ public class FieldController {
         calendar.setTime(TimeUtils.nowToTimeStamp());
         List<Date> dateValid = new ArrayList<>();
         //可选日期
-        calendar.add(Calendar.DATE, 0);
-        dateValid.add(new Date(calendar.getTimeInMillis()));
-        for(int i=0;i<6;i++){
+//        calendar.add(Calendar.DATE, 0);
+//        dateValid.add(new Date(calendar.getTimeInMillis()));
+        for(int i=0;i<7;i++){
             calendar.add(Calendar.DATE, 1);
             dateValid.add(new Date(calendar.getTimeInMillis()));
         }
@@ -314,6 +314,23 @@ public class FieldController {
 
     }
 
+    @GetMapping("/loadingDate")
+    public ResponseBean loadingDate(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(TimeUtils.nowToTimeStamp());
+        List<Date> dateValid = new ArrayList<>();
+        //可选日期
+//        calendar.add(Calendar.DATE, 0);
+//        dateValid.add(new Date(calendar.getTimeInMillis()));
+        for(int i=0;i<7;i++){
+            calendar.add(Calendar.DATE, 1);
+            dateValid.add(new Date(calendar.getTimeInMillis()));
+        }
+
+        return new ResponseBean(200,dateValid.size()==7?"查询成功":"查询结果为空",dateValid);
+    }
+
+
     //!!!暂时别用
     //加载日期安排，无参数默认第一个类型第一个场地；带参数查询特定类型下的某个场地安排（tid场地类型id,fid场地id）
     @GetMapping("/queryDate")
@@ -324,9 +341,9 @@ public class FieldController {
         calendar.setTime(TimeUtils.nowToTimeStamp());
         List<Date> dateValid = new ArrayList<>();
         //可选日期
-        calendar.add(Calendar.DATE, 0);
-        dateValid.add(new Date(calendar.getTimeInMillis()));
-        for(int i=0;i<6;i++){
+//        calendar.add(Calendar.DATE, 0);
+//        dateValid.add(new Date(calendar.getTimeInMillis()));
+        for(int i=0;i<7;i++){
             calendar.add(Calendar.DATE, 1);
             dateValid.add(new Date(calendar.getTimeInMillis()));
         }
