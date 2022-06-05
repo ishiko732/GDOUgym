@@ -46,6 +46,12 @@ export default {
       this.isLogin=true
       if(this.isLogin){
         this.$router.push({path: '/home'})
+        // this.$request.post('/user/login?password=gdougdou&username=superAdmin').then(res=>{
+        //   localStorage.setItem("token",res.data.data)
+        // })
+        // this.$request.post('/user/queryUserInfoById?ID=20191170122').then(res=>{
+        //   console.log(res)
+        // })
       }
     },
 

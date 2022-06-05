@@ -2,8 +2,10 @@ package edu.gdou.gym_java.controller;
 
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.Equipment;
+import edu.gdou.gym_java.entity.model.FixEquipment;
 import edu.gdou.gym_java.service.EquipmentRentStandardService;
 import edu.gdou.gym_java.service.EquipmentService;
+import edu.gdou.gym_java.service.FixEquipmentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +24,9 @@ import java.util.List;
 public class EquipmentController {
     private final EquipmentService equipmentService;
     private final EquipmentRentStandardService equipmentRentStandardService;
-    public EquipmentController(EquipmentService equipmentService,EquipmentRentStandardService equipmentRentStandardService){
+    private final FixEquipmentService fixEquipmentService;
+    public EquipmentController(EquipmentService equipmentService,EquipmentRentStandardService equipmentRentStandardService,FixEquipmentService fixEquipmentService){
+        this.fixEquipmentService = fixEquipmentService;
         this.equipmentService = equipmentService;
         this.equipmentRentStandardService = equipmentRentStandardService;
     }
@@ -53,16 +57,52 @@ public class EquipmentController {
     }
 
     @GetMapping("/queryEquipmentRentStandard")
-    public ResponseBean responseBean(){
+    public ResponseBean queryEquipmentRentStandard(){
         return new ResponseBean(200,"查询成功",equipmentRentStandardService.queryEquipmentRentStandard());
     }
 
     @GetMapping("/queryEquipmentRentStandardByEid")
-    public ResponseBean responseBean(@RequestParam("eid")String eid){
+    public ResponseBean queryEquipmentRentStandardByEid(@RequestParam("eid")String eid){
         if (StringUtils.isNumeric(eid)){
             return new ResponseBean(200,"查询成功",equipmentRentStandardService.queryEquipmentRentStandardByEid(Integer.parseInt(eid)));
         }else{
             return new ResponseBean(200,"输入的eid为非数字",null);
+        }
+    }
+
+    @PostMapping("/applyFixEquipment")
+    public ResponseBean applyFixEquipment(@RequestParam("eid")String eid,@RequestParam("number")String number){
+        if (StringUtils.isNumeric(eid)&&StringUtils.isNumeric(number)){
+            Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
+            if (equipment==null){
+                return new ResponseBean(200,"需要维修的器材不存在",null);
+            }else{
+                if (Integer.parseInt(number)<equipmentService.availableEquipmentCount(Integer.parseInt(eid))){
+                    FixEquipment fixEquipment = new FixEquipment(Integer.parseInt(eid), equipment.getName(), equipment.getTypes(), Integer.parseInt(number));
+                    Boolean flag = fixEquipmentService.applyFixEquipment(fixEquipment);
+                    return new ResponseBean(200,flag?"器材维修申报成功":"器材申报失败",null);
+                }else{
+                    return new ResponseBean(200,"器材维修申报失败，器材申报数量大于器材可使用数量",null);
+                }
+            }
+        }else{
+            return new ResponseBean(200,"输入的eid或number为非数字",null);
+        }
+    }
+
+    @PostMapping("/confirmFixEquipment")
+    public ResponseBean confirmFixEquipment(@RequestParam("eid")String eid,@RequestParam("number")String number){
+        if (StringUtils.isNumeric(eid)&&StringUtils.isNumeric(number)){
+            Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
+            if (equipment!=null){
+                FixEquipment fixEquipment = new FixEquipment(Integer.parseInt(eid), equipment.getName(), equipment.getTypes(), Integer.parseInt(number));
+                Boolean flag = fixEquipmentService.confirmFixEquipment(fixEquipment);
+                return new ResponseBean(200,flag?"器材维修成功确认":"器材维修成功失败",null);
+            }else{
+                return new ResponseBean(200,"需要维修的器材不存在",null);
+            }
+        }else{
+            return new ResponseBean(200,"输入的eid或number为非数字",null);
         }
     }
 }

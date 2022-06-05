@@ -78,16 +78,22 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+/deep/*{
+  overflow: hidden;
+}
 .home_container {
   .el-menu.el-menu--horizontal {
     border-bottom: none;
   }
   .home_nav {
-    width: 248px;
+    width: 247px;
     flex: 0 0 auto;
     background-color: rgba(84, 92, 100);
     .el-menu {
+      border: none;
+      border-top:1px solid rgba(84, 92, 100);
       .el-menu-item {
+        width: 247px;
         overflow: hidden;
       }
     }

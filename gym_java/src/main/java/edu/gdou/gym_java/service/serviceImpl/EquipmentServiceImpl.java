@@ -2,16 +2,14 @@ package edu.gdou.gym_java.service.serviceImpl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.gdou.gym_java.entity.model.Equipment;
-import edu.gdou.gym_java.entity.model.Role;
 import edu.gdou.gym_java.mapper.EquipmentMapper;
-import edu.gdou.gym_java.mapper.RoleMapper;
-import edu.gdou.gym_java.service.EquipmentService;
-import edu.gdou.gym_java.service.RoleService;
-import lombok.val;
+import edu.gdou.gym_java.service.*;
+import edu.gdou.gym_java.service.cm.CompetitionEquipmentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <p>
@@ -24,7 +22,10 @@ import java.util.Set;
 
 @Service
 public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment> implements EquipmentService {
-
+    @Autowired
+    private FixEquipmentService fixEquipmentService;
+    @Autowired
+    private CompetitionEquipmentService compositionEquipmentService;
     @Override
     public List<Equipment> queryEquipment(String name, String types, Integer number) {
         return getBaseMapper().queryEquipment(name,types,number);
@@ -34,5 +35,25 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
     public Boolean addEquipment(Equipment equipment) {
         int insert = getBaseMapper().insert(equipment);
         return insert==1;
+    }
+
+    @Override
+    public Integer availableEquipmentCount(Integer eid) {
+        Integer fixCount = fixEquipmentService.queryFixEquipmentCountByFid(eid);
+        Integer compositionCount = compositionEquipmentService.queryCompositionEquipmentCountByEid(eid);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id",eid);
+
+        List<Equipment> equipments = getBaseMapper().selectByMap(map);
+        int sum = 0;
+        for (Equipment equipment : equipments) {
+            sum+=equipment.getNumber();
+        }
+        return sum-fixCount-compositionCount;
+    }
+
+    @Override
+    public Equipment queryEquipmentByEid(Integer eid) {
+        return getBaseMapper().selectById(eid);
     }
 }

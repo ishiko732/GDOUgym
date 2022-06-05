@@ -44,8 +44,14 @@ public interface FieldService extends IService<Field> {
 
     Boolean updateCheck(FieldCheck fieldCheck);
 
-    OrderItem queryOrderItemByFcid(Integer id);
+    List<OrderItem> queryOrderItemByFcid(Integer id);
 
-    Boolean updateOrder(OrderItem orderItem);
+    List<FieldCheck> queryCheck( );
+
+    List<FieldCheck> queryCheckByUid(Integer uid);
+
+    Boolean updateCheckById(FieldCheck fieldCheck);
+
+
 
 }
