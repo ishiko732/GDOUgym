@@ -66,4 +66,8 @@ public class CompetitionField implements Serializable {
     @TableField(exist = false)
     private Timestamp endTime;
 
+    @ApiModelProperty("赛事场地更新时间")
+    @TableField(exist = false)
+    private Timestamp time;
+
 }

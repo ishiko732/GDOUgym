@@ -22,8 +22,8 @@ public interface CompetitionService extends IService<Competition> {
     Boolean cancelEvent(int cid,int uid,String context);
     Set<Competition> queryEvents(@Nullable Integer cid, @Nullable String name, @Nullable String uname,@Nullable TimeLimit time);
     List<Integer> eventSetFields(Integer cid,List<Integer> fcIds);
-    CompetitionField FieldUserLinkEvent(int cfId, int uid,String context);
-    Boolean FieldEquipmentLinkEvent(Set<CompetitionEquipment> competitionEquipments);
+    CompetitionField fieldUserLinkEvent(int cfId, int uid,String context);
+    List<CompetitionEquipment> fieldEquipmentLinkEvent(int cfid,List<CompetitionEquipment> competitionEquipments);
 
     // TODO 裁判简介公告 收入支出查询
 
