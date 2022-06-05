@@ -8,8 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>
@@ -19,8 +18,9 @@ import lombok.Setter;
  * @author ylhy
  * @since 2022-05-31
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("order_item")
 @ApiModel(value = "OrderItem对象", description = "")
 public class OrderItem implements Serializable {
