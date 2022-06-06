@@ -87,6 +87,7 @@ export default {
     // 用户通过了验证
     success(msg) {
       this.isShow = false;
+
       
       Login({
         username: this.username,
