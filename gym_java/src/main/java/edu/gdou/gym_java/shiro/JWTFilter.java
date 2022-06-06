@@ -10,7 +10,6 @@ import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +21,6 @@ import java.io.PrintWriter;
 
 @Slf4j
 public class JWTFilter extends BasicHttpAuthenticationFilter {
-
-
     /**
      * 判断用户是否想要登入。
      * 检测header里面是否包含Authorization字段即可
@@ -39,7 +36,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      *
      */
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         // 执行登录操作
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String authorization = httpServletRequest.getHeader("Authorization");
@@ -98,6 +95,8 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         return super.preHandle(request, response);
     }
 
+
+
     /**
      * 将非法请求跳转到 /401
      */
@@ -107,8 +106,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType("application/json; charset=utf-8");
         try (PrintWriter out = httpServletResponse.getWriter()) {
-
-            String data = new Gson().toJson(new ResponseBean(HttpStatus.UNAUTHORIZED.value(), "无权访问(Unauthorized):" + msg, null));
+            String data = new Gson().toJson(new ResponseBean(HttpStatus.UNAUTHORIZED.value(), "无权访问(Unauthorized)" , msg));
             out.append(data);
         } catch (IOException e) {
             log.error("直接返回Response信息出现IOException异常:{}", e.getMessage());

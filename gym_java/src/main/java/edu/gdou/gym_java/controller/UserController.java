@@ -8,6 +8,8 @@ import edu.gdou.gym_java.entity.model.MyPage;
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.service.RoleService;
 import edu.gdou.gym_java.service.UserService;
+import edu.gdou.gym_java.shiro.redis.Constant;
+import edu.gdou.gym_java.shiro.redis.JedisUtil;
 import edu.gdou.gym_java.utils.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
 import io.swagger.models.auth.In;
@@ -18,9 +20,14 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -81,8 +88,11 @@ public class UserController {
         }
         val md5_password = this.md5.md5(password);
         if (user.getPassword().equals(md5_password)) {
+            // 清除可能存在的Shiro权限信息缓存
+            if(JedisUtil.exists(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName())){
+                JedisUtil.delKey(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName());
+            }
             val token = JWTUtil.sign(username, md5_password);
-
             return new ResponseBean(200, "Login success", token);
         } else {
             log.info("用户尝试登录失败：账号"+username+"密码："+password);
@@ -301,7 +311,12 @@ public class UserController {
     @RequestMapping(value = "/logout",method = {RequestMethod.GET,RequestMethod.POST})
     @RequiresAuthentication
     public ResponseBean logout(){
+        // 清除可能存在的Shiro权限信息缓存
+        val user = userService.currentUser();
+        if(JedisUtil.exists(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName())){
+            JedisUtil.delKey(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName());
+        }
         SecurityUtils.getSubject().logout();
-        return null;
+        return new ResponseBean(200, "注销成功", null);
     }
 }

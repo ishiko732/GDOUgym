@@ -1,5 +1,8 @@
-package edu.gdou.gym_java.shiro;
+package edu.gdou.gym_java.config;
 
+import edu.gdou.gym_java.shiro.JWTFilter;
+import edu.gdou.gym_java.shiro.MyRealm;
+import edu.gdou.gym_java.shiro.cache.CustomCacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -33,6 +36,7 @@ public class ShiroConfig {
         defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
         subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
         manager.setSubjectDAO(subjectDAO);
+        manager.setCacheManager(new CustomCacheManager());// 设置自定义缓存(Cache)管理器
 
         return manager;
     }
