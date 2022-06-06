@@ -120,4 +120,24 @@ public class EquipmentController {
             return new ResponseBean(200,"输入的eid为空或为非数字",null);
         }
     }
+
+    @PostMapping("/reduceEquipmentCount")
+    public ResponseBean reduceEquipmentCount(@RequestParam("eid")String eid,@RequestParam("number")String number){
+        if (StringUtils.isNumeric(eid)&&StringUtils.isNumeric(number)){
+            Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
+            if (equipment==null){
+                return new ResponseBean(200,"器材不存在",null);
+            }else{
+                if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(Integer.parseInt(eid))){
+                    equipment.setNumber(equipment.getNumber()-Integer.parseInt(number));
+                    Boolean flag = equipmentService.updateEquipmentCount(equipment);
+                    return new ResponseBean(200,flag?"器材数量减少成功":"器材数量减少失败",null);
+                }else{
+                    return new ResponseBean(200,"器材数量减少失败，器材减少数量大于器材可使用数量",null);
+                }
+            }
+        }else{
+            return new ResponseBean(200,"输入的eid或number为非数字",null);
+        }
+    }
 }

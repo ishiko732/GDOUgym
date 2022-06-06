@@ -50,4 +50,10 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
     public Equipment queryEquipmentByEid(Integer eid) {
         return getBaseMapper().selectById(eid);
     }
+
+    @Override
+    public Boolean updateEquipmentCount(Equipment equipment) {
+        getBaseMapper().updateById(equipment);
+        return  getBaseMapper().updateById(equipment)==1;
+    }
 }
