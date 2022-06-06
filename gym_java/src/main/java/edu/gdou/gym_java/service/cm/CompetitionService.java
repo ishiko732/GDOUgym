@@ -1,5 +1,6 @@
 package edu.gdou.gym_java.service.cm;
 
+import edu.gdou.gym_java.entity.VO.RefereeAnnouncement;
 import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.model.*;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -21,11 +22,11 @@ public interface CompetitionService extends IService<Competition> {
     Integer createEvent(int uid, String name, Timestamp timestamp,int eventLength,Double money,String context);
     Boolean cancelEvent(int cid,int uid,String context);
     Set<Competition> queryEvents(@Nullable Integer cid, @Nullable String name, @Nullable String uname,@Nullable TimeLimit time);
-    Integer eventSetField(Set<Integer> fcIds);
-    CompetitionField FieldUserLinkEvent(int cid, FieldCheck field, int uid,@Nullable String content);
-    Boolean FieldEquipmentLinkEvent(Set<CompetitionEquipment> competitionEquipments);
+    List<Integer> eventSetFields(Integer cid,List<Integer> fcIds);
+    CompetitionField fieldUserLinkEvent(int cfId, int uid,String context);
+    List<CompetitionEquipment> fieldEquipmentLinkEvent(int cfid,List<CompetitionEquipment> competitionEquipments);
 
-    // TODO 裁判简介公告 收入支出查询
-
-
+    // TODO 收入支出查询
+    boolean updateUserEvent(int cfId, int uid,String context);
+    List<RefereeAnnouncement> queryRefereeAnnouncements(@Nullable Integer cid);
 }

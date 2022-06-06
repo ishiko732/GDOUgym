@@ -1,5 +1,6 @@
 package edu.gdou.gym_java.service.serviceImpl.cm;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import edu.gdou.gym_java.entity.VO.Init_Competition;
 import edu.gdou.gym_java.entity.model.CompetitionCheck;
 import edu.gdou.gym_java.mapper.CompetitionCheckMapper;
@@ -7,6 +8,9 @@ import edu.gdou.gym_java.service.cm.CompetitionCheckService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * <p>
@@ -28,5 +32,22 @@ public class CompetitionCheckServiceImpl extends ServiceImpl<CompetitionCheckMap
     @Override
     public CompetitionCheck queryByCid(int cid) {
         return getBaseMapper().queryByCid(cid);
+    }
+
+    @Override
+    public List<CompetitionCheck> queryList(String status) {
+        return getBaseMapper().queryList(status);
+    }
+
+    @Override
+    public List<CompetitionCheck> queryListByUid(String status,int uid) {
+        return getBaseMapper().queryListByUid(status,uid);
+    }
+
+    @Override
+    public Boolean checkStatus(Integer id, Integer uid,String status, String reason) {
+        val updateWrapper = new UpdateWrapper<CompetitionCheck>();
+        updateWrapper.eq("id",id).set("status",status).set("uid",uid).set("reason",reason);
+        return getBaseMapper().update(null, updateWrapper)!=0;
     }
 }

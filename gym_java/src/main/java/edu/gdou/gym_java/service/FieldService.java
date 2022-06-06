@@ -1,9 +1,9 @@
 package edu.gdou.gym_java.service;
 
+import edu.gdou.gym_java.entity.VO.FieldCheckVo;
 import edu.gdou.gym_java.entity.model.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,12 +46,20 @@ public interface FieldService extends IService<Field> {
 
     List<OrderItem> queryOrderItemByFcid(Integer id);
 
-    List<FieldCheck> queryCheck( );
+    List<FieldCheckVo> queryCheck( );
 
-    List<FieldCheck> queryCheckByUid(Integer uid);
+    List<FieldCheckVo> queryCheckByUid(Integer uid);
 
-    Boolean updateCheckById(FieldCheck fieldCheck);
+    Boolean updateCheckCardById(FieldCheck fieldCheck);
 
 
+    Boolean updateCheckStatusById(FieldCheck fieldCheck);
 
+    Boolean checkFlag(FieldCheck fieldCheck);
+
+    Boolean checkNum(FieldCheck fieldCheck);
+
+    Boolean addType(FieldType fieldType);
+
+    Integer queryTypeByName(String typeName);
 }

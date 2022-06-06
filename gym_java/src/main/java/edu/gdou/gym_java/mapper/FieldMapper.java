@@ -2,6 +2,7 @@ package edu.gdou.gym_java.mapper;
 
 import edu.gdou.gym_java.entity.model.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.Date;
@@ -61,7 +62,15 @@ public interface FieldMapper extends BaseMapper<Field> {
 
     List<FieldCheck> queryCheckByUid(Integer uid);
 
-    Boolean updateCheckById(FieldCheck fieldCheck);
+    Boolean updateCheckCardById(FieldCheck fieldCheck);
 
-//  Boolean cancelCheckById(FieldCheck fieldCheck);
+    Boolean updateCheckStatusById(FieldCheck fieldCheck);
+
+    FieldDate queryDateById(Integer fdid);
+
+    User queryUserById(Integer uid);
+
+    Boolean addType(FieldType fieldType);
+
+    Integer queryTypeByName(String typeName);
 }

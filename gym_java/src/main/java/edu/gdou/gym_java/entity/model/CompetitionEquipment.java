@@ -7,8 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>
@@ -18,8 +17,9 @@ import lombok.Setter;
  * @author liuyuanfeng
  * @since 2022-06-04
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("Competition_equipment")
 @ApiModel(value = "CompetitionEquipment对象", description = "赛事器材表")
 public class CompetitionEquipment implements Serializable {

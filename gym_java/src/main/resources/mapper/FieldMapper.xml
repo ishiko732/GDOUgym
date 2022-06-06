@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.gdou.gym_java.mapper.FieldMapper">
 
+    <resultMap id="BaseResultMap" type="edu.gdou.gym_java.entity.model.FieldCheck">
+        <id column="id" property="id"/>
+        <result column="time" property="time"/>
+        <result column="money" property="money"/>
+        <result column="status" property="status"/>
+        <result column="name" property="name"/>
+        <result column="card" property="card"/>
+        <association property="user" column="uid" javaType="edu.gdou.gym_java.entity.model.User" select="queryUserById">
+        </association>
+    </resultMap>
+
+
     <select id="queryFieldByType" resultType="edu.gdou.gym_java.entity.model.Field">
         select * from Field
         <where>
@@ -104,7 +116,7 @@ order by inode
         select * from Field_check where id = #{id}
     </select>
 
-    <update id="updateCheck" parameterType="edu.gdou.gym_java.entity.model.FieldCheck">
+    <update id="updateCheckStatusById" parameterType="edu.gdou.gym_java.entity.model.FieldCheck">
     update Field_check
         <set>
         status=#{status}
@@ -123,11 +135,16 @@ order by inode
         </where>
     </select>
 
-    <select id="queryCheck" resultType="edu.gdou.gym_java.entity.model.FieldCheck">
+    <select id="queryCheck" resultMap="BaseResultMap">
         select * from Field_check
     </select>
 
-    <select id="updateCheckById" parameterType="edu.gdou.gym_java.entity.model.FieldCheck">
+    <select id="queryUserById" resultType="edu.gdou.gym_java.entity.model.User">
+        select * from User where id =#{uid}
+    </select>
+
+
+    <select id="updateCheckCardById" parameterType="edu.gdou.gym_java.entity.model.FieldCheck">
         update Field_check
         <set>
             card=#{card}
@@ -143,6 +160,19 @@ order by inode
         where id = #{id} and uid = #{user.id}
     </update>
 
+    <select id="queryDateById" resultType="edu.gdou.gym_java.entity.model.FieldDate">
+        select * from Field_date where id = #{fdid}
+    </select>
 
+<insert id="addType" parameterType="edu.gdou.gym_java.entity.model.FieldType" useGeneratedKeys="true" keyProperty="tid">
+    insert into Field_type
+        <set>
+        type_name=#{typeName}
+        </set>
+</insert>
+
+    <select id="queryTypeByName" resultType="java.lang.Integer">
+        select count(*) from Field_type where type_name = #{typeName}
+    </select>
 
 </mapper>
