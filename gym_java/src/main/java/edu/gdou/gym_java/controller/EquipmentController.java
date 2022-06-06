@@ -3,9 +3,11 @@ package edu.gdou.gym_java.controller;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.Equipment;
 import edu.gdou.gym_java.entity.model.FixEquipment;
+import edu.gdou.gym_java.entity.model.RecycleEquipment;
 import edu.gdou.gym_java.service.EquipmentRentStandardService;
 import edu.gdou.gym_java.service.EquipmentService;
 import edu.gdou.gym_java.service.FixEquipmentService;
+import edu.gdou.gym_java.service.RecycleEquipmentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +27,12 @@ public class EquipmentController {
     private final EquipmentService equipmentService;
     private final EquipmentRentStandardService equipmentRentStandardService;
     private final FixEquipmentService fixEquipmentService;
-    public EquipmentController(EquipmentService equipmentService,EquipmentRentStandardService equipmentRentStandardService,FixEquipmentService fixEquipmentService){
+    private final RecycleEquipmentService recycleEquipmentService;
+    public EquipmentController(EquipmentService equipmentService,EquipmentRentStandardService equipmentRentStandardService,FixEquipmentService fixEquipmentService,RecycleEquipmentService recycleEquipmentService){
         this.fixEquipmentService = fixEquipmentService;
         this.equipmentService = equipmentService;
         this.equipmentRentStandardService = equipmentRentStandardService;
+        this.recycleEquipmentService = recycleEquipmentService;
     }
 
     @GetMapping("/queryEquipment")
@@ -140,4 +144,40 @@ public class EquipmentController {
             return new ResponseBean(200,"输入的eid或number为非数字",null);
         }
     }
+
+    @PostMapping("/applyRecycleEquipment")
+    public ResponseBean applyRecycleEquipment(@RequestParam("eid")String eid,@RequestParam("number")String number){
+        if (StringUtils.isNumeric(eid)&&StringUtils.isNumeric(number)){
+            Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
+            if (equipment==null){
+                return new ResponseBean(200,"器材不存在",null);
+            }else{
+                RecycleEquipment recycleEquipment = new RecycleEquipment(equipment.getId(),equipment.getName(),equipment.getTypes(),Integer.parseInt(number));
+                Boolean flag = recycleEquipmentService.applyRecycleEquipment(recycleEquipment);
+                return new ResponseBean(200,flag?"器材回收申请成功":"器材回收申请失败",null);
+            }
+        }else{
+            return new ResponseBean(200,"输入的eid或number为非数字",null);
+        }
+    }
+
+    @PostMapping("/confirmRecycleEquipment")
+    public ResponseBean confirmRecycleEquipment(@RequestParam("eid")String eid,@RequestParam("number")String number){
+        if (StringUtils.isNumeric(eid)&&StringUtils.isNumeric(number)){
+            Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
+            RecycleEquipment recycle = recycleEquipmentService.queryRecycleEquipment(Integer.parseInt(eid));
+            if (equipment==null){
+                return new ResponseBean(200,"器材不存在",null);
+            }else if(recycle==null){
+                return new ResponseBean(200,"器材回收记录不存在",null);
+            }else{
+                RecycleEquipment recycleEquipment = new RecycleEquipment(equipment.getId(),equipment.getName(),equipment.getTypes(),Integer.parseInt(number));
+                Boolean flag = recycleEquipmentService.confirmRecycleEquipment(recycleEquipment);
+                return new ResponseBean(200,flag?"器材回收确认成功":"器材回收确认失败",null);
+            }
+        }else{
+            return new ResponseBean(200,"输入的eid或number为非数字",null);
+        }
+    }
+
 }
