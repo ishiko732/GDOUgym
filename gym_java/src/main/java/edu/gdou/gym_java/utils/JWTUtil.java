@@ -60,15 +60,15 @@ public class JWTUtil {
      */
     public static String sign(String username, String secret) {
         try {
-            String currentTimeMillis= String.valueOf(System.currentTimeMillis());
+            long currentTimeMillis= System.currentTimeMillis();
             Date date = new Date(currentTimeMillis+EXPIRE_TIME);
             // 设置RefreshToken，时间戳为当前时间戳，直接设置即可(会覆盖已有的RefreshToken)
-            JedisUtil.setObject(Constant.PREFIX_SHIRO_REFRESH_TOKEN +username, currentTimeMillis, Constant.refreshTokenExpireTime);
+            JedisUtil.setObject(Constant.PREFIX_SHIRO_REFRESH_TOKEN +username, String.valueOf(System.currentTimeMillis()), Constant.refreshTokenExpireTime);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             // 附带username信息
             return JWT.create()
                     .withClaim(Constant.USERNAME, username)
-                    .withClaim(Constant.CURRENT_TIME_MILLIS, currentTimeMillis)
+                    .withClaim(Constant.CURRENT_TIME_MILLIS, String.valueOf(System.currentTimeMillis()))
                     .withExpiresAt(date)
                     .sign(algorithm);
         } catch (UnsupportedEncodingException e) {
