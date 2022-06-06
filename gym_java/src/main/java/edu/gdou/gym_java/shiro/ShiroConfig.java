@@ -54,10 +54,24 @@ public class ShiroConfig {
          * http://shiro.apache.org/web.html#urls-
          */
         Map<String, String> filterRuleMap = new HashMap<>();
+        //swagger
+        filterRuleMap.put("/swagger-ui.html", "anon");
+        filterRuleMap.put("/**/*.js", "anon");
+        filterRuleMap.put("/**/*.png", "anon");
+        filterRuleMap.put("/**/*.ico", "anon");
+        filterRuleMap.put("/**/*.css", "anon");
+        filterRuleMap.put("/**/ui/**", "anon");
+        filterRuleMap.put("/**/swagger-resources/**", "anon");
+        filterRuleMap.put("/**/api-docs/**", "anon");
+        //登录
+        filterRuleMap.put("/user/register","anon");
+        filterRuleMap.put("/user/login","anon");
+
         // 所有请求通过我们自己的JWT Filter
         filterRuleMap.put("/**", "jwt");
         // 访问401和404页面不通过我们的Filter
-        filterRuleMap.put("/401", "anon");
+        filterRuleMap.put("/401/*", "anon");
+        filterRuleMap.put("/403/*", "anon");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }

@@ -13,6 +13,7 @@ import edu.gdou.gym_java.utils.MD5;
 import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -80,7 +81,9 @@ public class UserController {
         }
         val md5_password = this.md5.md5(password);
         if (user.getPassword().equals(md5_password)) {
-            return new ResponseBean(200, "Login success", JWTUtil.sign(username, md5_password));
+            val token = JWTUtil.sign(username, md5_password);
+
+            return new ResponseBean(200, "Login success", token);
         } else {
             log.info("用户尝试登录失败：账号"+username+"密码："+password);
             return new ResponseBean(200, "Login failed", null);
@@ -288,5 +291,17 @@ public class UserController {
         }else{
             return new ResponseBean(200, "未获取到用户信息", null);
         }
+    }
+
+    // shiro
+    /**
+     * 注销登录
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "/logout",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequiresAuthentication
+    public ResponseBean logout(){
+        SecurityUtils.getSubject().logout();
+        return null;
     }
 }
