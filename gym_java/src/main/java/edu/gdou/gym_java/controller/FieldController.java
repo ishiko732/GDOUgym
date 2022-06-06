@@ -117,12 +117,18 @@ public class FieldController {
 
     //点击日期查询场地时间段信息安排
     @PostMapping("/listTimeByDate")
-    public ResponseBean listTimeByDate(@RequestParam("tid") String tid ,
+    public ResponseBean listTimeByDate(@RequestParam(value="tid",defaultValue = "0") String tid_par ,
                                      @RequestParam(value = "fid",defaultValue = "0") String fid_par,
-                                       @RequestParam(value = "date",required = false) String date_par){
+                                       @RequestParam(value = "date",defaultValue = "") String date_par){
         Map<String,Object> map = new HashMap<>();
-        FieldType fieldType = fieldService.queryTypeById(Integer.parseInt(tid));
-        List<Field> fieldList = fieldService.queryFieldByType(Integer.parseInt(tid));
+        List<FieldType> fieldTypeList = fieldService.queryType();
+        Integer tid = Integer.parseInt(tid_par);
+        //获取场地类型id号
+        if (tid == 0) {
+            tid = fieldTypeList.get(0).getTid();
+        }
+        FieldType fieldType = fieldService.queryTypeById(tid);
+        List<Field> fieldList = fieldService.queryFieldByType(tid);
         Integer fid = Integer.parseInt(fid_par);
 
         //获取场地id号
@@ -130,26 +136,29 @@ public class FieldController {
             fid = fieldList.get(0).getFid();
         }
 
-        Date date = new Date(System.currentTimeMillis());
-        if (date_par != null) {
-            date = Date.valueOf(date_par);
-        }
-
+        Date date;
         //获取能获取的有效日期
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(TimeUtils.nowToTimeStamp());
         List<Date> dateValid = new ArrayList<>();
-        //可选日期
-//        calendar.add(Calendar.DATE, 0);
-//        dateValid.add(new Date(calendar.getTimeInMillis()));
+
         for(int i=0;i<7;i++){
             calendar.add(Calendar.DATE, 1);
             dateValid.add(new Date(calendar.getTimeInMillis()));
         }
+
+        if (!date_par.isEmpty()) {
+            date = Date.valueOf(date_par);
+        }else {
+            date = dateValid.get(0);
+        }
+
         //获取所有场的安排表
         List<FieldDate> fieldDateList = fieldService.search(fid,date);
-        Field field = fieldService.queryFieldById(fid);
-        map.put("name",field.getDescription()+fieldType.getTypeName().substring(0,1));
+        map.put("name",fieldType.getTypeName().substring(0,1));
+        map.put("fields",fieldList);
+        map.put("dates",dateValid);
+        map.put("types",fieldTypeList);
         map.put("fieldDateList",fieldDateList);
             return new ResponseBean(200,fieldDateList.size()>0?"查询成功":"查询结果为空",map);
     }
