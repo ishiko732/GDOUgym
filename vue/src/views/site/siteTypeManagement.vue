@@ -95,4 +95,7 @@ export default {
   width: 80%;
   margin-left: 10%;
 }
+i{
+  margin-left: 8%;
+}
 </style>

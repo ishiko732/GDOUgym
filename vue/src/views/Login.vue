@@ -47,7 +47,6 @@
           <el-button type="primary" @click="register">确 定</el-button>
         </div>
       </el-dialog>
-
     </div>
   </div>
 </div>
@@ -87,6 +86,7 @@ export default {
     // 用户通过了验证
     success(msg) {
       this.isShow = false;
+
       
       Login({
         username: this.username,
@@ -159,49 +159,50 @@ export default {
 /deep/ *{
   overflow: hidden;
 }
+
 .container{
-  margin: 0 auto;
-  width: 80%;
-  .top{
-    margin-top: 20px;
-    display: flex;
-    .text{
-      margin-left: 10px;
-      font: normal 24px/45px "microsoft YaHei";
-      color: #1069a4;
-    }
-  }
-  .body{
-    margin-top: 20px;
-    display: flex;
-    .bodyImg{
-      width: 60%;
-      flex: 3;
-    }
-    .username_password{
-      margin-left: 30px;
-      flex: 1;
-      .el-input{
-        width: 70%;
-        margin-left: 60px;
-      }
-      .username{
-        position: absolute;
-        top:95px;
-      }
-      .password{
-        position: absolute;
-        top:190px;
-      }
-      .password_div,.username_div{
-        margin-bottom: 50px;
-      }
-      .el-button{
-        margin-left: 10px;
-        width: 45%;
-      }
-    }
-  }
+margin: 0 auto;
+width: 80%;
+.top{
+margin-top: 20px;
+display: flex;
+.text{
+margin-left: 10px;
+font: normal 24px/45px "microsoft YaHei";
+color: #1069a4;
+}
+}
+.body{
+margin-top: 20px;
+display: flex;
+.bodyImg{
+width: 60%;
+flex: 3;
+}
+.username_password{
+margin-left: 30px;
+flex: 1;
+.el-input{
+  width: 70%;
+  margin-left: 60px;
+}
+.username{
+  position: absolute;
+  top:95px;
+}
+.password{
+  position: absolute;
+  top:190px;
+}
+.password_div,.username_div{
+  margin-bottom: 50px;
+}
+.el-button{
+  margin-left: 10px;
+  width: 45%;
+}
+}
+}
 
 }
 
