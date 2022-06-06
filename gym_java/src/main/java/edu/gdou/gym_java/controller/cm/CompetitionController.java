@@ -7,7 +7,7 @@ import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.CompetitionEquipment;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
-import edu.gdou.gym_java.service.cm.CompetitionCancelService;
+import edu.gdou.gym_java.service.cm.CompetitionCheckService;
 import edu.gdou.gym_java.service.cm.CompetitionService;
 import edu.gdou.gym_java.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,9 @@ import lombok.val;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -31,15 +33,16 @@ import java.util.*;
 public class CompetitionController {
     private final UserService userService;
     private final CompetitionService competitionService;
-    private final CompetitionCancelService cancelService;
+    private final CompetitionCheckService checkService;
     private final FieldService fieldService;
     private final Gson gson;
 
 
-    public CompetitionController(UserService userService, CompetitionService competitionService, CompetitionCancelService cancelService, FieldService fieldService, Gson gson) {
+
+    public CompetitionController(UserService userService, CompetitionService competitionService, CompetitionCheckService checkService, FieldService fieldService, Gson gson) {
         this.userService = userService;
         this.competitionService = competitionService;
-        this.cancelService = cancelService;
+        this.checkService = checkService;
         this.fieldService = fieldService;
         this.gson = gson;
     }
@@ -107,7 +110,7 @@ public class CompetitionController {
     @RequestMapping(value = "/eventSetFields",method = RequestMethod.POST)
     public ResponseBean eventSetFields(@RequestBody Map<String,Object> map){
         val cid = Integer.parseInt(String.valueOf(map.get("cid")));
-        val ids = (List<Integer>)map.get("ids");
+        val ids = (List<Integer>)map.get("ids"); //这个是在审核中的场地信息
         val integers = competitionService.eventSetFields(cid, ids);
         return new ResponseBean(200,"返回成功绑定的赛事场地id信息",integers);
     }
@@ -129,6 +132,29 @@ public class CompetitionController {
         return new ResponseBean(200,competitionField.getUid().equals(cfid_int)?"绑定成功":"绑定失败",competitionField);
     }
 
+    @RequestMapping(value = "/updateUserEvent",method = RequestMethod.POST)
+    public ResponseBean updateUserEvent(@RequestParam(value = "cfId")String cfId,
+                                           @RequestParam(value = "uid")String uid,
+                                           @RequestParam(value = "context") String context) {
+        val cfid_int=Integer.parseInt(cfId);
+        val isBoolean = competitionService.updateUserEvent(cfid_int, Integer.parseInt(uid), context);
+        return new ResponseBean(200,isBoolean?"绑定成功":"绑定失败",isBoolean);
+    }
+
+    /**
+     * 查询裁判公告
+     * @param cid 赛事id
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "/queryRefereeAnnouncements",method = RequestMethod.GET)
+    public ResponseBean queryRefereeAnnouncements(@RequestParam(value = "cid",required = false)String cid) {
+        if(cid==null){
+            return new ResponseBean(200,"查询裁判公告信息", competitionService.queryRefereeAnnouncements(null));
+        }else{
+            return new ResponseBean(200,"查询裁判公告信息", competitionService.queryRefereeAnnouncements(Integer.parseInt(cid)));
+        }
+    }
+
     /**
      * 场地绑定器材
      * @param map RequestBody
@@ -145,6 +171,25 @@ public class CompetitionController {
 
         val equipments = competitionService.fieldEquipmentLinkEvent(cfid, competitionEquipments);
         return new ResponseBean(200,"绑定器材数"+competitionEquipments.size(),equipments);
+    }
+
+    // 审核部分
+    @RequestMapping(value = "/queryCheck",method = RequestMethod.GET)
+    public ResponseBean queryCheck(@RequestParam(value = "uid",required = false)String uid,
+                                   @RequestParam(value = "status",required = false)String status){
+        if(uid==null){
+            return new ResponseBean(200,"查询到审核数据",checkService.queryList(status));
+        }else{
+            return new ResponseBean(200,"查询到审核数据",checkService.queryListByUid(status,Integer.parseInt(uid)));
+        }
+    }
+
+    @RequestMapping(value = "/check",method = RequestMethod.GET)
+    public ResponseBean checkStatus(@RequestParam(value = "check_id") String id, @RequestParam(value = "status")String status,@RequestParam("reason") String reason){
+        val user = userService.currentUser();
+        val uid = user.getId();
+        val aBoolean = checkService.checkStatus(Integer.parseInt(id), uid, status, reason);
+        return new ResponseBean(200,"审核处理结果",aBoolean);
     }
 
 }

@@ -81,5 +81,34 @@ left join Competition_check Ccheck on Ccheck.cid=Competition.id;
 # where (competition_time between '2022-06-4 14:00:00' and '2022-06-4 15:05:00') and (timestampadd(minute ,60,competition_time) between '2022-06-4 14:00:00' and '2022-06-5 15:05:00');
 
 # 获取赛事时间段
+create view competition_time as
 select *,timestampadd(minute ,60,competition_time) as competition_end_time
 from Competition;
+
+
+# 根据cid查找裁判和公告
+alter view referee_announcements as
+select cid,Competition_field.id as cfId,fcId,Competition_field.uid,truename as judgment,Competition.name as competition_name,Competition_field.introduction,competition_time as starttime,timestampadd(minute ,60,competition_time) as endtime
+from Competition_field
+left join Competition on Competition_field.cid = Competition.id
+left join UserInfo UI on Competition_field.uid = UI.uid
+where Competition_field.uid is not null and timestampadd(minute ,60,competition_time) >= now()
+order by cid,fcId;
+
+# 根据cid查找对应的场地信息
+create view competition_field_time as
+select Competition_field.*,fid,TIMESTAMP(Fd.date,Ta.start_time) as startTime,TIMESTAMP(Fd.date,Ta.end_time) as endTime
+from Competition_field
+left join Order_item Oi on Competition_field.fcId = Oi.fcid
+left join Time_arrange Ta on Oi.time_id = Ta.time_id
+left join Field_date Fd on Ta.fdid = Fd.id;
+
+# 根据赛事地点id查询器材
+select Competition_equipment.*
+from Competition_equipment;
+
+# 根据uid查询审核信息
+select Competition_check.*
+from Competition_check
+left join Competition C on C.id = Competition_check.cid
+where C.uid=1
