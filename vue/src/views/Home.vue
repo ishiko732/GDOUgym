@@ -79,6 +79,7 @@ export default {
 </script>
 <style lang="less" scoped>
 /deep/*{
+
   overflow: hidden;
 }
 .home_container {
