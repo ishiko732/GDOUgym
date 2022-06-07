@@ -86,8 +86,8 @@ public class MyRealm extends AuthorizingRealm {
                 // 获取AccessToken时间戳，与RefreshToken的时间戳对比
                 if (currentTimeMillisRedis.equals(JWTUtil.getCreateTime(token))) {
                     refreshToken(token,userBean);
-                    return new SimpleAuthenticationInfo(token, token, "my_realm");
                 }
+                return new SimpleAuthenticationInfo(token, token, "my_realm");
             }
         }
         throw new AuthenticationException("Token已过期(Token expired or incorrect.)");// 已过期

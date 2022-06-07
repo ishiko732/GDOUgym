@@ -3,6 +3,7 @@ package edu.gdou.gym_java.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.gson.Gson;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.MyPage;
 import edu.gdou.gym_java.entity.model.User;
@@ -12,7 +13,6 @@ import edu.gdou.gym_java.shiro.redis.Constant;
 import edu.gdou.gym_java.shiro.redis.JedisUtil;
 import edu.gdou.gym_java.utils.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.shiro.SecurityUtils;
@@ -20,14 +20,11 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -324,5 +321,18 @@ public class UserController {
         }
         SecurityUtils.getSubject().logout();
         return new ResponseBean(200, "注销成功", null);
+    }
+    @RequestMapping(value = "/newToken",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequiresAuthentication
+    public ResponseBean newToken(){
+        val httpServletRequest = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        val oldToken = httpServletRequest.getHeader("Authorization");
+        val hashMap = new HashMap<String, String>();
+        val username = JWTUtil.getUsername(oldToken);
+        val newToken = JedisUtil.getJson(Constant.PREFIX_SHIRO_ACCESS_TOKEN + username);
+        hashMap.put("old_token",oldToken);
+        hashMap.put("new_token",newToken);
+        hashMap.put("new_token_create_time",JWTUtil.getCreateTime(newToken));
+        return new ResponseBean(200,"新token",hashMap);
     }
 }
