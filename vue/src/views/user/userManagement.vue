@@ -3,12 +3,13 @@
   <div class="top">
     <div class="top_top">
       <div class="userManager" v-show="roleId==2||roleId==1?isShowUserManager=true:isShowUserManager=false">
-        <span class="top_text" @click="typeManage"
-              :class="appointmentShow?'active':''">导入信息</span>
-        <span class="top_text" @click="notice"
-              :class="noticeShow&&$route.path=='/home/siteManagement/noticeManagement'?'active':''">查询用户个人信息</span>
-        <span class="top_text" @click="typeManage"
-              :class="typeShow&&$route.path=='/home/siteManagement/siteTypeManagement'?'active':''">修改密码(强制)</span>
+        <span class="top_text" @click="importInfo"
+              :class="$route.path=='/home/userManagement/importInfo'?'active':''">导入信息</span>
+        <span class="top_text" @click="queryUserInfo"
+              :class="$route.path=='/home/userManagement/queryUserInfo'?'active':''">查询用户个人信息</span>
+        <span class="top_text" @click="updatePwdForce"
+              :class="$route.path=='/home/userManagement/updatePwdForce'?'active':''">修改密码(强制)</span>
+
       </div>
       <div class="manager" v-show="roleId<6?isShowManager=true:isShowManager=false">
           <span class="top_text" @click="createAnnouncement"
@@ -17,8 +18,8 @@
                 :class="$route.path=='/home/userManagement/updateAnnouncement'?'active':''">修改公告</span>
           <span class="top_text" @click="queryAnnLogs"
                 :class="$route.path=='/home/userManagement/queryAnnLogs'?'active':''">查询公告历史记录</span>
-          <span class="top_text" @click="notice"
-                :class="noticeShow&&$route.path=='/home/siteManagement/noticeManagement'?'active':''">查询管理员用户</span>
+          <span class="top_text" @click="queryManagerInfo"
+                :class="$route.path=='/home/userManagement/queryManagerInfo'?'active':''">查询管理员用户</span>
         </div>
     </div>
     <div class="top_bottom">
@@ -35,8 +36,8 @@
       <div class="user" v-show="roleId<8?isShowUser=true:isShowUser=false">
         <span class="top_text" @click="updatePassword"
               :class="$route.path=='/home/userManagement/updatePassword'?'active':''">修改密码</span>
-        <span class="top_text" @click="appointment"
-              :class="appointmentShow&&$route.path=='/home/siteManagement/appointmentManagement'?'active':''">查询管理员信息</span>
+        <span class="top_text" @click="queryManager"
+              :class="$route.path=='/home/userManagement/queryManager'?'active':''">查询管理员信息</span>
         <span class="top_text" @click="queryNewAnn"
               :class="$route.path=='/home/userManagement/queryNewAnn'?'active':''">查询最新公告</span>
       </div>
@@ -94,14 +95,20 @@ export default {
     updatePassword(){
       this.$router.push({path:"/home/userManagement/updatePassword"})
     },
-    typeManage(){
-      
+    importInfo(){
+      this.$router.push({path:"/home/userManagement/importInfo"})
     },
-    appointment(){
-      
+    queryUserInfo(){
+      this.$router.push({path:"/home/userManagement/queryUserInfo"})
     },
-    notice(){
-      
+    updatePwdForce(){
+      this.$router.push({path:"/home/userManagement/updatePwdForce"})
+    },
+    queryManagerInfo(){
+      this.$router.push({path:"/home/userManagement/queryManagerInfo"})
+    },
+    queryManager(){
+      this.$router.push({path:"/home/userManagement/queryManager"})
     },
   }
 }
