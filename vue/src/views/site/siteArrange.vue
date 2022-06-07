@@ -46,7 +46,7 @@
       <span style="margin-top:6px;">你选中的是:</span>
       <el-input v-model="row" style="width:10%;" disabled></el-input>
       <el-input v-model="col" style="width:10%;" disabled></el-input>
-      <el-button>提交</el-button>
+      <el-button @click="submit">提交</el-button>
     </div>
   </div>
 </template>
@@ -170,6 +170,9 @@ export default {
             break;
         }
       }
+    },
+    submit () { 
+      
     }
   } 
 }
