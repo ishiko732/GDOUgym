@@ -395,6 +395,22 @@ public class FieldController {
     }
 
 
+    @RequiresAuthentication
+    @PostMapping("/pay")
+    public ResponseBean payForField(@RequestParam(value = "id",required = true)String id){
+
+        FieldCheck fieldCheck = fieldService.queryCheckById(Integer.valueOf(id));
+        if (fieldCheck==null){
+            return new ResponseBean(200,"该订单号不存在",id);
+        }
+        User user = userService.currentUser();
+        fieldCheck.setUser(user);
+        fieldCheck.setStatus("已完成");
+        Boolean payForField = fieldService.updateCheck(fieldCheck);
+
+        return new ResponseBean(200,payForField?"支付成功":"支付失败",null);
+    }
+
     //!!!暂时别用
     //加载日期安排，无参数默认第一个类型第一个场地；带参数查询特定类型下的某个场地安排（tid场地类型id,fid场地id）
     @GetMapping("/queryDate")
