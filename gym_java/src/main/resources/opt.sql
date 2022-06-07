@@ -111,4 +111,4 @@ from Competition_equipment;
 select Competition_check.*
 from Competition_check
 left join Competition C on C.id = Competition_check.cid
-where C.uid=1
+where C.uid=1;

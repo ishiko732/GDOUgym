@@ -56,11 +56,15 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
      * @return 赛事id
      */
     @Override
-    public Integer createEvent(int uid, String name, Timestamp timestamp, int eventLength, Double money, String context) {
+    public Map<String, Integer> createEvent(int uid, String name, Timestamp timestamp, int eventLength, Double money, String context) {
         val competition = new Competition(null, uid, name, timestamp, eventLength, context, money, null, null, null, null);
         val insert = getBaseMapper().insert_competition(competition);
         if (insert) {
-            return checkService.init_check(competition.getId());
+            val check_id = checkService.init_check(competition.getId());
+            val map = new HashMap<String, Integer>();
+            map.put("cid", competition.getId());
+            map.put("check_id",check_id);
+            return map;
         } else {
             return null;
         }
