@@ -43,6 +43,6 @@ public class EquipmentRentStandard {
     private Double price;
 
     @ApiModelProperty("器材租用时间")
-    @TableField(value="rentTime")
-    private Integer rentTime;
+    @TableField(value="maxRentTime")
+    private Integer maxRentTime;
 }

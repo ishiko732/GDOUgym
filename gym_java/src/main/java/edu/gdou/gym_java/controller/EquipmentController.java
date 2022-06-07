@@ -245,11 +245,11 @@ public class EquipmentController {
             Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
             EquipmentRentStandard equipmentRentStandard = equipmentRentStandardService.queryEquipmentRentStandardByEid(Integer.parseInt(eid));
             if (user!=null && equipment!=null && equipmentRentStandard!=null){
-                if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(equipment.getId())&&Integer.parseInt(rentTime)<=equipmentRentStandard.getRentTime()){
+                if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(equipment.getId())&&Integer.parseInt(rentTime)<=equipmentRentStandard.getMaxRentTime()){
                     RentEquipment rentEquipment = new RentEquipment(null, equipment.getId(), equipment.getName(), user.getId(), user.getName(), Integer.parseInt(rentTime), Integer.parseInt(number),new Date());
                     Boolean flag = rentEquipmentService.addRentEquipment(rentEquipment);
                     return new ResponseBean(200,flag?"器材租用成功":"器材租用失败",null);
-                }else if(Integer.parseInt(rentTime)>equipmentRentStandard.getRentTime()){
+                }else if(Integer.parseInt(rentTime)>equipmentRentStandard.getMaxRentTime()){
                     return new ResponseBean(200,"器材租用失败，器材租用时间大于器材可租用时间",null);
                 }else{
                     return new ResponseBean(200,"器材租用失败，器材租用数量大于器材可使用数量",null);
