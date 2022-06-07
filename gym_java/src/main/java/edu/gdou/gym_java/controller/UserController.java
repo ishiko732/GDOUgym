@@ -63,7 +63,7 @@ public class UserController {
     public ResponseBean currentUserInfoByUid(){
         val user = userService.currentUser();
         val map = userService.selectInfoByUid(user.getId());
-        if (map.containsKey("name")){
+        if (map.containsKey("uname")){
             return new ResponseBean(200, "获取到的用户信息("+map.get("name")+")", map);
         }else{
             return new ResponseBean(200, "未获取到用户信息", null);
@@ -258,13 +258,12 @@ public class UserController {
         map.put("currentSize",userMyPage.getSize());
         map.put("pages",userMyPage.getPages());
         val users = userMyPage.getRecords();
+        Collections.sort(users);
         map.put("users",users);
-        val infos = new ArrayList<Map<Integer,Object>>();
+        val infos = new ArrayList<Map<String,Object>>();
         for (User user : users) {
             val objectMap = userService.selectInfoByUid(user.getId());
-            val infoMap = new HashMap<Integer, Object>();
-            infoMap.put(user.getId(),objectMap);
-            infos.add(infoMap);
+            infos.add(objectMap);
         }
         map.put("infos",infos);
         return new ResponseBean(200, "获取到的用户信息", map);
