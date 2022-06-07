@@ -4,9 +4,7 @@
     <div class="top_top">
       <div class="userManager" v-show="roleId==2||roleId==1?isShowUserManager=true:isShowUserManager=false">
         <span class="top_text" @click="typeManage"
-              :class="appointmentShow?'active':''">导入学生信息</span>
-        <span class="top_text" @click="appointment"
-              :class="appointmentShow&&$route.path=='/home/siteManagement/appointmentManagement'?'active':''">导入教师信息</span>
+              :class="appointmentShow?'active':''">导入信息</span>
         <span class="top_text" @click="notice"
               :class="noticeShow&&$route.path=='/home/siteManagement/noticeManagement'?'active':''">查询用户个人信息</span>
         <span class="top_text" @click="typeManage"
@@ -66,7 +64,7 @@ export default {
     }
   },
   created(){
-    this.roleId = localStorage.getItem("roleId")
+    this.roleId = this.$store.state.roleId
   },
   methods:{
     addManager(){

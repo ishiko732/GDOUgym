@@ -25,11 +25,16 @@
                         <el-table-column
                         prop="aid"
                         label="id"
-                        width="100">
+                        width="50">
                         </el-table-column>
                         <el-table-column
                         prop="type"
                         label="公告类型"
+                        width="100">
+                        </el-table-column>
+                        <el-table-column
+                        prop="createDate"
+                        label="创建时间"
                         width="180">
                         </el-table-column>
                         <el-table-column
@@ -69,7 +74,7 @@ export default {
     methods:{
         queryAnnLogs(){
             QueryAnnLogs({type:this.type}).then(res=>{
-                // console.log(res);
+                console.log(res);
                 if(res.code==200){
                     this.AnnLogsList = res.data
                 }else{

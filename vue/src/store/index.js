@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    roleId:20,
+    username:"",
   },
   getters: {
   },
