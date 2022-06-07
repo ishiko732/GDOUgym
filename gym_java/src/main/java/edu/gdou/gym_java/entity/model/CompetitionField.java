@@ -73,21 +73,6 @@ public class CompetitionField implements Serializable {
     @TableField("time")
     private Timestamp time;
 
-    public Map<String,Object> getMap(){
-        val hashMap = new HashMap<String, Object>();
-        val fields = this.getClass().getDeclaredFields();
-        for (java.lang.reflect.Field field : fields) {
-            try {
-                val o = field.get(this);
-                if(o!=null){
-                    hashMap.put(field.getName(), o);
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        hashMap.remove("serialVersionUID");
-        return hashMap;
-    }
+
 
 }
