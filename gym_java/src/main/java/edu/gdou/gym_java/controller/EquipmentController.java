@@ -95,6 +95,13 @@ public class EquipmentController {
         }
     }
 
+    @GetMapping("/queryFixEquipment")
+    public ResponseBean queryFixEquipment(@RequestParam(value = "fid",required = false) String fid,@RequestParam(value = "name",required = false)String name,
+                                          @RequestParam(value = "number",required = false)String number,@RequestParam(value = "type",required = false)String type){
+        List<FixEquipment> fixEquipments = fixEquipmentService.queryFixEquipment(fid != null ? Integer.parseInt(fid) : null, name, number != null ? Integer.parseInt(number) : null, type);
+        return new ResponseBean(200,"查询成功",fixEquipments);
+    }
+
     @PostMapping("/confirmFixEquipment")
     public ResponseBean confirmFixEquipment(@RequestParam("eid")String eid,@RequestParam("number")String number){
         if (StringUtils.isNumeric(eid)&&StringUtils.isNumeric(number)){
@@ -102,7 +109,7 @@ public class EquipmentController {
             if (equipment!=null){
                 FixEquipment fixEquipment = new FixEquipment(Integer.parseInt(eid), equipment.getName(), equipment.getTypes(), Integer.parseInt(number));
                 Boolean flag = fixEquipmentService.confirmFixEquipment(fixEquipment);
-                return new ResponseBean(200,flag?"器材维修成功确认":"器材维修成功失败",null);
+                return new ResponseBean(200,flag?"器材维修确认成功":"器材维修确认失败",null);
             }else{
                 return new ResponseBean(200,"需要维修的器材不存在",null);
             }
@@ -117,7 +124,7 @@ public class EquipmentController {
             Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
             if (equipment != null) {
                 Integer count = equipmentService.availableEquipmentCount(equipment.getId());
-                return new ResponseBean(200,"该器材的可用数量为：",count);
+                return new ResponseBean(200,"该器材的可用数量为："+count,count);
             }else{
                 return new ResponseBean(200,"该器材不存在",null);
             }
@@ -126,7 +133,7 @@ public class EquipmentController {
         }
     }
 
-    @PostMapping("/reduceEquipmentCount")
+    @DeleteMapping("/reduceEquipmentCount")
     public ResponseBean reduceEquipmentCount(@RequestParam("eid")String eid,@RequestParam("number")String number){
         if (StringUtils.isNumeric(eid)&&StringUtils.isNumeric(number)){
             Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
@@ -160,6 +167,13 @@ public class EquipmentController {
         }else{
             return new ResponseBean(200,"输入的eid或number为非数字",null);
         }
+    }
+
+    @GetMapping("/queryRecycleEquipment")
+    public ResponseBean queryRecycleEquipment(@RequestParam(value = "reid",required = false)String reid,@RequestParam(value = "name",required = false)String name,
+                                              @RequestParam(value = "number",required = false)String number,@RequestParam(value = "type",required = false)String type){
+        List<RecycleEquipment> recycleEquipments = recycleEquipmentService.queryRecycleEquipment(reid != null ? Integer.parseInt(reid) : null, name, number != null ? Integer.parseInt(number) : null, type);
+        return new ResponseBean(200,"查询成功",recycleEquipments);
     }
 
     @PostMapping("/confirmRecycleEquipment")
@@ -211,7 +225,7 @@ public class EquipmentController {
             RentEquipment rentEquipment = rentEquipmentService.queryRentEquipmentByEid(Integer.parseInt(rid));
             return  new ResponseBean(200,rentEquipment!=null?"器材租用记录查询成功":"该器材租用记录不存在",rentEquipment);
         }else{
-            return new ResponseBean(200,"输入的参数为非数字",null);
+            return new ResponseBean(200,"输入的rid为非数字",null);
         }
     }
 

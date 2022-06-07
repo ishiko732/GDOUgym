@@ -3,6 +3,8 @@ package edu.gdou.gym_java.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import edu.gdou.gym_java.entity.model.FixEquipment;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务类
@@ -23,4 +25,7 @@ public interface FixEquipmentService  extends IService<FixEquipment> {
 
     //根据器材id查询所有的器材维修数量
     Integer queryFixEquipmentCountByFid(Integer fid);
+
+    //多条件查询器材维修记录
+    List<FixEquipment> queryFixEquipment(Integer fid,String name,Integer number,String type);
 }
