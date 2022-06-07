@@ -10,6 +10,8 @@ import edu.gdou.gym_java.service.RecycleEquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务实现类
@@ -68,5 +70,10 @@ public class RecycleEquipmentServiceImpl extends ServiceImpl<RecycleEquipmentMap
     @Override
     public Boolean deleteRecycleEquipmentByReid(Integer reid) {
         return getBaseMapper().deleteById(reid)==1;
+    }
+
+    @Override
+    public List<RecycleEquipment> queryRecycleEquipment(Integer reid, String name, Integer number, String type) {
+        return getBaseMapper().queryRecycleEquipment(reid,name,number,type);
     }
 }

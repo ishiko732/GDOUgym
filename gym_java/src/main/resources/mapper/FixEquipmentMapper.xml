@@ -4,5 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.gdou.gym_java.mapper.FixEquipmentMapper">
 
-
+    <select id="queryFixEquipment" resultType="edu.gdou.gym_java.entity.model.RecycleEquipment">
+        select * from Fix_equipment
+        <where>
+            <if test="fid!=null and fid!=''">and fid=#{fid}</if>
+            <if test="name!=null and name!=''">name=#{name}</if>
+            <if test="number!=null and number!=''">number=#{number}</if>
+            <if test="type!=null and type!=''">type=#{type}</if>
+        </where>
+    </select>
 </mapper>
