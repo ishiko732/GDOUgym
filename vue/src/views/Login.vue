@@ -105,8 +105,8 @@ export default {
             },500)
 
             SelLoginUserInfo().then(res=>{
-              this.$store.state.roleId = res.data.roleId
-              this.$store.state.username = res.data.name
+              localStorage.setItem("roleId",res.data.roleId)
+              localStorage.setItem("username",res.data.name)
             })
           }else if(res.msg == "Login failed"){
             this.$message.error("密码错误")

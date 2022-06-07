@@ -58,13 +58,10 @@ export default {
       isShowSuperManager:false,
       isShowUser:false,   
       
-      typeShow:false,
-      appointmentShow:false,
-      noticeShow:false,
     }
   },
   created(){
-    this.roleId = this.$store.state.roleId
+    this.roleId = localStorage.getItem("roleId")
   },
   methods:{
     addManager(){
