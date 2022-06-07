@@ -86,6 +86,8 @@ public class MyRealm extends AuthorizingRealm {
                 // 获取AccessToken时间戳，与RefreshToken的时间戳对比
                 if (currentTimeMillisRedis.equals(JWTUtil.getCreateTime(token))) {
                     refreshToken(token,userBean);
+                }else{
+                    setHeaderToken(token);
                 }
                 return new SimpleAuthenticationInfo(token, token, "my_realm");
             }
@@ -106,13 +108,17 @@ public class MyRealm extends AuthorizingRealm {
             // 获取当前AccessToken中的时间戳，与RefreshToken的时间戳对比，如果当前时间戳一致，进行AccessToken刷新
             if (currentTimeMillisRedis.equals(JWTUtil.getCreateTime(token))) {
                 String new_token = JWTUtil.sign(username, userBean.getPassword());// 刷新AccessToken
-                HttpServletResponse response = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getResponse();
-                // 最后将刷新的AccessToken存放在Response的Header中的Authorization字段返回
-                assert response != null;
-                response.setHeader("Authorization", new_token);
-                response.setHeader("Access-Control-Expose-Headers", "Authorization");
+                setHeaderToken(new_token);
             }
         }
         return token;
+    }
+
+    private void setHeaderToken(String token){
+        HttpServletResponse response = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getResponse();
+        // 最后将刷新的AccessToken存放在Response的Header中的Authorization字段返回
+        assert response != null;
+        response.setHeader("Authorization", token);
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
     }
 }
