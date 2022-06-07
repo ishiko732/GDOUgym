@@ -8,12 +8,12 @@
         select * from Rent_equipment
         <where>
             <if test="rid!='' and rid!=null">rid = #{rid}</if>
-            <if test="eid!='' and eid!=null">eid = #{eid}</if>
-            <if test="eName!='' and eName!=null">eName = #{eName}</if>
-            <if test="uid!='' and uid!=null">uid = #{uid}</if>
-            <if test="username!='' and username!=null">username = #{username}</if>
-            <if test="rentTime!='' and rentTime!=null">rentTime = #{rentTime}</if>
-            <if test="number!='' and number!=null">number = #{number}</if>
+            <if test="eid!='' and eid!=null">and eid = #{eid}</if>
+            <if test="eName!='' and eName!=null">and eName = #{eName}</if>
+            <if test="uid!='' and uid!=null">and uid = #{uid}</if>
+            <if test="username!='' and username!=null">and username = #{username}</if>
+            <if test="rentTime!='' and rentTime!=null">and rentTime = #{rentTime}</if>
+            <if test="number!='' and number!=null">and number = #{number}</if>
         </where>
     </select>
 
