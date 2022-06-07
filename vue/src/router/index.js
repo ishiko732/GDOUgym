@@ -47,7 +47,7 @@ const routes = [
           {
             //场地类型管理路由
             path:'/home/siteManagement/siteTypeManagement',
-            name:'siteArrange',
+            name:'siteTypeManagement',
             component:()=>import('../views/site/siteTypeManagement')
           },
           {
@@ -55,6 +55,12 @@ const routes = [
             path:'/home/siteManagement/appointmentManagement',
             name:'appointmentManagement',
             component:()=>import('../views/site/appointmentManagement')
+          },
+          {
+            //场地预约路由
+            path:'/home/siteManagement/siteAppointment',
+            name:'siteAppointment',
+            component:()=>import('../views/site/siteAppointment')
           },
           {
             //通知管理路由
