@@ -78,7 +78,7 @@ export default {
     border-bottom: 1px solid deepskyblue;
   }
 }
-/deep/*{
+/deep/ *{
   overflow: hidden;
 }
 .el-tabs{
