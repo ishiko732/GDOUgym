@@ -29,4 +29,9 @@ public class EquipmentRentStandardServiceImpl extends ServiceImpl<EquipmentRentS
     public EquipmentRentStandard queryEquipmentRentStandardByEid(Integer eid) {
         return getBaseMapper().queryEquipmentRentStandardByEid(eid);
     }
+
+    @Override
+    public Boolean addEquipmentRentStandard(EquipmentRentStandard equipmentRentStandard) {
+        return getBaseMapper().insert(equipmentRentStandard)==1;
+    }
 }

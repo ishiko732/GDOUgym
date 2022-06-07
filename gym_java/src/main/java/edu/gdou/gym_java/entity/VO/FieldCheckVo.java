@@ -27,5 +27,7 @@ public class FieldCheckVo implements Serializable {
 
     private String userName;
 
+    private Boolean flag;
+
     private List<TimeArrange> timeArrangeList;
 }

@@ -2,17 +2,26 @@ package edu.gdou.gym_java.shiro;
 
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.service.UserService;
-import edu.gdou.gym_java.utils.JWTUtil;
+import edu.gdou.gym_java.shiro.jwt.JWTToken;
+import edu.gdou.gym_java.shiro.redis.Constant;
+import edu.gdou.gym_java.shiro.redis.JedisUtil;
+import edu.gdou.gym_java.shiro.jwt.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 
 @Service
@@ -41,11 +50,16 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = JWTUtil.getUsername(principals.toString());
-        User user = userService.getUser(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRole(user.getRole().getRole());
-        Set<String> permission = user.getRole().getPermissions();
-        simpleAuthorizationInfo.addStringPermissions(permission);
+        if(username==null){
+            return simpleAuthorizationInfo;
+        }
+        User user = userService.getUser(username);
+        if(user!=null){
+            simpleAuthorizationInfo.addRole(user.getRole().getRole());
+            Set<String> permission = user.getRole().getPermissions();
+            simpleAuthorizationInfo.setStringPermissions(permission);
+        }
         return simpleAuthorizationInfo;
     }
 
@@ -55,21 +69,60 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auth) throws AuthenticationException {
         String token = (String) auth.getCredentials();
-        // 解密获得username，用于和数据库进行对比
         String username = JWTUtil.getUsername(token);
         if (username == null) {
-            throw new AuthenticationException("token invalid");
+            throw new AuthenticationException("token 验证失败");
         }
+        log.info("token是否过期："+JWTUtil.isExp(token));
+        if (!JWTUtil.isExp(token)) {
+            // 解密获得username，用于和数据库进行对比
+            User userBean = userService.getUser(username);
+            if (userBean == null || userBean.getId() == null) {
+                throw new AuthenticationException("用户不存在");
+            }
 
-        User userBean = userService.getUser(username);
-        if (userBean == null) {
-            throw new AuthenticationException("User didn't existed!");
+            if (!JWTUtil.verify(token, username, userBean.getPassword())) {
+                SecurityUtils.getSubject().logout();
+                throw new AuthenticationException("用户或密码错误");
+            } else {
+                // 获取RefreshToken的时间戳
+                String currentTimeMillisRedis = JedisUtil.getJson(Constant.PREFIX_SHIRO_REFRESH_TOKEN + username);
+                // 获取AccessToken时间戳，与RefreshToken的时间戳对比
+                if (currentTimeMillisRedis.equals(JWTUtil.getCreateTime(token))) {
+                    refreshToken(token,userBean);
+                }else{
+                    setHeaderToken(token);
+                }
+                return new SimpleAuthenticationInfo(token, token, "my_realm");
+            }
         }
+        throw new AuthenticationException("Token已过期(Token expired or incorrect.)");// 已过期
+    }
 
-        if (! JWTUtil.verify(token, username, userBean.getPassword())) {
-            throw new AuthenticationException("Username or password error");
+    /**
+     * 此处为AccessToken刷新，进行判断RefreshToken是否过期，未过期就返回新的AccessToken且继续正常访问
+     * @param token 当前账号的token
+     */
+    private String refreshToken(String token,User userBean) {
+        String username =userBean.getName();
+        // 判断Redis中RefreshToken是否存在
+        if (JedisUtil.exists(Constant.PREFIX_SHIRO_REFRESH_TOKEN + username)) {
+            // Redis中RefreshToken还存在，获取RefreshToken的时间戳
+            String currentTimeMillisRedis =JedisUtil.getJson(Constant.PREFIX_SHIRO_REFRESH_TOKEN + username);
+            // 获取当前AccessToken中的时间戳，与RefreshToken的时间戳对比，如果当前时间戳一致，进行AccessToken刷新
+            if (currentTimeMillisRedis.equals(JWTUtil.getCreateTime(token))) {
+                String new_token = JWTUtil.sign(username, userBean.getPassword());// 刷新AccessToken
+                setHeaderToken(new_token);
+            }
         }
+        return token;
+    }
 
-        return new SimpleAuthenticationInfo(token, token, "my_realm");
+    private void setHeaderToken(String token){
+        HttpServletResponse response = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getResponse();
+        // 最后将刷新的AccessToken存放在Response的Header中的Authorization字段返回
+        assert response != null;
+        response.setHeader("Authorization", token);
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
     }
 }
