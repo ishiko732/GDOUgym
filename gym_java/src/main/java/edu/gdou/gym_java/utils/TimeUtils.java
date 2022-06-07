@@ -35,6 +35,10 @@ public class TimeUtils {
         return TimeStampToString(nowToTimeStamp());
     }
 
+    public static Date nowToDate(){
+        return new Date(System.currentTimeMillis());
+    }
+
     public static Timestamp DateToTimeStamp(Date date) {
         return new Timestamp(date.getTime());
     }
