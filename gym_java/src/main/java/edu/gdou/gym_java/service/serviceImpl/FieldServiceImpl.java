@@ -185,6 +185,11 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         List<FieldCheckVo> fieldCheckVos = new ArrayList<>();
         for (int i = 0; i < fieldCheckList.size(); i++) {
             FieldCheckVo fieldCheckVo = new FieldCheckVo();
+            if (fieldCheckList.get(i).getStatus().equals("审核中")){
+                fieldCheckVo.setFlag(true);
+            }else {
+                fieldCheckVo.setFlag(false);
+            }
             fieldCheckVo.setCard(fieldCheckList.get(i).getCard());
             fieldCheckVo.setId(fieldCheckList.get(i).getId());
             fieldCheckVo.setMoney(fieldCheckList.get(i).getMoney());
@@ -217,6 +222,11 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         User user = getBaseMapper().queryUserById(uid);
         for (int i = 0; i < fieldCheckList.size(); i++) {
             FieldCheckVo fieldCheckVo = new FieldCheckVo();
+            if (fieldCheckList.get(i).getStatus().equals("待支付")){
+                fieldCheckVo.setFlag(true);
+            }else {
+                fieldCheckVo.setFlag(false);
+            }
             fieldCheckVo.setCard(fieldCheckList.get(i).getCard());
             fieldCheckVo.setId(fieldCheckList.get(i).getId());
             fieldCheckVo.setMoney(fieldCheckList.get(i).getMoney());
