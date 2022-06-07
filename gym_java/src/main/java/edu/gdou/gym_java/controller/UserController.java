@@ -4,6 +4,7 @@ package edu.gdou.gym_java.controller;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
+import edu.gdou.gym_java.entity.enums.RoleEnums;
 import edu.gdou.gym_java.entity.model.MyPage;
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.service.RoleService;
@@ -220,7 +221,7 @@ public class UserController {
      * @return ResponseBean
      */
     @RequestMapping(value = "changeRole",method = RequestMethod.POST)
-    @RequiresPermissions(logical = Logical.AND, value = {"更新管理员角色"})
+    @RequiresPermissions("更新管理员角色")
     public ResponseBean updateRole(@RequestParam("ID")String ID,@RequestParam("RID")String RID){
         int managerID = Integer.parseInt(ID);
         int roleID =Integer.parseInt(RID);
@@ -245,14 +246,12 @@ public class UserController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryUsers",method = RequestMethod.GET)
+    @RequiresAuthentication
     public ResponseBean queryUsers(@RequestParam("current") Integer current,
                                    @RequestParam("size")Integer size,
                                    @RequestParam("cnt")Integer cnt) {
         MyPage<User> myPage = new MyPage<User>(current, size).setSelectInt(cnt);
         IPage<User> userMyPage = userService.selectUserPage(myPage);
-//        System.out.println("总条数:" + userMyPage.getTotal());
-//        System.out.println("当前页数: " + userMyPage.getCurrent());
-//        System.out.println("当前每页显示数:" + userMyPage.getSize());
         Map<String,Object> map =new HashMap<>();
         map.put("total",userMyPage.getTotal());
         map.put("currentPage",userMyPage.getCurrent());
@@ -277,7 +276,7 @@ public class UserController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryUserInfo",method = {RequestMethod.GET,RequestMethod.POST})
-    @RequiresPermissions(logical = Logical.AND, value = {"查询用户个人信息"})
+    @RequiresPermissions("查询用户个人信息")
     public ResponseBean queryUserInfoByUid(@RequestParam("ID")String ID){
         val map = userService.selectInfoByUid(Integer.parseInt(ID));
         if (map!=null && map.containsKey("uname")){
@@ -292,7 +291,7 @@ public class UserController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryUserInfoById",method = {RequestMethod.GET,RequestMethod.POST})
-    @RequiresPermissions(logical = Logical.AND, value = {"查询用户个人信息"})
+    @RequiresPermissions("查询用户个人信息")
     public ResponseBean queryUserInfoById(@RequestParam("ID")String ID){
         val map = userService.selectInfoById(ID);
         if (map!=null && map.containsKey("uname")){

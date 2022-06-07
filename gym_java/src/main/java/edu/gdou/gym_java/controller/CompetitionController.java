@@ -12,6 +12,8 @@ import edu.gdou.gym_java.service.cm.CompetitionService;
 import edu.gdou.gym_java.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,6 +52,7 @@ public class CompetitionController {
 
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequiresPermissions("赛事创建(预告)")
     public ResponseBean createEvent(@RequestParam(value = "uid", required = false) String uid,
                                     @Valid @RequestParam("event_name") String name,
                                     @Valid @RequestParam(value = "event_time") String time,
@@ -68,6 +71,7 @@ public class CompetitionController {
         return new ResponseBean(200, "赛事审核id信息", cid);
     }
 
+    @RequiresPermissions("赛事取消")
     @RequestMapping(value = "/cancel", method = RequestMethod.POST)
     public ResponseBean cancelEvent(@RequestParam("cid") String cid,
                                     @RequestParam(value = "uid", required = false) String uid,
@@ -88,6 +92,7 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/queryEvent", method = RequestMethod.GET)
+    @RequiresPermissions("赛事查询")
     public ResponseBean queryEvents(@RequestParam(value = "cid",required = false) Integer cid,
                                     @RequestParam(value = "name", required = false) String name,
                                     @RequestParam(value = "uname",required = false) String uname,
@@ -108,6 +113,7 @@ public class CompetitionController {
      * @return 成功数信息
      */
     @RequestMapping(value = "/eventSetFields",method = RequestMethod.POST)
+    @RequiresPermissions("比赛场地安排")
     public ResponseBean eventSetFields(@RequestBody Map<String,Object> map){
         val cid = Integer.parseInt(String.valueOf(map.get("cid")));
         val ids = (List<Integer>)map.get("ids"); //这个是在审核中的场地信息
@@ -123,6 +129,7 @@ public class CompetitionController {
      * @return CompetitionField
      */
     @RequestMapping(value = "/userLinkField",method = RequestMethod.POST)
+    @RequiresPermissions(logical = Logical.OR,value = {"比赛场地安排","裁判简介公告"})
     public ResponseBean FieldUserLinkEvent(@RequestParam(value = "cfId")String cfId,
                                            @RequestParam(value = "uid")String uid,
                                            @RequestParam(value = "context") String context) {
@@ -133,6 +140,7 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/updateUserEvent",method = RequestMethod.POST)
+    @RequiresPermissions(logical = Logical.OR,value = {"比赛场地安排","裁判简介公告"})
     public ResponseBean updateUserEvent(@RequestParam(value = "cfId")String cfId,
                                            @RequestParam(value = "uid")String uid,
                                            @RequestParam(value = "context") String context) {
@@ -147,6 +155,7 @@ public class CompetitionController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryRefereeAnnouncements",method = RequestMethod.GET)
+    @RequiresPermissions("查询最新公告")
     public ResponseBean queryRefereeAnnouncements(@RequestParam(value = "cid",required = false)String cid) {
         if(cid==null){
             return new ResponseBean(200,"查询裁判公告信息", competitionService.queryRefereeAnnouncements(null));
@@ -161,6 +170,7 @@ public class CompetitionController {
      * @return Set<CompetitionEquipment> 正确插入的值
      */
     @RequestMapping(value = "/equipmentLinkField",method = RequestMethod.POST)
+    @RequiresPermissions(logical = Logical.OR,value = {"比赛场地安排","赛事器材申请"})
     public ResponseBean fieldEquipmentLinkEvent(@RequestBody Map<String,Object> map) {
         val cfid = Integer.parseInt(String.valueOf(map.get("cfId")));
         val objectList =gson.fromJson(gson.toJson(map.get("equipment")),List.class);
@@ -175,6 +185,7 @@ public class CompetitionController {
 
     // 审核部分
     @RequestMapping(value = "/queryCheck",method = RequestMethod.GET)
+    @RequiresPermissions("赛事审核")
     public ResponseBean queryCheck(@RequestParam(value = "uid",required = false)String uid,
                                    @RequestParam(value = "status",required = false)String status){
         if(uid==null){
@@ -185,6 +196,7 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/check",method = RequestMethod.GET)
+    @RequiresPermissions("赛事审核")
     public ResponseBean checkStatus(@RequestParam(value = "check_id") String id, @RequestParam(value = "status")String status,@RequestParam("reason") String reason){
         val user = userService.currentUser();
         val uid = user.getId();
