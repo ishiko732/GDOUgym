@@ -115,7 +115,7 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
             val competitionField = new CompetitionField();
             competitionField.setCid(cid);
             competitionField.setFcId(fcId);
-            val field = fieldService.getBaseMapper().selectByMap(competitionField.getMap());
+            val field = fieldService.getBaseMapper().selectByMap(getMap(competitionField));
             if(field==null||field.isEmpty()){
                 val insert = fieldService.getBaseMapper().insert(competitionField);
                 if(insert!=0){
@@ -124,6 +124,23 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
             }
         }
         return integers;
+    }
+
+    public Map<String,Object> getMap(Object obj){
+        val hashMap = new HashMap<String, Object>();
+        val fields = obj.getClass().getDeclaredFields();
+        for (java.lang.reflect.Field field : fields) {
+            try {
+                val o = field.get(obj);
+                if(o!=null){
+                    hashMap.put(field.getName(), o);
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        hashMap.remove("serialVersionUID");
+        return hashMap;
     }
 
     /**
