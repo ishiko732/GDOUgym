@@ -16,5 +16,14 @@
             <if test="number!='' and number!=null">and number = #{number}</if>
         </where>
     </select>
-
+    
+    <select id="generateEquipmentIncome" resultType="Double">
+        SELECT SUM(rentTime*ers.`price`*number)
+        FROM Rent_equipment re INNER JOIN Equipment_rent_standard ers
+        ON  ers.`eid` = re.`eid`
+        <where>
+            <if test="year!=null and year!=''">YEAR(rentDate) = #{year} </if>
+            <if test="month!=null and month!=''">and MONTH(rentDate) = #{month}</if>
+        </where>
+    </select>
 </mapper>
