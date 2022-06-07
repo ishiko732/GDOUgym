@@ -9,6 +9,7 @@
               :class="$route.path=='/home/userManagement/queryUserInfo'?'active':''">查询用户个人信息</span>
         <span class="top_text" @click="updatePwdForce"
               :class="$route.path=='/home/userManagement/updatePwdForce'?'active':''">修改密码(强制)</span>
+
       </div>
       <div class="manager" v-show="roleId<6?isShowManager=true:isShowManager=false">
           <span class="top_text" @click="createAnnouncement"

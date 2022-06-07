@@ -1,4 +1,4 @@
-package edu.gdou.gym_java.controller.cm;
+package edu.gdou.gym_java.controller;
 
 
 import com.google.gson.Gson;

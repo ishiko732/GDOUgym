@@ -183,7 +183,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = getUser(username);
         String pre_md5 ;
         String new_md5 ;
-        if (isForced) {
+        if (user!=null && isForced) {
             pre_md5=user.getPassword();
         }else if (prePassword!=null){
             pre_md5=md5.md5(prePassword);
@@ -192,7 +192,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         new_md5 = md5.md5(newPassword);
 
-        if (user.getPassword().equals(pre_md5)){
+        if (user!=null && user.getPassword().equals(pre_md5)){
             user.setPassword(new_md5);
             return getBaseMapper().updateById(user)!=0;
         }else{
