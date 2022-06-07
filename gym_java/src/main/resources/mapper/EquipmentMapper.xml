@@ -8,8 +8,8 @@
         select * from Equipment
         <where>
             <if test="name!='' and name!=null">name=#{name}</if>
-            <if test="types!='' and types!=null">types=#{types}</if>
-            <if test="number!='' and number!=null">number=#{number}</if>
+            <if test="types!='' and types!=null">and types=#{types}</if>
+            <if test="number!='' and number!=null">and number=#{number}</if>
         </where>
     </select>
 
