@@ -86,6 +86,8 @@ export default {
     del(row,index) {
       console.log(index);
     },
+  },
+  created() {
   }
 }
 </script>
