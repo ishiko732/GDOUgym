@@ -23,13 +23,13 @@
       <el-dialog title="注册" :visible.sync="isShowRegister" center>
         <el-form>
           <el-form-item label="学号：" :label-width="formLabelWidth">
-            <el-input v-model="id" autocomplete="off"></el-input>
+            <el-input v-model.trim="id" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="用户名：" :label-width="formLabelWidth">
-            <el-input v-model="username_register" autocomplete="off"></el-input>
+            <el-input v-model.trim="username_register" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="密码：" :label-width="formLabelWidth">
-            <el-input type="password" v-model="password_register" autocomplete="off"></el-input>
+            <el-input type="password" v-model.trim="password_register" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="角色：" :label-width="formLabelWidth">
             <el-select v-model="role" placeholder="请选择">
@@ -54,7 +54,7 @@
 
 <script>
 import Vcode from "vue-puzzle-vcode"
-import { Login,Register } from "@/request/api";
+import { Login,Register,SelLoginUserInfo } from "@/request/api";
 
 export default {
   name: "Login",
@@ -99,11 +99,15 @@ export default {
         if(res.code == 200){
           if(res.msg == "Login success"){
             localStorage.setItem("token",res.data)
-            localStorage.setItem("username",this.username)
             this.$message.success("登录成功")
             setTimeout(()=>{
               this.$router.push({path: '/home'})
             },500)
+
+            SelLoginUserInfo().then(res=>{
+              this.$store.state.roleId = res.data.roleId
+              this.$store.state.username = res.data.name
+            })
           }else if(res.msg == "Login failed"){
             this.$message.error("密码错误")
           }else if(res.msg == "用户未注册"){

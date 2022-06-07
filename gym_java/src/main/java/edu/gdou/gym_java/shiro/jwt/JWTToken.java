@@ -1,4 +1,4 @@
-package edu.gdou.gym_java.shiro;
+package edu.gdou.gym_java.shiro.jwt;
 
 import org.apache.shiro.authc.AuthenticationToken;
 

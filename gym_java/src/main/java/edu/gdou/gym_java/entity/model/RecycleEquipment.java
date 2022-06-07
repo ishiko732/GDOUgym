@@ -20,12 +20,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("RecycleEquipment")
+@TableName("Recycle_equipment")
 @ApiModel(value = "Recycle_equipment", description = "")
 public class RecycleEquipment {
     @ApiModelProperty("器材回收reid")
-    @TableId(value = "fid")
-    private Integer fid;
+    @TableId(value = "reid")
+    private Integer reid;
 
     @ApiModelProperty("器材名称")
     @TableField(value="name")

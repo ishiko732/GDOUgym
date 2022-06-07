@@ -78,7 +78,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-/deep/*{
+/deep/ *{
 
   overflow: hidden;
 }

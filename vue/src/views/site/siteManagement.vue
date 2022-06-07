@@ -7,6 +7,8 @@
               :class="typeShow&&$route.path=='/home/siteManagement/siteTypeManagement'?'active':''">场地类型管理</span>
         <span class="top_text" @click="appointment"
               :class="appointmentShow&&$route.path=='/home/siteManagement/appointmentManagement'?'active':''">预约审核</span>
+        <span class="top_text" @click="siteappointment"
+              :class="siteAppointment&&$route.path=='/home/siteManagement/siteAppointment'?'active':''">场地预约</span>
         <span class="top_text" @click="notice"
               :class="noticeShow&&$route.path=='/home/siteManagement/noticeManagement'?'active':''">通知管理</span>
       </div>
@@ -23,6 +25,7 @@ export default {
       typeShow:false,
       appointmentShow:false,
       noticeShow:false,
+      siteAppointment:false
     };
   },
   methods: {
@@ -30,19 +33,29 @@ export default {
       this.typeShow=true
       this.appointmentShow=false
       this.noticeShow=false
+      this.siteAppointment=false
       this.$router.push({path:'/home/siteManagement/siteTypeManagement'})
     },
     appointment(){
       this.typeShow=false
       this.appointmentShow=true
       this.noticeShow=false
+      this.siteAppointment=false
       this.$router.push({path:'/home/siteManagement/appointmentManagement'})
     },
     notice(){
       this.typeShow=false
       this.appointmentShow=false
+      this.siteAppointment=false
       this.noticeShow=true
       this.$router.push({path:'/home/siteManagement/noticeManagement'})
+    },
+    siteappointment(){
+      this.typeShow=false
+      this.appointmentShow=false
+      this.noticeShow=false
+      this.siteAppointment=true
+      this.$router.push({path:'/home/siteManagement/siteAppointment'})
     },
   }
 }
@@ -65,7 +78,7 @@ export default {
     border-bottom: 1px solid deepskyblue;
   }
 }
-/deep/*{
+/deep/ *{
   overflow: hidden;
 }
 .el-tabs{

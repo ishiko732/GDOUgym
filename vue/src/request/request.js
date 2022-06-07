@@ -23,12 +23,15 @@ instance.interceptors.request.use(config=>{
     if(token){
         config.headers["Authorization"]=token
     }
-    console.log(config);
+    // console.log(config);
     return config
 })
 
 //响应拦截器
 instance.interceptors.response.use(res=>{
+    // console.log(res);
+    localStorage.removeItem("token")
+    localStorage.setItem("token",res.headers.authorization)
     return res.data
 })
 
