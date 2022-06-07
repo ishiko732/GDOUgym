@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Map;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -50,4 +52,7 @@ public class User implements Serializable,Comparable<User> {
     public int compareTo(User o) {
         return this.getId()-o.getId();
     }
+
+    @TableField(exist = false)
+    private Map<String,Object> info;
 }
