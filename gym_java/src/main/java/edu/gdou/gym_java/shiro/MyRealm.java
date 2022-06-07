@@ -69,6 +69,7 @@ public class MyRealm extends AuthorizingRealm {
         if (username == null) {
             throw new AuthenticationException("token 验证失败");
         }
+        log.info("token是否过期："+JWTUtil.isExp(token));
         if (!JWTUtil.isExp(token)) {
             // 解密获得username，用于和数据库进行对比
             User userBean = userService.getUser(username);
@@ -81,10 +82,10 @@ public class MyRealm extends AuthorizingRealm {
                 throw new AuthenticationException("用户或密码错误");
             } else {
                 // 获取RefreshToken的时间戳
-                String currentTimeMillisRedis = JedisUtil.getObject(Constant.PREFIX_SHIRO_REFRESH_TOKEN + username).toString();
+                String currentTimeMillisRedis = JedisUtil.getJson(Constant.PREFIX_SHIRO_REFRESH_TOKEN + username);
                 // 获取AccessToken时间戳，与RefreshToken的时间戳对比
                 if (currentTimeMillisRedis.equals(JWTUtil.getCreateTime(token))) {
-                    token = refreshToken(token,userBean);
+                    refreshToken(token,userBean);
                     return new SimpleAuthenticationInfo(token, token, "my_realm");
                 }
             }
@@ -101,14 +102,14 @@ public class MyRealm extends AuthorizingRealm {
         // 判断Redis中RefreshToken是否存在
         if (JedisUtil.exists(Constant.PREFIX_SHIRO_REFRESH_TOKEN + username)) {
             // Redis中RefreshToken还存在，获取RefreshToken的时间戳
-            String currentTimeMillisRedis = (String)JedisUtil.getObject(Constant.PREFIX_SHIRO_REFRESH_TOKEN + username);
+            String currentTimeMillisRedis =JedisUtil.getJson(Constant.PREFIX_SHIRO_REFRESH_TOKEN + username);
             // 获取当前AccessToken中的时间戳，与RefreshToken的时间戳对比，如果当前时间戳一致，进行AccessToken刷新
-            if (currentTimeMillisRedis.equals(JWTUtil.getUsername(token))) {
-                token = JWTUtil.sign(username, userBean.getPassword());// 刷新AccessToken
+            if (currentTimeMillisRedis.equals(JWTUtil.getCreateTime(token))) {
+                String new_token = JWTUtil.sign(username, userBean.getPassword());// 刷新AccessToken
                 HttpServletResponse response = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getResponse();
                 // 最后将刷新的AccessToken存放在Response的Header中的Authorization字段返回
                 assert response != null;
-                response.setHeader("Authorization", token);
+                response.setHeader("Authorization", new_token);
                 response.setHeader("Access-Control-Expose-Headers", "Authorization");
             }
         }

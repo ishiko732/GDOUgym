@@ -92,6 +92,9 @@ public class UserController {
             if(JedisUtil.exists(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName())){
                 JedisUtil.delKey(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName());
             }
+            if (JedisUtil.exists(Constant.PREFIX_SHIRO_ACCESS_TOKEN+user.getName())){
+                JedisUtil.delKey(Constant.PREFIX_SHIRO_ACCESS_TOKEN+user.getName());
+            }
             val token = JWTUtil.sign(username, md5_password);
             return new ResponseBean(200, "Login success", token);
         } else {
@@ -315,6 +318,9 @@ public class UserController {
         val user = userService.currentUser();
         if(JedisUtil.exists(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName())){
             JedisUtil.delKey(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName());
+        }
+        if (JedisUtil.exists(Constant.PREFIX_SHIRO_ACCESS_TOKEN+user.getName())){
+            JedisUtil.delKey(Constant.PREFIX_SHIRO_ACCESS_TOKEN+user.getName());
         }
         SecurityUtils.getSubject().logout();
         return new ResponseBean(200, "注销成功", null);

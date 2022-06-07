@@ -9,16 +9,16 @@ import edu.gdou.gym_java.exception.CustomException;
 import edu.gdou.gym_java.shiro.redis.Constant;
 import edu.gdou.gym_java.shiro.redis.JedisUtil;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Component
 @Slf4j
 public class JWTUtil {
-    // 过期时间5分钟
-    private static final long EXPIRE_TIME = 5*60*1000;
 
     /**
      * 校验token是否正确
@@ -60,17 +60,20 @@ public class JWTUtil {
      */
     public static String sign(String username, String secret) {
         try {
-            long currentTimeMillis= System.currentTimeMillis();
-            Date date = new Date(currentTimeMillis+EXPIRE_TIME);
+            Timestamp currentTimestamp = TimeUtils.nowToTimeStamp();
+            long currentTimeMillis= currentTimestamp.getTime();
+            Date date = new Date(currentTimeMillis+Constant.EXPIRE_TIME);
             // 设置RefreshToken，时间戳为当前时间戳，直接设置即可(会覆盖已有的RefreshToken)
-            JedisUtil.setObject(Constant.PREFIX_SHIRO_REFRESH_TOKEN +username, String.valueOf(System.currentTimeMillis()), Constant.refreshTokenExpireTime);
+            JedisUtil.setJson(Constant.PREFIX_SHIRO_REFRESH_TOKEN +username, TimeUtils.TimeStampToString(currentTimestamp), Constant.refreshTokenExpireTime);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             // 附带username信息
-            return JWT.create()
+            String token = JWT.create()
                     .withClaim(Constant.USERNAME, username)
-                    .withClaim(Constant.CURRENT_TIME_MILLIS, String.valueOf(System.currentTimeMillis()))
+                    .withClaim(Constant.CURRENT_TIME_MILLIS, TimeUtils.TimeStampToString(currentTimestamp))
                     .withExpiresAt(date)
                     .sign(algorithm);
+            JedisUtil.setJson(Constant.PREFIX_SHIRO_ACCESS_TOKEN+username,token,Constant.accessTokenExpireTime);
+            return token;
         } catch (UnsupportedEncodingException e) {
             return null;
         }

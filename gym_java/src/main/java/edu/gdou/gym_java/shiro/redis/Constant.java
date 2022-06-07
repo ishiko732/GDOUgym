@@ -58,6 +58,11 @@ public class Constant {
      */
     public static final Integer PASSWORD_MAX_LEN = 8;
 
+    // 长期时间 30分钟
     public static final int refreshTokenExpireTime=30*60;
+    // 过期时间5分钟
+    public static final long EXPIRE_TIME = 5*60*1000;
+    // 过期时间5分钟
+    public static final int accessTokenExpireTime = 5*60;
 
 }
