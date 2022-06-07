@@ -44,6 +44,12 @@ const routes = [
             name:'siteArrange',
             component:()=>import('../views/site/siteArrange')
           },
+           {
+            //场地信息路由
+            path:'/home/siteManagement/siteMessage',
+            name:'siteMessage',
+            component:()=>import('../views/site/siteMessage')
+          },
           {
             //场地类型管理路由
             path:'/home/siteManagement/siteTypeManagement',

@@ -36,3 +36,40 @@ export const QueryAnnType = () => request.get("/announcement/type")
 
 // 修改密码
 export const UpdatePassword = (params) => request.post("/user/changePassword",params)
+
+// 获取场地类型
+export const queryType = () => request.get("field/queryType")
+
+//按照类型查询场地
+export const queryFieldByType = (params) => request.get("field/queryFieldByType", { params })
+
+//查询场地安排表
+export const listTimeByDate = (params) => request.post("/field/listTimeByDate", params)
+
+//获取场地一周信息安排
+export const queryDate = () => request.get("field/queryDate")
+
+//预约场地
+export const orderField = (params) => request.post("/field/orderField", params)
+
+//查询场地预约
+export const queryCheck = () => request.get("field/queryCheck")
+
+//场地预约审核
+export const checkOrder = (params) => request.post("/field/checkOrder", params)
+
+//用户查询场地审核列表
+export const queryCheckByUid = () => request.post("field/queryCheckByUid")
+
+//取消场地预约
+export const cancelCheckById = (params) => request.post("/field/cancelCheckById", params)
+
+//查询场地费用
+export const queryMoneyByTimeId = (params) => request.get("/field/queryMoneyByTimeId", { params })
+
+
+
+
+
+
+

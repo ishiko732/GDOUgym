@@ -41,7 +41,7 @@
         </el-row>
       </div>
       <div class="router">
-        <router-view style="width: 1660px;"></router-view>
+        <router-view style="width: 1660px;height:auto"></router-view>
       </div>
     </div>
   </div>

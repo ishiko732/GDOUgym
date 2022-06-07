@@ -1,5 +1,5 @@
 <template>
-  <div class="messageContainer">
+  <div class="messageContainer" style="height:1000px">
     <template>
       <el-table :data="msgData" border style="width: 100%">
         <el-table-column prop="fid" label="ID" width="180">
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {queryFieldType} from '@/request/api'
+import { queryFieldByType } from '@/request/api'
 export default {
   data () { 
     return {
@@ -40,7 +40,9 @@ export default {
   },
   created () { 
     this.tid = this.$route.query.tid
-    queryFieldType({ tid: this.tid }).then(res => {
+    console.log(this.tid);
+    queryFieldByType({ tid: this.tid }).then(res => {
+      console.log(res);
       this.msgData=res.data
     })
   },
