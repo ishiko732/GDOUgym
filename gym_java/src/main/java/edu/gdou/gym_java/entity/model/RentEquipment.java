@@ -1,5 +1,6 @@
 package edu.gdou.gym_java.entity.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "Rent_equipment", description = "")
 public class RentEquipment {
     @ApiModelProperty("器材租用rid")
-    @TableId(value = "rid")
+    @TableId(value = "rid", type = IdType.AUTO)
     private Integer rid;
 
     @ApiModelProperty("器材eid")

@@ -1,13 +1,8 @@
 package edu.gdou.gym_java.controller;
 
 import edu.gdou.gym_java.entity.bean.ResponseBean;
-import edu.gdou.gym_java.entity.model.Equipment;
-import edu.gdou.gym_java.entity.model.FixEquipment;
-import edu.gdou.gym_java.entity.model.RecycleEquipment;
-import edu.gdou.gym_java.service.EquipmentRentStandardService;
-import edu.gdou.gym_java.service.EquipmentService;
-import edu.gdou.gym_java.service.FixEquipmentService;
-import edu.gdou.gym_java.service.RecycleEquipmentService;
+import edu.gdou.gym_java.entity.model.*;
+import edu.gdou.gym_java.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +23,17 @@ public class EquipmentController {
     private final EquipmentRentStandardService equipmentRentStandardService;
     private final FixEquipmentService fixEquipmentService;
     private final RecycleEquipmentService recycleEquipmentService;
-    public EquipmentController(EquipmentService equipmentService,EquipmentRentStandardService equipmentRentStandardService,FixEquipmentService fixEquipmentService,RecycleEquipmentService recycleEquipmentService){
+    private final UserService userService;
+    private final RentEquipmentService rentEquipmentService;
+    public EquipmentController(EquipmentService equipmentService,EquipmentRentStandardService equipmentRentStandardService,
+                               UserService userService,FixEquipmentService fixEquipmentService,
+                               RecycleEquipmentService recycleEquipmentService,RentEquipmentService rentEquipmentService){
         this.fixEquipmentService = fixEquipmentService;
         this.equipmentService = equipmentService;
         this.equipmentRentStandardService = equipmentRentStandardService;
         this.recycleEquipmentService = recycleEquipmentService;
+        this.userService = userService;
+        this.rentEquipmentService = rentEquipmentService;
     }
 
     @GetMapping("/queryEquipment")
@@ -178,6 +179,48 @@ public class EquipmentController {
         }else{
             return new ResponseBean(200,"输入的eid或number为非数字",null);
         }
+    }
+
+    @PostMapping("/addRentEquipment")
+    public ResponseBean addRentEquipment(@RequestParam("uid")String uid,@RequestParam("eid")String eid,
+                                         @RequestParam("rentTime")String rentTIme,@RequestParam("number")String number){
+        if(StringUtils.isNumeric(uid)||StringUtils.isNumeric(eid)||StringUtils.isNumeric(rentTIme)||StringUtils.isNumeric(number)){
+            User user = userService.queryUserByID(Integer.parseInt(uid));
+            Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
+            if (user!=null && equipment!=null){
+                if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(equipment.getId())){
+                    RentEquipment rentEquipment = new RentEquipment(null, equipment.getId(), equipment.getName(), user.getId(), user.getName(), Integer.parseInt(rentTIme), Integer.parseInt(number));
+                    Boolean flag = rentEquipmentService.addRentEquipment(rentEquipment);
+                    return new ResponseBean(200,flag?"器材租用成功":"器材租用失败",null);
+                }else{
+                    return new ResponseBean(200,"器材租用失败，器材租用数量大于器材可使用数量",null);
+                }
+            }else if(user==null){
+                return new ResponseBean(200,"查询不到用户，输入的uid有误",null);
+            }else{
+                return new ResponseBean(200,"查询不到器材，输入的eid有误",null);
+            }
+        }else{
+            return new ResponseBean(200,"输入的参数为非数字",null);
+        }
+    }
+
+    @GetMapping("/queryRentEquipmentByEid")
+    public ResponseBean responseBean(@RequestParam("rid")String rid){
+        if(StringUtils.isNumeric(rid)){
+            RentEquipment rentEquipment = rentEquipmentService.queryRentEquipmentByEid(Integer.parseInt(rid));
+            return  new ResponseBean(200,rentEquipment!=null?"器材租用记录查询成功":"该器材租用记录不存在",rentEquipment);
+        }else{
+            return new ResponseBean(200,"输入的参数为非数字",null);
+        }
+    }
+
+    @GetMapping("/queryRentEquipment")
+    public ResponseBean responseBean(String rid, String eid, String eName, String uid,
+                                     String username, String rentTime, String number){
+        List<RentEquipment> rentEquipments = rentEquipmentService.queryRentEquipment(rid != null ? Integer.parseInt(rid) : null, eid != null ? Integer.parseInt(eid) : null, eName, uid != null ? Integer.parseInt(uid) : null,
+                                                                                    username, rentTime != null ? Integer.parseInt(rentTime) : null, number != null ? Integer.parseInt(number) : null);
+        return new ResponseBean(200,"查询成功",rentEquipments);
     }
 
 }
