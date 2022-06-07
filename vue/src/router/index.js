@@ -135,6 +135,36 @@ const routes = [
             path:'/home/userManagement/updatePassword',
             name:'updatePassword',
             component:()=>import('../views/user/updatePassword.vue')
+          },
+          {
+            //修改密码（强制）路由
+            path:'/home/userManagement/updatePwdForce',
+            name:'updatePwdForce',
+            component:()=>import('../views/user/updatePwdForce.vue')
+          },
+          {
+            //导入信息路由
+            path:'/home/userManagement/importInfo',
+            name:'importInfo',
+            component:()=>import('../views/user/importInfo.vue')
+          },
+          {
+            //查询用户个人信息路由
+            path:'/home/userManagement/queryUserInfo',
+            name:'queryUserInfo',
+            component:()=>import('../views/user/queryUserInfo.vue')
+          },
+          {
+            //查询管理员信息路由
+            path:'/home/userManagement/queryManager',
+            name:'queryManager',
+            component:()=>import('../views/user/queryManager.vue')
+          },
+          {
+            //查询管理员用户路由
+            path:'/home/userManagement/queryManagerInfo',
+            name:'queryManagerInfo',
+            component:()=>import('../views/user/queryManagerInfo.vue')
           }
         ]
       },

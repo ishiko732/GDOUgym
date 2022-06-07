@@ -42,6 +42,9 @@ export default {
             },{
                 value: '场馆',
                 label: '场馆'
+            },{
+                value: '场地',
+                label: '场地'
             }],
  
         }
