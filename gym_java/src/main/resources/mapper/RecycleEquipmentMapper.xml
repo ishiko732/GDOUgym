@@ -7,10 +7,10 @@
     <select id="queryRecycleEquipment" resultType="edu.gdou.gym_java.entity.model.RecycleEquipment">
         select * from Recycle_equipment
         <where>
-            <if test="reid!=null and reid!=''">and reid=#{reid}</if>
-            <if test="name!=null and name!=''">name=#{name}</if>
-            <if test="number!=null and number!=''">number=#{number}</if>
-            <if test="type!=null and type!=''">type=#{type}</if>
+            <if test="reid!=null and reid!=''">reid=#{reid}</if>
+            <if test="name!=null and name!=''">and name=#{name}</if>
+            <if test="number!=null and number!=''">and number=#{number}</if>
+            <if test="type!=null and type!=''">and type=#{type}</if>
         </where>
     </select>
 
