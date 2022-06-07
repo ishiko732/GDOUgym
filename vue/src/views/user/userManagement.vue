@@ -66,7 +66,7 @@ export default {
     }
   },
   created(){
-    this.roleId = localStorage.getItem("roleId")
+    this.roleId = this.$store.state.roleId
   },
   methods:{
     addManager(){
