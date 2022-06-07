@@ -6,14 +6,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.mapper.UserMapper;
 import edu.gdou.gym_java.service.UserService;
-import edu.gdou.gym_java.controller.testDemo.test;
-import edu.gdou.gym_java.utils.JWTUtil;
+import edu.gdou.gym_java.shiro.jwt.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -22,7 +19,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -183,7 +179,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = getUser(username);
         String pre_md5 ;
         String new_md5 ;
-        if (isForced) {
+        if (user!=null && isForced) {
             pre_md5=user.getPassword();
         }else if (prePassword!=null){
             pre_md5=md5.md5(prePassword);
@@ -192,7 +188,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         new_md5 = md5.md5(newPassword);
 
-        if (user.getPassword().equals(pre_md5)){
+        if (user!=null && user.getPassword().equals(pre_md5)){
             user.setPassword(new_md5);
             return getBaseMapper().updateById(user)!=0;
         }else{

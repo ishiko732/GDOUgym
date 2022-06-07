@@ -18,4 +18,7 @@ public interface EquipmentRentStandardService extends IService<EquipmentRentStan
 
     //根据器材id查询器材租用标准
     EquipmentRentStandard queryEquipmentRentStandardByEid(Integer eid);
+
+    //新增器材租用标准
+    Boolean addEquipmentRentStandard(EquipmentRentStandard equipmentRentStandard);
 }

@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("User")
 @ApiModel(value = "User对象", description = "用户表")
-public class User implements Serializable {
+public class User implements Serializable,Comparable<User> {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,4 +46,8 @@ public class User implements Serializable {
     @TableField(exist = false)
     private Role role;
 
+    @Override
+    public int compareTo(User o) {
+        return this.getId()-o.getId();
+    }
 }

@@ -4,13 +4,15 @@ package edu.gdou.gym_java.controller;
 import edu.gdou.gym_java.entity.VO.FieldCheckVo;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.enums.CheckStatus;
-import edu.gdou.gym_java.entity.enums.RoleEnums;
 import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.utils.TimeUtils;
 import lombok.val;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -35,12 +37,14 @@ public class FieldController {
         this.userService = userService;
     }
     //id查询场地类型
+    @RequiresAuthentication
     @GetMapping("/queryFieldByType")
     public ResponseBean queryFieldByType(@RequestParam("tid")String tid){
         List<Field> fieldList =fieldService.queryFieldByType(Integer.valueOf(tid));
         return new ResponseBean(200,fieldList.size()>0?"查询成功":"查询结果为空",fieldList);
     }
     //查询所有场地类型
+    @RequiresAuthentication
     @GetMapping("/queryType")
     public ResponseBean queryType(){
         List<FieldType> fieldTypeList =fieldService.queryType();
@@ -48,6 +52,7 @@ public class FieldController {
     }
 
     //添加场地类型
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/addType")
     public ResponseBean addType(@RequestParam("typeName") String typeName){
         FieldType fieldType = new FieldType();
@@ -63,6 +68,7 @@ public class FieldController {
     }
 
     //添加场地
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/addField")
     public ResponseBean addField(@RequestParam(value = "money",defaultValue = "0") String money,
                                    @RequestParam(value = "description",defaultValue = "") String description,
@@ -81,6 +87,7 @@ public class FieldController {
     }
 
     //编辑场地
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/updateField")
     public ResponseBean updateField(@RequestParam(value = "money",defaultValue = "0") String money,
                                    @RequestParam(value = "description",defaultValue = "") String description,
@@ -104,6 +111,7 @@ public class FieldController {
 
 
     //编辑场地时间段状态
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/updateStatus")
     public ResponseBean updateStatus(@RequestParam("timeId") String timeId ,
                                     @RequestParam("status") String status){
@@ -112,10 +120,20 @@ public class FieldController {
             } else {
                 return new ResponseBean(200, "场地时间段状态更新失败", null);
             }
-
     }
 
+    // 场地收费标准查询
+    @RequiresAuthentication
+    @GetMapping("/queryMoneyByTimeId")
+    public ResponseBean queryMoneyByTimeId(@RequestParam("timeId") String timeId_par){
+        Integer timeId = Integer.valueOf(timeId_par);
+        Integer money = fieldService.queryMoneyByTimeId(timeId);
+            return new ResponseBean(200, "场地收费标准查询成功", money);
+    }
+
+
     //点击日期查询场地时间段信息安排
+    @RequiresAuthentication
     @PostMapping("/listTimeByDate")
     public ResponseBean listTimeByDate(@RequestParam(value="tid",defaultValue = "0") String tid_par ,
                                      @RequestParam(value = "fid",defaultValue = "0") String fid_par,
@@ -156,27 +174,26 @@ public class FieldController {
         //获取所有场的安排表
         List<FieldDate> fieldDateList = fieldService.search(fid,date);
         map.put("name",fieldType.getTypeName().substring(0,1));
-        map.put("fields",fieldList);
-        map.put("dates",dateValid);
-        map.put("types",fieldTypeList);
+//        map.put("fields",fieldList);
+//        map.put("dates",dateValid);
+//        map.put("types",fieldTypeList);
         map.put("fieldDateList",fieldDateList);
             return new ResponseBean(200,fieldDateList.size()>0?"查询成功":"查询结果为空",map);
     }
 
     //用户提交预约审核，审核项设置为审核中，日期安排项设置为预约中
+    @RequiresAuthentication
     @PostMapping("/orderField")
-    public ResponseBean orderField(@RequestParam("uid") String uid ,
-                                   @RequestParam("card") String card ,
-                                   @RequestParam("timeId") String time_id ,
+    public ResponseBean orderField(@RequestParam("timeId") String time_id ,
                                        @RequestParam(value = "name") String name,
                                        @RequestParam("money") String money_par){
         FieldCheck fieldCheck = new FieldCheck();
-
-        User user = userService.queryUserByID(Integer.valueOf(uid));//用户
+       User user =  userService.currentUser();
+       val map = userService.selectInfoByUid(user.getId());
         //新增审核
         fieldCheck.setTime(new java.sql.Timestamp(System.currentTimeMillis()));
         fieldCheck.setName(name);
-        fieldCheck.setCard(card);
+        fieldCheck.setCard( map.get("id").toString());
         fieldCheck.setMoney(Integer.valueOf(money_par));
         fieldCheck.setStatus("审核中");
         fieldCheck.setUser(user);
@@ -210,6 +227,7 @@ public class FieldController {
 
     //后台审核通过，审核项设置为待支付，日期安排项设置为占用
     //后台审核不通过，审核项设置为已退回，日期安排项设置为空闲
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/checkOrder")
     public ResponseBean orderField(@RequestParam("id") String id ,
                                    @RequestParam("status") String status){
@@ -245,6 +263,7 @@ public class FieldController {
 
 
     //管理员查询审核列表
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @GetMapping("/queryCheck")
     public ResponseBean queryCheck(){
         List<FieldCheckVo> fieldCheckVos = fieldService.queryCheck();
@@ -252,38 +271,48 @@ public class FieldController {
     }
 
     //用户查询自己的审核列表
+    @RequiresAuthentication
      @PostMapping("/queryCheckByUid")
-     public ResponseBean queryCheckByUid(@RequestParam(value = "uid",defaultValue = "0",required = true)String uid){
-         List<FieldCheckVo> fieldCheckVos = fieldService.queryCheckByUid(Integer.valueOf(uid));
+     public ResponseBean queryCheckByUid(){
+         User user =  userService.currentUser();
+         List<FieldCheckVo> fieldCheckVos = fieldService.queryCheckByUid(Integer.valueOf(user.getId()));
          return new ResponseBean(200,fieldCheckVos.size()>0?"查询成功":"查询结果为空",fieldCheckVos);
        }
 
-    //用户根据id和uid修改预约(修改一卡通？)
-    @PostMapping("/updateCheckById")
-    public ResponseBean updateCheckById(@RequestParam(value = "uid",required = true)String uid,
-                                         @RequestParam(value = "id",required = true)String id,
-                                         @RequestParam(value = "card",required = true)String card){
-        FieldCheck fieldCheck = fieldService.queryCheckById(Integer.valueOf(id));
-        User user = userService.queryUserByID(Integer.valueOf(uid));
-        if (fieldCheck.getStatus().equals("审核中") &&fieldCheck!=null && user!=null){
-            fieldCheck.setCard(card);
-                fieldCheck.setUser(user);
-                fieldService.updateCheckCardById(fieldCheck);
-                fieldCheck.setUser(null);
-                    return new ResponseBean(200, "修改预约成功！", fieldCheck);
-
-        }
-        return new ResponseBean(200, "不存在该用户订单或不能取消该状态下的预约", null);
+    //场地收入查询
+    @RequiresPermissions("收支处理")
+    @PostMapping("/querySumMoney")
+    public ResponseBean querySumMoney(@RequestParam("beginDate")String beginDate,
+                                      @RequestParam("endDate")String endDate){
+       Integer sumMoney = fieldService.querySumMoney(beginDate,endDate);
+        return new ResponseBean(200,"场地收入查询成功",sumMoney);
     }
+
+    //用户根据id和uid修改预约(修改一卡通？)
+//    @PostMapping("/updateCheckById")
+//    public ResponseBean updateCheckById(@RequestParam(value = "uid",required = true)String uid,
+//                                         @RequestParam(value = "id",required = true)String id,
+//                                         @RequestParam(value = "card",required = true)String card){
+//        FieldCheck fieldCheck = fieldService.queryCheckById(Integer.valueOf(id));
+//        User user = userService.queryUserByID(Integer.valueOf(uid));
+//        if (fieldCheck.getStatus().equals("审核中") &&fieldCheck!=null && user!=null){
+//            fieldCheck.setCard(card);
+//                fieldCheck.setUser(user);
+//                fieldService.updateCheckCardById(fieldCheck);
+//                fieldCheck.setUser(null);
+//                    return new ResponseBean(200, "修改预约成功！", fieldCheck);
+//
+//        }
+//        return new ResponseBean(200, "不存在该用户订单或不能取消该状态下的预约", null);
+//    }
 
 
     //用户根据id和uid取消预约审核
+    @RequiresAuthentication
     @PostMapping("/cancelCheckById")
-    public ResponseBean cancelCheckById(@RequestParam(value = "uid",required = true)String uid,
-                                        @RequestParam(value = "id",required = true)String id
-                                        ) {
+    public ResponseBean cancelCheckById(@RequestParam(value = "id",required = true)String id) {
         FieldCheck fieldCheck = fieldService.queryCheckById(Integer.valueOf(id));
-        User user = userService.queryUserByID(Integer.valueOf(uid));
+        User user =  userService.currentUser();
         if (user != null&&fieldCheck!=null) {
             fieldCheck.setUser(user);
             if (fieldCheck.getStatus().equals("审核中")) {
@@ -292,15 +321,20 @@ public class FieldController {
                 fieldCheck.setUser(null);
                 return new ResponseBean(200, "取消预约成功", fieldCheck);
             }else if (fieldCheck.getStatus().equals("待支付")) {
-                fieldCheck.setStatus("已取消");
-                fieldService.updateCheck(fieldCheck);
-                //根据订单里的安排表id更新时间段状态
-                List<OrderItem> orderItemList = fieldService.queryOrderItemByFcid(Integer.valueOf(id));
-                for (int i=0;i<orderItemList.size();i++){
-                    fieldService.updateStatus(orderItemList.get(i).getTimeId(),"空闲"); //编辑状态
+                Boolean checkCancelTime = fieldService.checkCancelTime(fieldCheck);
+                if (checkCancelTime){
+                    fieldCheck.setStatus("已取消");
+                    fieldService.updateCheck(fieldCheck);
+                    //根据订单里的安排表id更新时间段状态
+                    List<OrderItem> orderItemList = fieldService.queryOrderItemByFcid(Integer.valueOf(id));
+                    for (int i=0;i<orderItemList.size();i++){
+                        fieldService.updateStatus(orderItemList.get(i).getTimeId(),"空闲"); //编辑状态
+                    }
+                    fieldCheck.setUser(null);
+                    return new ResponseBean(200, "取消预约成功", fieldCheck);
+                }else {
+                    return new ResponseBean(200, "已经接近预约时间，不能取消", null);
                 }
-                fieldCheck.setUser(null);
-                return new ResponseBean(200, "取消预约成功", fieldCheck);
         }
 
     }
@@ -309,20 +343,12 @@ public class FieldController {
 
     //赛事预约场地审核，审核项设置为审核中，日期安排项设置为预约中
     //name页面用场地类型+场地描述+序号生成
-    @PostMapping("/orderFieldByCom")
     @RequiresAuthentication
-    public ResponseBean orderFieldByCom(@RequestParam("uid") String uid ,
-                                   @RequestParam("timeIds") String[] ids ,
+    @PostMapping("/orderFieldByCom")
+    public ResponseBean orderFieldByCom(@RequestParam("timeIds") String[] ids ,
                                    @RequestParam(value = "name") String name,
                                    @RequestParam(value = "money",required = false,defaultValue = "0") String money_par){
-        val currentUser = userService.currentUser();
-        User user;
-        if (currentUser.getRole().getId()< RoleEnums.Student.getRid()){
-            // 如果该用户角色不是管理员，则用当前登录账号作为申请的user
-            user = userService.queryUserByID(Integer.valueOf(uid));
-        }else{
-            user = currentUser;
-        }
+        val user = userService.currentUser();
         val objectMap = userService.selectInfoByUid(user.getId());
         //新增审核
         val card=String.valueOf(objectMap.get("id"));
@@ -351,6 +377,7 @@ public class FieldController {
 
     }
 
+    @RequiresAuthentication
     @GetMapping("/loadingDate")
     public ResponseBean loadingDate(){
         Calendar calendar = Calendar.getInstance();

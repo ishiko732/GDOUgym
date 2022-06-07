@@ -4,20 +4,25 @@ package edu.gdou.gym_java.controller;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
+import edu.gdou.gym_java.entity.enums.RoleEnums;
 import edu.gdou.gym_java.entity.model.MyPage;
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.service.RoleService;
 import edu.gdou.gym_java.service.UserService;
-import edu.gdou.gym_java.utils.JWTUtil;
+import edu.gdou.gym_java.shiro.redis.Constant;
+import edu.gdou.gym_java.shiro.redis.JedisUtil;
+import edu.gdou.gym_java.shiro.jwt.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
@@ -58,7 +63,7 @@ public class UserController {
     public ResponseBean currentUserInfoByUid(){
         val user = userService.currentUser();
         val map = userService.selectInfoByUid(user.getId());
-        if (map.containsKey("name")){
+        if (map.containsKey("uname")){
             return new ResponseBean(200, "获取到的用户信息("+map.get("name")+")", map);
         }else{
             return new ResponseBean(200, "未获取到用户信息", null);
@@ -80,7 +85,15 @@ public class UserController {
         }
         val md5_password = this.md5.md5(password);
         if (user.getPassword().equals(md5_password)) {
-            return new ResponseBean(200, "Login success", JWTUtil.sign(username, md5_password));
+            // 清除可能存在的Shiro权限信息缓存
+            if(JedisUtil.exists(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName())){
+                JedisUtil.delKey(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName());
+            }
+            if (JedisUtil.exists(Constant.PREFIX_SHIRO_ACCESS_TOKEN+user.getName())){
+                JedisUtil.delKey(Constant.PREFIX_SHIRO_ACCESS_TOKEN+user.getName());
+            }
+            val token = JWTUtil.sign(username, md5_password);
+            return new ResponseBean(200, "Login success", token);
         } else {
             log.info("用户尝试登录失败：账号"+username+"密码："+password);
             return new ResponseBean(200, "Login failed", null);
@@ -208,7 +221,7 @@ public class UserController {
      * @return ResponseBean
      */
     @RequestMapping(value = "changeRole",method = RequestMethod.POST)
-    @RequiresPermissions(logical = Logical.AND, value = {"更新管理员角色"})
+    @RequiresPermissions("更新管理员角色")
     public ResponseBean updateRole(@RequestParam("ID")String ID,@RequestParam("RID")String RID){
         int managerID = Integer.parseInt(ID);
         int roleID =Integer.parseInt(RID);
@@ -233,27 +246,24 @@ public class UserController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryUsers",method = RequestMethod.GET)
+    @RequiresAuthentication
     public ResponseBean queryUsers(@RequestParam("current") Integer current,
                                    @RequestParam("size")Integer size,
                                    @RequestParam("cnt")Integer cnt) {
         MyPage<User> myPage = new MyPage<User>(current, size).setSelectInt(cnt);
         IPage<User> userMyPage = userService.selectUserPage(myPage);
-//        System.out.println("总条数:" + userMyPage.getTotal());
-//        System.out.println("当前页数: " + userMyPage.getCurrent());
-//        System.out.println("当前每页显示数:" + userMyPage.getSize());
         Map<String,Object> map =new HashMap<>();
         map.put("total",userMyPage.getTotal());
         map.put("currentPage",userMyPage.getCurrent());
         map.put("currentSize",userMyPage.getSize());
         map.put("pages",userMyPage.getPages());
         val users = userMyPage.getRecords();
+        Collections.sort(users);
         map.put("users",users);
-        val infos = new ArrayList<Map<Integer,Object>>();
+        val infos = new ArrayList<Map<String,Object>>();
         for (User user : users) {
             val objectMap = userService.selectInfoByUid(user.getId());
-            val infoMap = new HashMap<Integer, Object>();
-            infoMap.put(user.getId(),objectMap);
-            infos.add(infoMap);
+            infos.add(objectMap);
         }
         map.put("infos",infos);
         return new ResponseBean(200, "获取到的用户信息", map);
@@ -265,7 +275,7 @@ public class UserController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryUserInfo",method = {RequestMethod.GET,RequestMethod.POST})
-    @RequiresPermissions(logical = Logical.AND, value = {"查询用户个人信息"})
+    @RequiresPermissions("查询用户个人信息")
     public ResponseBean queryUserInfoByUid(@RequestParam("ID")String ID){
         val map = userService.selectInfoByUid(Integer.parseInt(ID));
         if (map!=null && map.containsKey("uname")){
@@ -280,7 +290,7 @@ public class UserController {
      * @return ResponseBean
      */
     @RequestMapping(value = "/queryUserInfoById",method = {RequestMethod.GET,RequestMethod.POST})
-    @RequiresPermissions(logical = Logical.AND, value = {"查询用户个人信息"})
+    @RequiresPermissions("查询用户个人信息")
     public ResponseBean queryUserInfoById(@RequestParam("ID")String ID){
         val map = userService.selectInfoById(ID);
         if (map!=null && map.containsKey("uname")){
@@ -288,5 +298,38 @@ public class UserController {
         }else{
             return new ResponseBean(200, "未获取到用户信息", null);
         }
+    }
+
+    // shiro
+    /**
+     * 注销登录
+     * @return ResponseBean
+     */
+    @RequestMapping(value = "/logout",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequiresAuthentication
+    public ResponseBean logout(){
+        // 清除可能存在的Shiro权限信息缓存
+        val user = userService.currentUser();
+        if(JedisUtil.exists(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName())){
+            JedisUtil.delKey(Constant.PREFIX_SHIRO_REFRESH_TOKEN+user.getName());
+        }
+        if (JedisUtil.exists(Constant.PREFIX_SHIRO_ACCESS_TOKEN+user.getName())){
+            JedisUtil.delKey(Constant.PREFIX_SHIRO_ACCESS_TOKEN+user.getName());
+        }
+        SecurityUtils.getSubject().logout();
+        return new ResponseBean(200, "注销成功", null);
+    }
+    @RequestMapping(value = "/newToken",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequiresAuthentication
+    public ResponseBean newToken(){
+        val httpServletRequest = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        val oldToken = httpServletRequest.getHeader("Authorization");
+        val hashMap = new HashMap<String, String>();
+        val username = JWTUtil.getUsername(oldToken);
+        val newToken = JedisUtil.getJson(Constant.PREFIX_SHIRO_ACCESS_TOKEN + username);
+        hashMap.put("old_token",oldToken);
+        hashMap.put("new_token",newToken);
+        hashMap.put("new_token_create_time",JWTUtil.getCreateTime(newToken));
+        return new ResponseBean(200,"新token",hashMap);
     }
 }
