@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class TimeUtils {
 
@@ -53,6 +54,22 @@ public class TimeUtils {
         long startDateTime = dateFormat.parse(dateFormat.format(startDate)).getTime();
         long endDateTime = dateFormat.parse(dateFormat.format(endDate)).getTime();
         return (int) ((endDateTime - startDateTime) / (1000 * 3600 * 24));
+    }
+
+    /**
+     * 获取当前日期是星期几<br>
+     *
+     * @param dt
+     * @return 当前日期是星期几
+     */
+    public static String getWeekOfDate(Date dt) {
+        String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dt);
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        if (w < 0)
+            w = 0;
+        return weekDays[w];
     }
 
 }

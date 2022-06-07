@@ -185,6 +185,11 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         List<FieldCheckVo> fieldCheckVos = new ArrayList<>();
         for (int i = 0; i < fieldCheckList.size(); i++) {
             FieldCheckVo fieldCheckVo = new FieldCheckVo();
+            if (fieldCheckList.get(i).getStatus().equals("审核中")){
+                fieldCheckVo.setFlag(true);
+            }else {
+                fieldCheckVo.setFlag(false);
+            }
             fieldCheckVo.setCard(fieldCheckList.get(i).getCard());
             fieldCheckVo.setId(fieldCheckList.get(i).getId());
             fieldCheckVo.setMoney(fieldCheckList.get(i).getMoney());
@@ -217,6 +222,11 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         User user = getBaseMapper().queryUserById(uid);
         for (int i = 0; i < fieldCheckList.size(); i++) {
             FieldCheckVo fieldCheckVo = new FieldCheckVo();
+            if (fieldCheckList.get(i).getStatus().equals("待支付")){
+                fieldCheckVo.setFlag(true);
+            }else {
+                fieldCheckVo.setFlag(false);
+            }
             fieldCheckVo.setCard(fieldCheckList.get(i).getCard());
             fieldCheckVo.setId(fieldCheckList.get(i).getId());
             fieldCheckVo.setMoney(fieldCheckList.get(i).getMoney());
@@ -308,5 +318,57 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     @Override
     public Integer queryTypeByName(String typeName) {
         return getBaseMapper().queryTypeByName(typeName);
+    }
+
+    @Override
+    public Integer queryMoneyByTimeId(Integer timeId) {
+        Integer money = 0;
+        TimeArrange timeArrange = getBaseMapper().queryTimeById(timeId);
+        FieldDate fieldDate = getBaseMapper().queryDateById(timeArrange.getFdid());
+        Field field = getBaseMapper().queryFieldById(fieldDate.getField().getFid());
+        Time endTime = timeArrange.getEndTime();
+        Date date = fieldDate.getDate();
+        String week = TimeUtils.getWeekOfDate(date);
+        if (week.equals("星期六")||week.equals("星期日")){
+                if (endTime.getTime()!=time[5].getTime()||endTime.getTime()!=time[6].getTime()){
+                    money = field.getMoney();
+                }
+        }else {
+            if (endTime.getTime()<=time[8].getTime()||endTime.getTime()>time[10].getTime()){
+                money = field.getMoney();
+            }
+        }
+            return money;
+    }
+
+    @Override
+    public Boolean checkCancelTime(FieldCheck fieldCheck) {
+        List<OrderItem> orderItemList = getBaseMapper().queryOrderItemByFcid(fieldCheck.getId());
+        Date dateNow = new Date(System.currentTimeMillis());
+        for (int j = 0; j < orderItemList.size(); j++) {
+            TimeArrange timeArrange = getBaseMapper().queryTimeById(orderItemList.get(j).getTimeId());
+            FieldDate fieldDate = getBaseMapper().queryDateById(timeArrange.getFdid());
+            try {
+                int diff = TimeUtils.getDayDiffer(fieldDate.getDate(), dateNow);
+                if (diff>= 0) {
+                    return true;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Integer querySumMoney(String beginDate, String endDate) {
+        Integer sum=0;
+        List<FieldCheck> fieldCheckList = getBaseMapper().queryCheckByTime(beginDate,endDate);
+        if (fieldCheckList.size()>0){
+            for (int i=0;i<fieldCheckList.size();i++){
+                sum = sum+  fieldCheckList.get(i).getMoney();
+            }
+        }
+        return sum;
     }
 }
