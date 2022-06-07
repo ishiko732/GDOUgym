@@ -73,4 +73,6 @@ public interface FieldMapper extends BaseMapper<Field> {
     Boolean addType(FieldType fieldType);
 
     Integer queryTypeByName(String typeName);
+
+    List<FieldCheck> queryCheckByTime(String beginDate, String endDate);
 }
