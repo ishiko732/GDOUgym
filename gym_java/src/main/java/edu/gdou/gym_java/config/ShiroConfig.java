@@ -1,6 +1,6 @@
 package edu.gdou.gym_java.config;
 
-import edu.gdou.gym_java.shiro.JWTFilter;
+import edu.gdou.gym_java.shiro.jwt.JWTFilter;
 import edu.gdou.gym_java.shiro.MyRealm;
 import edu.gdou.gym_java.shiro.cache.CustomCacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;

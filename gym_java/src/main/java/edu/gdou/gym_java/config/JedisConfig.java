@@ -16,8 +16,6 @@ import redis.clients.jedis.JedisPoolConfig;
  * http://www.cnblogs.com/GodHeng/p/9301330.html
  */
 @Configuration
-@EnableAutoConfiguration
-@PropertySource("classpath:config.properties")
 @ConfigurationProperties(prefix = "redis")
 public class JedisConfig {
 

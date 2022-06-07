@@ -1,4 +1,4 @@
-package edu.gdou.gym_java.utils;
+package edu.gdou.gym_java.shiro.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -8,13 +8,9 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import edu.gdou.gym_java.exception.CustomException;
 import edu.gdou.gym_java.shiro.redis.Constant;
 import edu.gdou.gym_java.shiro.redis.JedisUtil;
+import edu.gdou.gym_java.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.Date;

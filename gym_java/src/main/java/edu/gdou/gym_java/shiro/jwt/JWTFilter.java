@@ -1,4 +1,4 @@
-package edu.gdou.gym_java.shiro;
+package edu.gdou.gym_java.shiro.jwt;
 
 import com.google.gson.Gson;
 import edu.gdou.gym_java.entity.bean.ResponseBean;

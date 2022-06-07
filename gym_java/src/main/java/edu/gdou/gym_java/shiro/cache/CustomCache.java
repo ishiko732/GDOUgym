@@ -2,7 +2,7 @@ package edu.gdou.gym_java.shiro.cache;
 
 
 import edu.gdou.gym_java.shiro.redis.JedisUtil;
-import edu.gdou.gym_java.utils.JWTUtil;
+import edu.gdou.gym_java.shiro.jwt.JWTUtil;
 import edu.gdou.gym_java.utils.SerializableUtil;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;

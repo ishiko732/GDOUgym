@@ -2,9 +2,10 @@ package edu.gdou.gym_java.shiro;
 
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.service.UserService;
+import edu.gdou.gym_java.shiro.jwt.JWTToken;
 import edu.gdou.gym_java.shiro.redis.Constant;
 import edu.gdou.gym_java.shiro.redis.JedisUtil;
-import edu.gdou.gym_java.utils.JWTUtil;
+import edu.gdou.gym_java.shiro.jwt.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -49,8 +50,11 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = JWTUtil.getUsername(principals.toString());
-        User user = userService.getUser(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+        if(username==null){
+            return simpleAuthorizationInfo;
+        }
+        User user = userService.getUser(username);
         if(user!=null){
             simpleAuthorizationInfo.addRole(user.getRole().getRole());
             Set<String> permission = user.getRole().getPermissions();

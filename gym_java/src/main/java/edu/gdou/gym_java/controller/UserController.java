@@ -3,7 +3,6 @@ package edu.gdou.gym_java.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.google.gson.Gson;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.MyPage;
 import edu.gdou.gym_java.entity.model.User;
@@ -11,7 +10,7 @@ import edu.gdou.gym_java.service.RoleService;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.shiro.redis.Constant;
 import edu.gdou.gym_java.shiro.redis.JedisUtil;
-import edu.gdou.gym_java.utils.JWTUtil;
+import edu.gdou.gym_java.shiro.jwt.JWTUtil;
 import edu.gdou.gym_java.utils.MD5;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
