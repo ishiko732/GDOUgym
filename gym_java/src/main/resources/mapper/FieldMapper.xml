@@ -13,6 +13,13 @@
         </association>
     </resultMap>
 
+    <resultMap id="BaseDateResultMap" type="edu.gdou.gym_java.entity.model.FieldDate">
+        <id column="id" property="id"/>
+        <result column="inode" property="inode"/>
+        <result column="date" property="date"/>
+        <association property="field" column="fid" javaType="edu.gdou.gym_java.entity.model.Field" select="queryFieldById">
+        </association>
+    </resultMap>
 
     <select id="queryFieldByType" resultType="edu.gdou.gym_java.entity.model.Field">
         select * from Field
@@ -160,7 +167,7 @@ order by inode
         where id = #{id} and uid = #{user.id}
     </update>
 
-    <select id="queryDateById" resultType="edu.gdou.gym_java.entity.model.FieldDate">
+    <select id="queryDateById" resultMap="BaseDateResultMap">
         select * from Field_date where id = #{fdid}
     </select>
 

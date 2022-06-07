@@ -112,8 +112,16 @@ public class FieldController {
             } else {
                 return new ResponseBean(200, "场地时间段状态更新失败", null);
             }
-
     }
+
+    // 场地收费标准查询
+    @GetMapping("/queryMoneyByTimeId")
+    public ResponseBean queryMoneyByTimeId(@RequestParam("timeId") String timeId_par){
+        Integer timeId = Integer.valueOf(timeId_par);
+        Integer money = fieldService.queryMoneyByTimeId(timeId);
+            return new ResponseBean(200, "场地收费标准查询成功", money);
+    }
+
 
     //点击日期查询场地时间段信息安排
     @PostMapping("/listTimeByDate")

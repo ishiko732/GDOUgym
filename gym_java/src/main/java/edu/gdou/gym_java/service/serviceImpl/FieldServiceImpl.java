@@ -309,4 +309,25 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     public Integer queryTypeByName(String typeName) {
         return getBaseMapper().queryTypeByName(typeName);
     }
+
+    @Override
+    public Integer queryMoneyByTimeId(Integer timeId) {
+        Integer money = 0;
+        TimeArrange timeArrange = getBaseMapper().queryTimeById(timeId);
+        FieldDate fieldDate = getBaseMapper().queryDateById(timeArrange.getFdid());
+        Field field = getBaseMapper().queryFieldById(fieldDate.getField().getFid());
+        Time endTime = timeArrange.getEndTime();
+        Date date = fieldDate.getDate();
+        String week = TimeUtils.getWeekOfDate(date);
+        if (week.equals("星期六")||week.equals("星期日")){
+                if (endTime.getTime()!=time[5].getTime()||endTime.getTime()!=time[6].getTime()){
+                    money = field.getMoney();
+                }
+        }else {
+            if (endTime.getTime()<=time[8].getTime()||endTime.getTime()>time[10].getTime()){
+                money = field.getMoney();
+            }
+        }
+            return money;
+    }
 }

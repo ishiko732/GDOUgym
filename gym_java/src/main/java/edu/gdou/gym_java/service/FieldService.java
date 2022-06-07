@@ -62,4 +62,6 @@ public interface FieldService extends IService<Field> {
     Boolean addType(FieldType fieldType);
 
     Integer queryTypeByName(String typeName);
+
+    Integer queryMoneyByTimeId(Integer timeId);
 }
