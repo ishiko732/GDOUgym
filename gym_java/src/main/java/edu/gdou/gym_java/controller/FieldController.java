@@ -52,7 +52,7 @@ public class FieldController {
     }
 
     //添加场地类型
-    @RequiresRoles(logical = Logical.AND, value = {"超级管理员", "场地管理员"})
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/addType")
     public ResponseBean addType(@RequestParam("typeName") String typeName){
         FieldType fieldType = new FieldType();
@@ -68,7 +68,7 @@ public class FieldController {
     }
 
     //添加场地
-    @RequiresRoles(logical = Logical.AND, value = {"超级管理员", "场地管理员"})
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/addField")
     public ResponseBean addField(@RequestParam(value = "money",defaultValue = "0") String money,
                                    @RequestParam(value = "description",defaultValue = "") String description,
@@ -87,7 +87,7 @@ public class FieldController {
     }
 
     //编辑场地
-    @RequiresRoles(logical = Logical.AND, value = {"超级管理员", "场地管理员"})
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/updateField")
     public ResponseBean updateField(@RequestParam(value = "money",defaultValue = "0") String money,
                                    @RequestParam(value = "description",defaultValue = "") String description,
@@ -111,7 +111,7 @@ public class FieldController {
 
 
     //编辑场地时间段状态
-    @RequiresRoles(logical = Logical.AND, value = {"超级管理员", "场地管理员"})
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/updateStatus")
     public ResponseBean updateStatus(@RequestParam("timeId") String timeId ,
                                     @RequestParam("status") String status){
@@ -227,7 +227,7 @@ public class FieldController {
 
     //后台审核通过，审核项设置为待支付，日期安排项设置为占用
     //后台审核不通过，审核项设置为已退回，日期安排项设置为空闲
-    @RequiresRoles(logical = Logical.AND, value = {"超级管理员", "场地管理员"})
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/checkOrder")
     public ResponseBean orderField(@RequestParam("id") String id ,
                                    @RequestParam("status") String status){
@@ -263,7 +263,7 @@ public class FieldController {
 
 
     //管理员查询审核列表
-    @RequiresRoles(logical = Logical.AND, value = {"超级管理员", "场地管理员"})
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @GetMapping("/queryCheck")
     public ResponseBean queryCheck(){
         List<FieldCheckVo> fieldCheckVos = fieldService.queryCheck();
