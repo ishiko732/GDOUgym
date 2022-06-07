@@ -340,4 +340,35 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         }
             return money;
     }
+
+    @Override
+    public Boolean checkCancelTime(FieldCheck fieldCheck) {
+        List<OrderItem> orderItemList = getBaseMapper().queryOrderItemByFcid(fieldCheck.getId());
+        Date dateNow = new Date(System.currentTimeMillis());
+        for (int j = 0; j < orderItemList.size(); j++) {
+            TimeArrange timeArrange = getBaseMapper().queryTimeById(orderItemList.get(j).getTimeId());
+            FieldDate fieldDate = getBaseMapper().queryDateById(timeArrange.getFdid());
+            try {
+                int diff = TimeUtils.getDayDiffer(fieldDate.getDate(), dateNow);
+                if (diff>= 0) {
+                    return true;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Integer querySumMoney(String beginDate, String endDate) {
+        Integer sum=0;
+        List<FieldCheck> fieldCheckList = getBaseMapper().queryCheckByTime(beginDate,endDate);
+        if (fieldCheckList.size()>0){
+            for (int i=0;i<fieldCheckList.size();i++){
+                sum = sum+  fieldCheckList.get(i).getMoney();
+            }
+        }
+        return sum;
+    }
 }

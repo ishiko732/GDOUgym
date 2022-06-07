@@ -64,4 +64,8 @@ public interface FieldService extends IService<Field> {
     Integer queryTypeByName(String typeName);
 
     Integer queryMoneyByTimeId(Integer timeId);
+
+    Boolean checkCancelTime(FieldCheck fieldCheck);
+
+    Integer querySumMoney(String beginDate, String endDate);
 }
