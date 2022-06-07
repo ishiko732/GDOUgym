@@ -17,8 +17,6 @@
                 :class="$route.path=='/home/userManagement/updateAnnouncement'?'active':''">修改公告</span>
           <span class="top_text" @click="queryAnnLogs"
                 :class="$route.path=='/home/userManagement/queryAnnLogs'?'active':''">查询公告历史记录</span>
-          <span class="top_text" @click="queryManagerInfo"
-                :class="$route.path=='/home/userManagement/queryManagerInfo'?'active':''">查询管理员用户</span>
         </div>
     </div>
     <div class="top_bottom">
@@ -35,8 +33,8 @@
       <div class="user" v-show="roleId<8?isShowUser=true:isShowUser=false">
         <span class="top_text" @click="updatePassword"
               :class="$route.path=='/home/userManagement/updatePassword'?'active':''">修改密码</span>
-        <span class="top_text" @click="queryManager"
-              :class="$route.path=='/home/userManagement/queryManager'?'active':''">查询管理员信息</span>
+        <span class="top_text" @click="queryManagerInfo"
+              :class="$route.path=='/home/userManagement/queryManagerInfo'?'active':''">查询管理员信息</span>
         <span class="top_text" @click="queryNewAnn"
               :class="$route.path=='/home/userManagement/queryNewAnn'?'active':''">查询最新公告</span>
       </div>

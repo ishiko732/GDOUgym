@@ -86,8 +86,7 @@ export default {
     // 用户通过了验证
     success(msg) {
       this.isShow = false;
-
-      
+      localStorage.removeItem("token")
       Login({
         username: this.username,
         password: this.password,

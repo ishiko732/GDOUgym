@@ -13,8 +13,7 @@ axios.defaults.transformRequest = [function (data) {
 }]
 
 const instance=axios.create({
-    // baseURL:'http://127.0.0.1:8000',
-    baseURL:"http://1.15.187.187:8080/",
+    baseURL:'http://127.0.0.1:8000',
     timeout:10000,           //超过10s 则超时
 })
 
@@ -24,7 +23,7 @@ instance.interceptors.request.use(config=>{
     if(token){
         config.headers["Authorization"]=token
     }
-    // console.log(config);
+    console.log(config);
     return config
 })
 

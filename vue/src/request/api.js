@@ -51,3 +51,7 @@ export const QueryUsers = (params) => request.get("/user/queryUsers",{params})
 
 // 导入信息
 export const ExportUser = (params) => request.post("/user/exportUser",params)
+
+// 查询管理员信息
+export const QueryManagerInfo = (params) => request.post("/user/queryManagerByName",params)
+
