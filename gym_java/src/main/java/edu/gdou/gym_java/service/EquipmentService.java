@@ -24,4 +24,7 @@ public interface EquipmentService extends IService<Equipment> {
 
     //根据eid查询器材
     Equipment queryEquipmentByEid(Integer eid);
+
+    //修改器材数量
+    Boolean updateEquipmentCount(Equipment equipment);
 }
