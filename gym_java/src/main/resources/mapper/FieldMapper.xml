@@ -200,6 +200,10 @@ order by inode
         select count(*) from Field_type where type_name = #{typeName} and is_del = 0
     </select>
 
+    <select id="queryFieldByDes" resultType="java.lang.Integer">
+        select count(*) from Field where description = #{description} and tid =#{tid} and is_del = 0
+    </select>
+
     <select id="queryCheckByTime" resultType="edu.gdou.gym_java.entity.model.FieldCheck">
         select * from Field_check where status = '已完成' and time between #{beginDate} and #{endDate}
 
