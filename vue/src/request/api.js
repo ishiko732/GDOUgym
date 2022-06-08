@@ -103,6 +103,17 @@ export const availableEquipmentCount = (params) => request.get("/equipment/avail
 //查询器材可用数量
 export const queryEquipmentRentStandard = () => request.get("/equipment/queryEquipmentRentStandard")
 
+//器材报废
+export const reduceEquipmentCount = (params) => request.delete("/equipment/reduceEquipmentCount",{params})
 
+//申请回收器材
+export const applyRecycleEquipment = (params) => request.post("/equipment/applyRecycleEquipment",params)
 
+//查询回收器材
+export const queryRecycleEquipment = () => request.get("/equipment/queryRecycleEquipment")
 
+//申请维护器材
+export const applyFixEquipment = (params) => request.post("/equipment/applyFixEquipment",params)
+
+//查询维护器材
+export const queryFixEquipment = () => request.get("/equipment/queryFixEquipment")
