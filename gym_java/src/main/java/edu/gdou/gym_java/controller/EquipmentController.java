@@ -108,7 +108,13 @@ public class EquipmentController {
                 if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(Integer.parseInt(eid))){
                     FixEquipment fixEquipment = new FixEquipment(Integer.parseInt(eid), equipment.getName(), equipment.getTypes(), Integer.parseInt(number));
                     Boolean flag = fixEquipmentService.applyFixEquipment(fixEquipment);
-                    return new ResponseBean(200,flag?"器材维修申报成功":"器材维修申报失败",null);
+                    if (flag){
+                        equipment.setNumber(equipment.getNumber()-Integer.parseInt(number));
+                        Boolean update = equipmentService.updateEquipmentCount(equipment);
+                        return new ResponseBean(200,update?"器材维修申报成功":"器材维修申报失败",null);
+                    }else{
+                        return new ResponseBean(200,"器材维修申报失败",null);
+                    }
                 }else{
                     return new ResponseBean(200,"器材维修申报失败，器材申报数量大于器材可使用数量",null);
                 }
