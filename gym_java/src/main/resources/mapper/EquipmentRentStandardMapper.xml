@@ -5,11 +5,11 @@
 <mapper namespace="edu.gdou.gym_java.mapper.EquipmentRentStandardMapper">
 
     <select id="queryEquipmentRentStandard" resultType="edu.gdou.gym_java.entity.model.EquipmentRentStandard">
-        select erid,eid,name,price,rent_time rentTime from Equipment_rent_standard
+        select * from Equipment_rent_standard
     </select>
 
     <select id="queryEquipmentRentStandardByEid" resultType="edu.gdou.gym_java.entity.model.EquipmentRentStandard">
-        select erid,eid,name,price,rent_time rentTime from Equipment_rent_standard where eid=#{eid}
+        select * from Equipment_rent_standard where eid=#{eid}
     </select>
 
 </mapper>
