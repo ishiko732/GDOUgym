@@ -1,32 +1,40 @@
 <template>
-<div style="height: 1000px">
-  <div class="siteContainer">
-    <div class="top">
-      <div style="margin-left: 30%">
-        <span class="top_text" @click="typeManage"
-              :class="typeShow&&$route.path=='/home/siteManagement/siteTypeManagement'?'active':''">场地类型管理</span>
-        <span class="top_text" @click="appointment"
-              :class="appointmentShow&&$route.path=='/home/siteManagement/appointmentManagement'?'active':''">预约审核</span>
-        <span class="top_text" @click="siteappointment"
-              :class="siteAppointment&&$route.path=='/home/siteManagement/siteAppointment'?'active':''">场地预约</span>
-        <span class="top_text" @click="notice"
-              :class="noticeShow&&$route.path=='/home/siteManagement/noticeManagement'?'active':''">通知管理</span>
+  <div style="height: 1000px">
+    <div class="siteContainer">
+      <div class="top">
+        <div style="margin-left: 30%">
+          <span class="top_text" @click="typeManage" v-show="roleId==1||roleId==3?true:false"
+            :class="typeShow&&$route.path=='/home/siteManagement/siteTypeManagement'?'active':''">场地类型管理</span>
+          <span class="top_text" @click="appointment" v-show="roleId==1||roleId==3?true:false"
+            :class="appointmentShow&&$route.path=='/home/siteManagement/appointmentManagement'?'active':''">预约审核</span>
+          <span class="top_text" @click="pay" v-show="roleId==1||roleId==3?false:true"
+            :class="payShow&&$route.path=='/home/siteManagement/appointPay'?'active':''">预约付费</span>
+          <span class="top_text" @click="siteappointment"
+            :class="siteAppointment&&$route.path=='/home/siteManagement/siteAppointment'?'active':''">场地预约</span>
+          <span class="top_text" @click="notice"
+            :class="noticeShow&&$route.path=='/home/siteManagement/noticeManagement'?'active':''">公告</span>
+        </div>
       </div>
     </div>
+    <router-view></router-view>
   </div>
-  <router-view></router-view>
-</div>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      roleId:"",
       typeShow:false,
       appointmentShow:false,
       noticeShow:false,
-      siteAppointment:false
+      siteAppointment:false,
+      payShow:false,
     };
+  },
+  created () { 
+    this.roleId = this.$store.state.roleId
+    console.log(this.roleId);
   },
   methods: {
     typeManage(){
@@ -56,6 +64,14 @@ export default {
       this.noticeShow=false
       this.siteAppointment=true
       this.$router.push({path:'/home/siteManagement/siteAppointment'})
+    },
+    pay(){
+      this.typeShow=false
+      this.appointmentShow=false
+      this.noticeShow=false
+      this.siteAppointment=false
+      this.payShow=true
+      this.$router.push({path:'/home/siteManagement/appointPay'})
     },
   }
 }

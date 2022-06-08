@@ -1,16 +1,16 @@
 <template>
-  <div class="siteList">
+  <div class="siteList" style="height:1000px;">
     <el-button type="text" @click="dialogVisible = true">新增场地类型</el-button>
     <el-table
         :data="siteData"
         style="width: 100%">
       <el-table-column
-          prop="siteId"
+          prop="tid"
           label="编号"
           width="240">
       </el-table-column>
       <el-table-column
-          prop="name"
+          prop="typeName"
           label="类型名称"
           width="240">
       </el-table-column>
@@ -35,35 +35,31 @@
       </el-table-column>
     </el-table>
     <el-dialog
-        title="提示"
+        title="新增场地类型"
         :visible.sync="dialogVisible"
         width="30%"
         :before-close="handleClose">
-      <el-input></el-input>
+      <div style="display: flex">
+        <span style="margin-top: 10px;">场地类型:&nbsp;&nbsp;</span>
+        <el-input v-model="type" style="width: 60%"></el-input>
+      </div>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确定</el-button>
+                <el-button type="primary" @click="addtype">确定</el-button>
               </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { queryType,addType } from '@/request/api'
 export default {
   name: "siteTypeManagement",
   data(){
     return{
       dialogVisible: false,
-      siteData: [{
-        siteId: '2016-05-02',
-        name: '王小虎1',
-      },{
-        siteId: '2016-05-02',
-        name: '王小虎2',
-      },{
-        siteId: '2016-05-02',
-        name: '王小虎3',
-      },]
+      type:"",
+      siteData: []
     }
   },
   methods:{
@@ -78,14 +74,25 @@ export default {
       console.log(index);
     },
     arrange(row,index) {
-      this.$router.push({path:'/home/siteManagement/siteArrange',query:{id:this.siteData[index].name}})
+      this.$router.push({path:'/home/siteManagement/siteArrange',query:{tid:this.siteData[index].tid}})
     },
     message(row,index) {
-      console.log(index);
+      this.$router.push({ path: '/home/siteManagement/siteMessage', query: { tid: this.siteData[index].tid } })
     },
     del(row,index) {
       console.log(index);
     },
+    addtype(){
+      addType({typeName:this.type}).then(res=>{
+        console.log(res)
+      })
+      this.dialogVisible=false
+    }
+  },
+  created () {
+    queryType().then(res => {
+      this.siteData=res.data
+    })
   }
 }
 </script>

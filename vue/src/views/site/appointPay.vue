@@ -1,8 +1,8 @@
 <template>
-  <div style="height: 100000px">
-    <el-card class="box-card" style="margin-top:20px;" v-for="(item,index) in appointmentData">
+  <div style="height:3000px;">
+    <el-card class="box-card" style="margin-top:20px;" v-for="(item, index) in appointmentData">
       <div slot="header" class="clearfix">
-        <span> 订单号 {{item[0].id}}</span>
+        <span> 订单号 {{ item[0].money }}</span>
       </div>
       <div class="appointment_table">
         <template>
@@ -22,9 +22,9 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <i class="el-icon-check" style="margin-left: 5px; cursor: pointer;"
-                  @click="check(scope.row,scope.$index)"></i>
+                  @click="check(scope.row, scope.$index)"></i>
                 <i class="el-icon-close" style="margin-left: 5px; cursor: pointer;"
-                  @click="close(scope.row,scope.$index)"></i>
+                  @click="close(scope.row, scope.$index)"></i>
               </template>
             </el-table-column>
           </el-table>
@@ -35,27 +35,25 @@
 </template>
 
 <script>
-import { queryCheck, checkOrder } from '@/request/api'
+import { queryCheckByUid, cancelCheckById } from '@/request/api'
 export default {
-  name: "appointmentManagement",
   data () {
     return {
-      appointmentData:[]
+      appointmentData: []
     }
   },
-  created () { 
-    queryCheck().then(res => {
-      console.log(res.data);
-      res.data.forEach((item,index) => {
+  created () {
+    queryCheckByUid().then(res => {
+      res.data.forEach((item, index) => {
         var obj = {}
         var arr = []
         console.log(item.timeArrangeList[0].startTime);
         obj.username = item.userName
-        obj.site=item.name
+        obj.site = item.name
         obj.id = item.id
         obj.date = item.date
         obj.state = item.status
-        obj.time = item.timeArrangeList[0].startTime +"-"+item.timeArrangeList[0].endTime
+        obj.time = item.timeArrangeList[0].startTime + "-" + item.timeArrangeList[0].endTime
         obj.money = item.money
         arr.push(obj)
         this.appointmentData.push(arr)
@@ -64,50 +62,39 @@ export default {
     })
   },
   methods: {
-    close (a, b) { 
-      console.log(a.id);
-      if (a.state == "审核中"||a.state=="已取消") {
-        checkOrder({ id: a.id, status: "审核退回" }).then(res => {
-          this.$message.warning(res.data.name + "已退回")
-          // setTimeout(() => {
-          //   location.reload();
-          // }, 1000);
-        })  
+    close (a,b) {
+      if (a.state == "已退回"||a.state=="已取消") {
+        this.$message.error("不能操作")
       } else {
-        this.$message.warning("已经审核完成")
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 1000);
+        cancelCheckById({id:a.id}).then(res => {
+          this.$message(res.msg)
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        })
       }
-      
     },
-    check (a, b) {
-      if (a.state == "审核中") {
-        checkOrder({ id: a.id, status: "审核通过" }).then(res => {
-        this.$message.success(res.data.name+res.msg)
-        setTimeout(() => {
-          location.reload();
-        }, 1000);
-      })
-      } else {
-        this.$message.warning("已经审核完成")
-      }  
+    check (a,b) {
+      if (a.state == "已退回") {
+        this.$message.error("已退回不能操作")
+      }
     },
   }
 }
 </script>
 
 <style scoped lang="less">
-
-/deep/ *{
-  overflow: hidden
+/deep/ * {
+  overflow: hidden;
 }
-/deep/.box-card{ 
+
+/deep/.box-card {
   width: 90%;
   margin: 0 auto;
-  .clearfix{
+
+  .clearfix {
     font-size: 18px;
   }
-  
+
 }
 </style>

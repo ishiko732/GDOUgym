@@ -1,5 +1,5 @@
 <template>
-<div style="width: 1650px;">
+<div style="width: 1650px;height: 1000px">
   <div class="first_container">
     <div class="title">体育馆器材查询</div>
     <div class="equipment_type">
