@@ -44,6 +44,12 @@ const routes = [
             name:'siteArrange',
             component:()=>import('../views/site/siteArrange')
           },
+           {
+            //场地信息路由
+            path:'/home/siteManagement/siteMessage',
+            name:'siteMessage',
+            component:()=>import('../views/site/siteMessage')
+          },
           {
             //场地类型管理路由
             path:'/home/siteManagement/siteTypeManagement',
@@ -63,10 +69,16 @@ const routes = [
             component:()=>import('../views/site/siteAppointment')
           },
           {
-            //通知管理路由
+            //通知路由
             path:'/home/siteManagement/noticeManagement',
             name:'noticeManagement',
             component:()=>import('../views/site/noticeManagement')
+          },
+          {
+            //学生付费路由
+            path:'/home/siteManagement/appointPay',
+            name:'appointPay',
+            component:()=>import('../views/site/appointPay')
           },
         ],
       },
