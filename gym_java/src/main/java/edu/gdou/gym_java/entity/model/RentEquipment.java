@@ -57,4 +57,8 @@ public class RentEquipment {
     @ApiModelProperty("器材租用日期")
     @TableField(value="rentDate")
     private Date rentDate;
+
+    @ApiModelProperty("器材归还状态")
+    @TableField(value="status")
+    private Integer status;
 }
