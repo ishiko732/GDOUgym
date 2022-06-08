@@ -19,5 +19,9 @@ public interface RentEquipmentService extends IService<RentEquipment> {
     //根据月份查询收入
     Double generateEquipmentIncome(String year,String month);
 
+    //归还器材
     Boolean redeemEquipment(int rid);
+
+    //根据器材id和status查询正在被租用的器材数量
+    Integer queryRentEquipmentAvailableCount(Integer id);
 }

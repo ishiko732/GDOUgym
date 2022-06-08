@@ -6,7 +6,9 @@ import edu.gdou.gym_java.mapper.RentEquipmentMapper;
 import edu.gdou.gym_java.service.RentEquipmentService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, RentEquipment> implements RentEquipmentService {
@@ -39,5 +41,18 @@ public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, R
         }else{
             return false;
         }
+    }
+
+    @Override
+    public Integer queryRentEquipmentAvailableCount(Integer id) {
+        HashMap map = new HashMap<String,Object>();
+        map.put("eid",id);
+        map.put("status",0);
+        int count = 0;
+        List<RentEquipment> rentEquipments = getBaseMapper().selectByMap(map);
+        for (RentEquipment rentEquipment : rentEquipments) {
+            count+=rentEquipment.getNumber();
+        }
+        return count;
     }
 }
