@@ -19,7 +19,7 @@ public class QuartzConfig {
     @Bean
     public Trigger mysqlQuartzTrigger(){
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
-                .withIntervalInSeconds(10)  //设置时间周期单位秒
+                .withIntervalInHours(2) //每2个小时备份一次
                 .repeatForever();
         return TriggerBuilder.newTrigger().forJob(mysqlQuartz())
                 .withIdentity("mysqlQuartz")
