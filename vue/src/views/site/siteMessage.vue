@@ -52,7 +52,7 @@
         width="30%">
       <div class="input">
         <span style="margin-top: 10px;">场地类型:&nbsp;&nbsp;</span>
-        <el-input v-model="edit_description" maxlength="10" style="width: 60%"></el-input>
+        <el-input v-model="edit_description" maxlength="10" style="width: 60%" disabled></el-input>
       </div>
       <div class="input">
         <span style="margin-top: 10px;">场地金额:&nbsp;&nbsp;</span>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { queryFieldByType ,addField,updateField} from '@/request/api'
+import { queryFieldByType ,addField,updateField,deleteField} from '@/request/api'
 export default {
   data () { 
     return {
@@ -97,12 +97,16 @@ export default {
     })
   },
   methods: {
-    del () { 
-
+    del (a,b) {
+      this.fid=b[a].fid
+      deleteField({fid:this.fid}).then(res=>{
+        this.$message(res.msg)
+      })
     },
     edit (a,b) {
       this.edit_dialogVisible=true
       this.fid=b[a].fid
+      this.edit_description=b[a].description
     },
     handleClose(done) {
       this.$confirm('确认关闭？')
@@ -115,7 +119,7 @@ export default {
       console.log(this.tid,this.money,this.description,this.num)
       addField({tid:this.tid,money:this.money,description:this.description,num:this.num})
       .then(res=>{
-        console.log(res)
+        this.$message(res.msg)
       })
       this.dialogVisible=false
     },

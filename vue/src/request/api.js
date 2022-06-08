@@ -76,6 +76,15 @@ export const addField = (params) => request.post("/field/addField", params)
 //编辑场地
 export const updateField = (params) => request.post("/field/updateField", params)
 
+//用户付费
+export const pay = (params) => request.post("/field/pay", params)
+
+//删除场地类型
+export const deleteType = (params) => request.post("/field/deleteType", params)
+
+//删除场地类型
+export const deleteField = (params) => request.post("/field/deleteField", params)
+
 // 注销
 export const Logout = () => request.get("/user/logout")
 
@@ -94,4 +103,33 @@ export const ExportUser = (params) => request.post("/user/exportUser",params)
 // 查询管理员信息
 export const QueryManagerInfo = (params) => request.post("/user/queryManagerByName",params)
 
+//查询器材
+export const queryEquipment = (params) => request.get("/equipment/queryEquipment",{params})
 
+//查询器材可用数量
+export const availableEquipmentCount = (params) => request.get("/equipment/availableEquipmentCount",{params})
+
+//查询器材可用数量
+export const queryEquipmentRentStandard = () => request.get("/equipment/queryEquipmentRentStandard")
+
+//器材报废
+export const reduceEquipmentCount = (params) => request.delete("/equipment/reduceEquipmentCount",{params})
+
+//申请回收器材
+export const applyRecycleEquipment = (params) => request.post("/equipment/applyRecycleEquipment",params)
+
+//查询回收器材
+export const queryRecycleEquipment = () => request.get("/equipment/queryRecycleEquipment")
+
+//确认回收器材
+export const confirmRecycleEquipment = (params) => request.post("/equipment/confirmRecycleEquipment",params)
+
+
+//申请维护器材
+export const applyFixEquipment = (params) => request.post("/equipment/applyFixEquipment",params)
+
+//查询维护器材
+export const queryFixEquipment = () => request.get("/equipment/queryFixEquipment")
+
+//确认器材维护
+export const confirmFixEquipment = (params) => request.post("equipment/confirmFixEquipment",params)
