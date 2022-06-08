@@ -21,8 +21,8 @@ public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, R
     }
 
     @Override
-    public List<RentEquipment> queryRentEquipment(Integer rid, Integer eid, String eName, Integer uid, String username, Integer rentTime, Integer number) {
-        return getBaseMapper().queryRentEquipment(rid,eid,eName,uid,username,rentTime,number);
+    public List<RentEquipment> queryRentEquipment(Integer rid, Integer eid, String eName, Integer uid, String username, Integer rentTime, Integer number,Integer status) {
+        return getBaseMapper().queryRentEquipment(rid,eid,eName,uid,username,rentTime,number,status);
     }
 
     @Override

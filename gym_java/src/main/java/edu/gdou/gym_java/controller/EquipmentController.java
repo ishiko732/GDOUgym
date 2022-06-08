@@ -248,7 +248,7 @@ public class EquipmentController {
             EquipmentRentStandard equipmentRentStandard = equipmentRentStandardService.queryEquipmentRentStandardByEid(Integer.parseInt(eid));
             if (user!=null && equipment!=null && equipmentRentStandard!=null){
                 if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(equipment.getId())&&Integer.parseInt(rentTime)<=equipmentRentStandard.getMaxRentTime()){
-                    RentEquipment rentEquipment = new RentEquipment(null, equipment.getId(), equipment.getName(), user.getId(), user.getName(), Integer.parseInt(rentTime), Integer.parseInt(number),new Date());
+                    RentEquipment rentEquipment = new RentEquipment(null, equipment.getId(), equipment.getName(), user.getId(), user.getName(), Integer.parseInt(rentTime), Integer.parseInt(number),new Date(),0);
                     Boolean flag = rentEquipmentService.addRentEquipment(rentEquipment);
                     return new ResponseBean(200,flag?"器材租用成功":"器材租用失败",null);
                 }else if(Integer.parseInt(rentTime)>equipmentRentStandard.getMaxRentTime()){
@@ -285,10 +285,10 @@ public class EquipmentController {
     public ResponseBean queryRentEquipment(@RequestParam(value = "rid",required = false) String rid, @RequestParam(value = "eid",required = false)String eid,
                                            @RequestParam(value = "eName",required = false)String eName, @RequestParam(value = "uid",required = false)String uid,
                                            @RequestParam(value = "username",required = false)String username, @RequestParam(value = "rentTime",required = false)String rentTime,
-                                           @RequestParam(value = "number",required = false)String number){
+                                           @RequestParam(value = "number",required = false)String number,@RequestParam(value = "status",required = false)String status){
         List<RentEquipment> rentEquipments = rentEquipmentService.queryRentEquipment(StringUtils.isNumeric(rid) ? Integer.parseInt(rid) : null, StringUtils.isNumeric(eid) ? Integer.parseInt(eid) : null, eName,
                 StringUtils.isNumeric(uid) ? Integer.parseInt(uid) : null, username, StringUtils.isNumeric(rentTime) ? Integer.parseInt(rentTime) : null,
-                StringUtils.isNumeric(number) ? Integer.parseInt(number) : null);
+                StringUtils.isNumeric(number) ? Integer.parseInt(number) : null,StringUtils.isNumeric(status) ? Integer.parseInt(status) : null);
         return new ResponseBean(200,"查询成功",rentEquipments);
     }
 

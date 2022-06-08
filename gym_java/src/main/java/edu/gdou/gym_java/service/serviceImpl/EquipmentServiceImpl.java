@@ -39,11 +39,9 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 
     @Override
     public Integer availableEquipmentCount(Integer eid) {
-        Integer fixCount = fixEquipmentService.queryFixEquipmentCountByFid(eid);
         Integer compositionCount = compositionEquipmentService.queryCompositionEquipmentCountByEid(eid);
-
         Equipment equipment = getBaseMapper().selectById(eid);
-        return equipment.getNumber()-fixCount-compositionCount;
+        return equipment.getNumber()-compositionCount;
     }
 
     @Override
