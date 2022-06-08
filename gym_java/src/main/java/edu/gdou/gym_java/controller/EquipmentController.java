@@ -108,7 +108,13 @@ public class EquipmentController {
                 if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(Integer.parseInt(eid))){
                     FixEquipment fixEquipment = new FixEquipment(Integer.parseInt(eid), equipment.getName(), equipment.getTypes(), Integer.parseInt(number));
                     Boolean flag = fixEquipmentService.applyFixEquipment(fixEquipment);
-                    return new ResponseBean(200,flag?"器材维修申报成功":"器材维修申报失败",null);
+                    if (flag){
+                        equipment.setNumber(equipment.getNumber()-Integer.parseInt(number));
+                        Boolean update = equipmentService.updateEquipmentCount(equipment);
+                        return new ResponseBean(200,update?"器材维修申报成功":"器材维修申报失败",null);
+                    }else{
+                        return new ResponseBean(200,"器材维修申报失败",null);
+                    }
                 }else{
                     return new ResponseBean(200,"器材维修申报失败，器材申报数量大于器材可使用数量",null);
                 }
@@ -128,21 +134,24 @@ public class EquipmentController {
 
     @PostMapping("/confirmFixEquipment")
     @RequiresPermissions(logical = Logical.AND, value = {"维护器材"})
-    public ResponseBean confirmFixEquipment(@RequestParam("eid")String eid,@RequestParam("number")String number){
-        if (StringUtils.isNumeric(eid)&&StringUtils.isNumeric(number)){
+    public ResponseBean confirmFixEquipment(@RequestParam("eid")String eid){
+        if (StringUtils.isNumeric(eid)){
             Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
-            if (equipment!=null){
-                FixEquipment fixEquipment = new FixEquipment(Integer.parseInt(eid), equipment.getName(), equipment.getTypes(), Integer.parseInt(number));
-                Boolean flag = fixEquipmentService.confirmFixEquipment(fixEquipment);
-                if (flag){
-                    FixEquipmentBill fixEquipmentBill = new FixEquipmentBill(null, equipment.getId(), Integer.parseInt(number), equipment.getPrice()/2, new Date());
+            FixEquipment fixEquipment = fixEquipmentService.queryFixEquipmentByFid(Integer.parseInt(eid));
+            if (equipment==null){
+                return new ResponseBean(200,"器材不存在",null);
+            }else if(fixEquipment==null){
+                return new ResponseBean(200,"需要维修的器材不存在",null);
+            }else{
+                if (fixEquipmentService.deleteFixEquipmentByFid(fixEquipment.getFid())) {
+                    equipment.setNumber(equipment.getNumber()+fixEquipment.getNumber());
+                    Boolean flag = equipmentService.updateEquipmentCount(equipment);
+                    FixEquipmentBill fixEquipmentBill = new FixEquipmentBill(null, equipment.getId(), fixEquipment.getNumber(), equipment.getPrice()/2, new Date());
                     Boolean insert = fixEquipmentBillService.addFixEquipmentBill(fixEquipmentBill);
-                    return new ResponseBean(200,insert?"器材维修确认成功":"器材维修确认失败",null);
+                    return new ResponseBean(200,flag&&insert?"器材维修确认成功":"器材维修确认失败",null);
                 }else{
                     return new ResponseBean(200,"器材维修确认失败",null);
                 }
-            }else{
-                return new ResponseBean(200,"需要维修的器材不存在",null);
             }
         }else{
             return new ResponseBean(200,"输入的eid或number为非数字",null);
@@ -213,8 +222,8 @@ public class EquipmentController {
 
     @PostMapping("/confirmRecycleEquipment")
     @RequiresPermissions(logical = Logical.AND, value = {"回收器材审核"})
-    public ResponseBean confirmRecycleEquipment(@RequestParam("eid")String eid,@RequestParam("number")String number){
-        if (StringUtils.isNumeric(eid)&&StringUtils.isNumeric(number)){
+    public ResponseBean confirmRecycleEquipment(@RequestParam("eid")String eid){
+        if (StringUtils.isNumeric(eid)){
             Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
             RecycleEquipment recycle = recycleEquipmentService.queryRecycleEquipment(Integer.parseInt(eid));
             if (equipment==null){
@@ -222,8 +231,7 @@ public class EquipmentController {
             }else if(recycle==null){
                 return new ResponseBean(200,"器材回收记录不存在",null);
             }else{
-                RecycleEquipment recycleEquipment = new RecycleEquipment(equipment.getId(),equipment.getName(),equipment.getTypes(),Integer.parseInt(number));
-                Boolean flag = recycleEquipmentService.confirmRecycleEquipment(recycleEquipment);
+                Boolean flag = recycleEquipmentService.confirmRecycleEquipment(recycle);
                 return new ResponseBean(200,flag?"器材回收确认成功":"器材回收确认失败",null);
             }
         }else{

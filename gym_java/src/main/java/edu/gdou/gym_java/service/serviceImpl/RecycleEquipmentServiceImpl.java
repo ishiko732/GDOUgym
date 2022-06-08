@@ -27,35 +27,27 @@ public class RecycleEquipmentServiceImpl extends ServiceImpl<RecycleEquipmentMap
 
     @Override
     public Boolean applyRecycleEquipment(RecycleEquipment recycleEquipment) {
-        return getBaseMapper().insert(recycleEquipment)==1;
+        RecycleEquipment recycle = queryRecycleEquipment(recycleEquipment.getReid());
+        if (recycle==null){
+            return getBaseMapper().insert(recycleEquipment)==1;
+        }else{
+            recycle.setNumber(recycle.getNumber()+recycleEquipment.getNumber());
+            return getBaseMapper().updateById(recycle)==1;
+        }
     }
 
     @Override
     public Boolean confirmRecycleEquipment(RecycleEquipment recycleEquipment) {
-        RecycleEquipment recycle = queryRecycleEquipment(recycleEquipment.getReid());
+        //删除器材回收，增加原本器材数量
         Equipment equipment = equipmentService.queryEquipmentByEid(recycleEquipment.getReid());
-        if (recycle==null){
+        if (recycleEquipment==null){
             return false;
         }else{
-            if(recycle.getNumber()==recycleEquipment.getNumber()){
-                int delete = getBaseMapper().deleteById(recycle.getReid());
-                if (delete==1){
-                    equipment.setNumber(equipment.getNumber()+recycleEquipment.getNumber());
-                    Boolean flag = equipmentService.updateEquipmentCount(equipment);
-                    return flag;
-                }else{
-                    return false;
-                }
-            }else if(recycle.getNumber()>recycleEquipment.getNumber()){
-                recycle.setNumber(recycle.getNumber()-recycleEquipment.getNumber());
-                int update = getBaseMapper().updateById(recycle);
-                if(update==1){
-                    equipment.setNumber(equipment.getNumber()+recycleEquipment.getNumber());
-                    Boolean flag = equipmentService.updateEquipmentCount(equipment);
-                    return flag;
-                }else{
-                    return false;
-                }
+            int delete = getBaseMapper().deleteById(recycleEquipment.getReid());
+            if (delete==1){
+                equipment.setNumber(equipment.getNumber()+recycleEquipment.getNumber());
+                Boolean flag = equipmentService.updateEquipmentCount(equipment);
+                return flag;
             }else{
                 return false;
             }

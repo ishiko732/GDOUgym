@@ -29,7 +29,6 @@ import java.util.Objects;
 public class AnnouncementController {
     private final AnnouncementService announcementService;
     private final UserService userService;
-
     public AnnouncementController(AnnouncementService announcementService, UserService userService) {
         this.announcementService = announcementService;
         this.userService = userService;

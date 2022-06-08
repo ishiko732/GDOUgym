@@ -19,8 +19,6 @@ public class GlobalException {
         if (e instanceof AuthorizationException){
             return new ResponseBean(401,"没有权限访问",null);
         }else if(e instanceof UnknownAccountException){
-            log.warn(e.getMessage(), e);
-            log.info("catch UnknownAccountException");
             return new ResponseBean(403,"操作被禁止",e.getMessage());
         }
         log.error("系统全局发生错误:[出错原因:{},出错信息:{}]",e.getCause(),e.getMessage());
@@ -32,7 +30,6 @@ public class GlobalException {
     @ExceptionHandler(CustomUnauthorizedException.class)
     @ResponseBody
     public ResponseBean UnauthorizedException(CustomUnauthorizedException e) {
-        log.error("系统全局发生错误:[出错原因:{},出错信息:{}]",e.getCause(),e.getMessage());
         return new ResponseBean(403,"操作被禁止",e.getMessage());
     }
 
@@ -44,8 +41,6 @@ public class GlobalException {
         if (e instanceof AuthorizationException){
             return new ResponseBean(401,"没有权限访问",null);
         }else {
-            log.warn(e.getMessage(), e);
-            log.info("catch UnknownAccountException");
             return new ResponseBean(403,"操作被禁止",e.getMessage());
         }
     }

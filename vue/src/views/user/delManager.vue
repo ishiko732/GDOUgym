@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="height:800px">
         <div class="form">
             <h2>删除管理员</h2>
             <el-form>
@@ -43,7 +43,8 @@ export default {
                     this.clear()
                 })
                 .catch(err=>{
-                    this.$message.error("请求错误，删除管理员失败")
+                    // console.log("err:",err.response.data);
+                    this.$message.error(err.response.data.data+"，请重新登录")
                 })
             }
         },

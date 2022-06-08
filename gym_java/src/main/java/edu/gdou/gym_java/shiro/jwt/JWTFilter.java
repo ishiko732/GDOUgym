@@ -10,14 +10,14 @@ import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class JWTFilter extends BasicHttpAuthenticationFilter {
@@ -65,10 +65,10 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             try {
                 executeLogin(request, response);
             } catch (AuthenticationException e) {
-                log.error("shiro 验证异常 {}", getException(e));
+                log.error("[shiro 验证异常] {}", e.getMessage());
                 response401( response, e.getMessage());
             } catch (Exception e) {
-                log.error("shiro 验证异常 {}", getException(e));
+                log.error("[shiro 验证异常] {}", e.getMessage());
                 response401(response, e.getMessage());
                 return false;
             }
@@ -104,9 +104,11 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType("application/json; charset=utf-8");
-        try (PrintWriter out = httpServletResponse.getWriter()) {
+        try (ServletOutputStream out = httpServletResponse.getOutputStream()) {
             String data = new Gson().toJson(new ResponseBean(HttpStatus.UNAUTHORIZED.value(), "无权访问(Unauthorized)" , msg));
-            out.append(data);
+            out.write(data.getBytes(StandardCharsets.UTF_8));
+            out.flush();
+            // https://www.cnblogs.com/muxi0407/p/12094935.html
         } catch (IOException e) {
             log.error("直接返回Response信息出现IOException异常:{}", e.getMessage());
             throw new CustomException("直接返回Response信息出现IOException异常:" + e.getMessage());

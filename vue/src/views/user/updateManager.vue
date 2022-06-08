@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="height:800px">
         <div class="form">
             <h2>更新管理员</h2>
             <el-form>
@@ -81,6 +81,9 @@ export default {
                         this.$message.warning("发生未知错误")
                     }
                     this.clear()
+                }).catch(err=>{
+                    // console.log("err:",err.response.data);
+                    this.$message.error(err.response.data.data+"，请重新登录")
                 })
             }
         },
