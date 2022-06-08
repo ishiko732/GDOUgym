@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.gdou.gym_java.mapper.FixEquipmentMapper">
 
-    <select id="queryFixEquipment" resultType="edu.gdou.gym_java.entity.model.RecycleEquipment">
+    <select id="queryFixEquipment" resultType="edu.gdou.gym_java.entity.model.FixEquipment">
         select * from Fix_equipment
         <where>
             <if test="fid!=null and fid!=''">fid=#{fid}</if>
