@@ -79,4 +79,6 @@ public interface FieldMapper extends BaseMapper<Field> {
     Boolean deleteType(FieldType fieldType);
 
     Boolean deleteField(Field field);
+
+    Integer queryFieldByDes(Field field);
 }
