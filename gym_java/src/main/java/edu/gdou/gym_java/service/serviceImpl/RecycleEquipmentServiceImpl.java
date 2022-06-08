@@ -27,7 +27,13 @@ public class RecycleEquipmentServiceImpl extends ServiceImpl<RecycleEquipmentMap
 
     @Override
     public Boolean applyRecycleEquipment(RecycleEquipment recycleEquipment) {
-        return getBaseMapper().insert(recycleEquipment)==1;
+        RecycleEquipment recycle = queryRecycleEquipment(recycleEquipment.getReid());
+        if (recycle==null){
+            return getBaseMapper().insert(recycleEquipment)==1;
+        }else{
+            recycle.setNumber(recycle.getNumber()+recycleEquipment.getNumber());
+            return getBaseMapper().updateById(recycle)==1;
+        }
     }
 
     @Override
