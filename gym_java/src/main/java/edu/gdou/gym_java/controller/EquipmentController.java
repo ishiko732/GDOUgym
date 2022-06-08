@@ -269,6 +269,16 @@ public class EquipmentController {
         }
     }
 
+    @PostMapping("/redeemEquipment")
+    public ResponseBean redeemEquipment(@RequestParam("rid")String rid){
+        if (StringUtils.isNumeric(rid)) {
+            Boolean flag = rentEquipmentService.redeemEquipment(Integer.parseInt(rid));
+            return new ResponseBean(200,flag?"器材归还成功":"器材归还失败",null);
+        }else{
+            return new ResponseBean(200,"输入的rid为非数字",null);
+        }
+    }
+
     @GetMapping("/queryRentEquipmentByEid")
     @RequiresPermissions(logical = Logical.AND, value = {"查询器材"})
     public ResponseBean queryRentEquipmentByEid(@RequestParam("rid")String rid){

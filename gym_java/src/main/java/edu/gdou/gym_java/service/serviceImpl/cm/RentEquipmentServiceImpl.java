@@ -29,4 +29,15 @@ public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, R
     public Double generateEquipmentIncome(String year, String month) {
         return getBaseMapper().generateEquipmentIncome(year,month);
     }
+
+    @Override
+    public Boolean redeemEquipment(int rid) {
+        RentEquipment rentEquipment = getBaseMapper().selectById(rid);
+        if (rentEquipment!=null){
+            rentEquipment.setStatus(1);
+            return getBaseMapper().updateById(rentEquipment)==1;
+        }else{
+            return false;
+        }
+    }
 }

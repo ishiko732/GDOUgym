@@ -18,4 +18,6 @@ public interface RentEquipmentService extends IService<RentEquipment> {
 
     //根据月份查询收入
     Double generateEquipmentIncome(String year,String month);
+
+    Boolean redeemEquipment(int rid);
 }
