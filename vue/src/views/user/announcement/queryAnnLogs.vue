@@ -1,6 +1,6 @@
 <template>
 <!-- 查询公告历史记录 -->
-    <div>
+    <div style="height:800px">
         <div class="form">
             <h2>查询公告历史记录</h2>
             <el-form>
@@ -69,6 +69,9 @@ export default {
                     label:res.data[i]
                 })
             }
+        }).catch(err=>{
+            // console.log("err:",err.response.data);
+            this.$message.error(err.response.data.data+"，请重新登录")
         })
     },
     methods:{
@@ -80,6 +83,9 @@ export default {
                 }else{
                     this.$message.warning(res.msg)
                 }
+            }).catch(err=>{
+                // console.log("err:",err.response.data);
+                this.$message.error(err.response.data.data+"，请重新登录")
             })
         }
     }

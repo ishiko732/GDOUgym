@@ -1,5 +1,5 @@
 <template>
-<div style="height:870px">
+<div>
   <div class="top">
     <div class="top_top">
       <div class="userManager" v-show="roleId==2||roleId==1?isShowUserManager=true:isShowUserManager=false">
@@ -55,7 +55,7 @@ export default {
       isShowUserManager:false,
       isShowManager:false,
       isShowSuperManager:false,
-      isShowUser:false,   
+      isShowUser:false,
       
     }
   },

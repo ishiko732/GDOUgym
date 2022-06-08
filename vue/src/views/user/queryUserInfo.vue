@@ -1,6 +1,6 @@
 <template>
 <!-- 查询用户个人信息 -->
-    <div>
+    <div style="height:800px">
         <div class="form">
             <h2>查询用户个人信息</h2>
             <el-form>
@@ -86,6 +86,9 @@ export default {
                             })
                         }
                     }
+                }).catch(err=>{
+                    // console.log("err:",err.response.data);
+                    this.$message.error(err.response.data.data+"，请重新登录")
                 })
             }else if(this.id!=""){
                 QueryUserInfoById({ID:this.id}).then(res=>{
@@ -104,6 +107,9 @@ export default {
                             })
                         }
                     }
+                }).catch(err=>{
+                    // console.log("err:",err.response.data);
+                    this.$message.error(err.response.data.data+"，请重新登录")
                 })
             }else{
                 this.$message.warning("用户id和学工号都为空，请输入后再查询")

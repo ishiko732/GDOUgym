@@ -1,20 +1,6 @@
 //axios封装
 import axios from "axios";
 
-//设置axios为form-data
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.transformRequest = [function (data) {
-    if(Object.prototype.toString.call(data)=='[object FormData]'){
-        return data
-    }else{
-        let ret = ''
-        for (let it in data) {
-        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-        }
-        return ret
-    }
-}]
 
 const instance=axios.create({
     // baseURL:'http://127.0.0.1:8080',
@@ -28,7 +14,7 @@ instance.interceptors.request.use(config=>{
     if(token){
         config.headers["Authorization"]=token
     }
-    // console.log(config);
+    console.log(config);
     return config
 })
 
@@ -41,5 +27,3 @@ instance.interceptors.response.use(res=>{
 })
 
 export default instance
-
-

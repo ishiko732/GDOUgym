@@ -1,6 +1,6 @@
 <template>
 <!-- 查询管理员信息（普通用户可查） -->
-    <div>
+    <div style="height:800px">
         <div class="form">
             <h2>查询管理员信息</h2>
             <el-form>
@@ -63,11 +63,17 @@ export default {
                             this.ManagerInfoList = res.data 
                         }
                     }
+                }).catch(err=>{
+                    // console.log("err:",err.response.data);
+                    this.$message.error(err.response.data.data+"，请重新登录")
                 })
             }else{
                 QueryManagerInfo().then(res=>{
                     console.log(res);
                     this.ManagerInfoList = res.data
+                }).catch(err=>{
+                    // console.log("err:",err.response.data);
+                    this.$message.error(err.response.data.data+"，请重新登录")
                 })
             }
         },

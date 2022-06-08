@@ -1,6 +1,6 @@
 <template>
 <!-- 查询最新公告 -->
-    <div>
+    <div style="height:800px">
         <div class="form">
             <h2>查询最新公告</h2>
             <el-form>
@@ -45,6 +45,9 @@ export default {
                     label:res.data[i]
                 })
             }
+        }).catch(err=>{
+            // console.log("err:",err.response.data);
+            this.$message.error(err.response.data.data+"，请重新登录")
         })
     },
     methods:{
@@ -52,6 +55,9 @@ export default {
             QueryNewAnn({type:this.type}).then(res=>{
                 console.log(res);
                 this.content = res.data[0].content
+            }).catch(err=>{
+                // console.log("err:",err.response.data);
+                this.$message.error(err.response.data.data+"，请重新登录")
             })
         }
     }

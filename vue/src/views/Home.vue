@@ -70,7 +70,7 @@ export default {
       this.$router.push({path:'/home/equipmentManagement'})
     },
     userManagement(){
-      this.$router.push({path:'/home/userManagement'})
+      this.$router.push({path:'/home/userManagement/queryNewAnn'})
     },
     siteManagement(){
       this.$router.push({path:'/home/siteManagement'})
@@ -80,8 +80,13 @@ export default {
     },
     logout(){
       Logout().then(res=>{
-        console.log(res);
+        // console.log(res);
         this.$message.success(res.msg)
+        localStorage.clear()
+        this.$router.push({path:"/login"})
+      }).catch(err=>{
+        // console.log("err:",err.response.data);
+        this.$message.error("登录已失效")
         localStorage.clear()
         this.$router.push({path:"/login"})
       })
