@@ -71,7 +71,7 @@ public class MyRealm extends AuthorizingRealm {
         String token = (String) auth.getCredentials();
         String username = JWTUtil.getUsername(token);
         if (username == null) {
-            throw new AuthenticationException("token 验证失败");
+            throw new AuthenticationException("token 验证失败(用户信息不存在) "+token);
         }
         if (!JWTUtil.isExp(token)) {
             // 解密获得username，用于和数据库进行对比
@@ -95,7 +95,7 @@ public class MyRealm extends AuthorizingRealm {
                 return new SimpleAuthenticationInfo(token, token, "my_realm");
             }
         }
-        log.info("token是否过期："+JWTUtil.isExp(token));
+        log.info("[doGetAuthenticationInfo] token是否过期："+JWTUtil.isExp(token));
         throw new AuthenticationException("Token已过期(Token expired or incorrect.)");// 已过期
     }
 
@@ -124,5 +124,6 @@ public class MyRealm extends AuthorizingRealm {
         assert response != null;
         response.setHeader("Authorization", token);
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
+        log.info("[MyRealm-setHeaderToken]刷新token");
     }
 }
