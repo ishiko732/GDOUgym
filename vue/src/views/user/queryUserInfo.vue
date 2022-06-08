@@ -127,6 +127,8 @@ export default {
                 
             })
         }
+    },created(){
+        this.queryAll()
     }
 }
 </script>
