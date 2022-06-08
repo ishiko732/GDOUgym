@@ -35,26 +35,30 @@
       </el-table-column>
     </el-table>
     <el-dialog
-        title="提示"
+        title="新增场地类型"
         :visible.sync="dialogVisible"
         width="30%"
         :before-close="handleClose">
-      <el-input></el-input>
+      <div style="display: flex">
+        <span style="margin-top: 10px;">场地类型:&nbsp;&nbsp;</span>
+        <el-input v-model="type" style="width: 60%"></el-input>
+      </div>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确定</el-button>
+                <el-button type="primary" @click="addtype">确定</el-button>
               </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { queryType } from '@/request/api'
+import { queryType,addType } from '@/request/api'
 export default {
   name: "siteTypeManagement",
   data(){
     return{
       dialogVisible: false,
+      type:"",
       siteData: []
     }
   },
@@ -78,6 +82,12 @@ export default {
     del(row,index) {
       console.log(index);
     },
+    addtype(){
+      addType({typeName:this.type}).then(res=>{
+        console.log(res)
+      })
+      this.dialogVisible=false
+    }
   },
   created () {
     queryType().then(res => {

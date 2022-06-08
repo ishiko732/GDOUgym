@@ -63,11 +63,14 @@ export default {
   },
   methods: {
     close (a,b) {
-      if (a.state == "已退回") {
-        this.$message.error("已退回不能操作")
+      if (a.state == "已退回"||a.state=="已取消") {
+        this.$message.error("不能操作")
       } else {
         cancelCheckById({id:a.id}).then(res => {
           this.$message(res.msg)
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
         })
       }
     },

@@ -216,6 +216,9 @@ export default {
         this.col = ""
         this.date = ""
         this.$message.success(res.data+res.msg)
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
       })
     }
   }

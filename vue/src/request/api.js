@@ -67,6 +67,16 @@ export const cancelCheckById = (params) => request.post("/field/cancelCheckById"
 //查询场地费用
 export const queryMoneyByTimeId = (params) => request.get("/field/queryMoneyByTimeId", { params })
 
+//新增场地类型
+export const addType = (params) => request.post("/field/addType", params)
+
+//添加场地
+export const addField = (params) => request.post("/field/addField", params)
+
+//编辑场地
+export const updateField = (params) => request.post("/field/updateField", params)
+
+
 
 
 

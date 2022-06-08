@@ -1,6 +1,6 @@
 <!-- 学生预约 -->
 <template>
-  <div class="arrangeContainer">
+  <div class="arrangeContainer" style="height: 1000px">
     <el-tabs tab-position="top" @tab-click="changeType">
       <el-tab-pane :label="data.description" v-for="(data, dataindex) in typeList">
         <el-tabs tab-position="top" style="height: 100%;" @tab-click="changeDate">

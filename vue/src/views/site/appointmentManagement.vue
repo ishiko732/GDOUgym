@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100000px">
     <el-card class="box-card" style="margin-top:20px;" v-for="(item,index) in appointmentData">
       <div slot="header" class="clearfix">
         <span> 订单号 {{item[0].id}}</span>
@@ -66,15 +66,18 @@ export default {
   methods: {
     close (a, b) { 
       console.log(a.id);
-      if (a.state == "审核中") {
+      if (a.state == "审核中"||a.state=="已取消") {
         checkOrder({ id: a.id, status: "审核退回" }).then(res => {
           this.$message.warning(res.data.name + "已退回")
-          setTimeout(() => {
-            location.reload();
-          }, 1000);
+          // setTimeout(() => {
+          //   location.reload();
+          // }, 1000);
         })  
       } else {
         this.$message.warning("已经审核完成")
+        // setTimeout(() => {
+        //   location.reload();
+        // }, 1000);
       }
       
     },
