@@ -22,23 +22,24 @@
     </resultMap>
 
     <select id="queryFieldByType" resultType="edu.gdou.gym_java.entity.model.Field">
-        select * from Field
+        select f.* from Field as f,Field_type as ft
         <where>
-            <if test="tid!='' and tid!=null">tid=#{tid}</if>
+            <if test="tid!='' and tid!=null">f.tid = ft.tid AND f.tid = #{tid} AND ft.is_del  = 0 AND f.is_del = 0</if>
         </where>
     </select>
 
     <select id="fillFieldInType" resultType="edu.gdou.gym_java.entity.model.Field">
-        select * from Field
+        select f.* from Field as f,Field_type as ft
         <where>
-            <if test="tid!='' and tid!=null">tid=#{tid} and num > 0</if>
+            <if test="tid!='' and tid!=null">f.tid = ft.tid AND f.tid = #{tid} AND f.num>0 AND ft.is_del  = 0 AND f.is_del = 0</if>
         </where>
     </select>
 
     <select id="queryFieldById" resultType="edu.gdou.gym_java.entity.model.Field">
         select * from Field
         <where>
-            <if test="fid!='' and fid!=null">fid=#{fid}</if>
+            is_del = 0
+            <if test="fid!='' and fid!=null">and fid=#{fid}</if>
         </where>
     </select>
 
@@ -68,18 +69,26 @@ order by inode
     </insert>
 
     <select id="queryType" resultType="edu.gdou.gym_java.entity.model.FieldType">
-        select * from Field_type
+        select * from Field_type where is_del = 0
     </select>
     <select id="queryTypeById" resultType="edu.gdou.gym_java.entity.model.FieldType">
         select * from Field_type
         <where>
-            <if test="tid!='' and tid!=null">tid=#{tid}</if>
+            <if test="tid!='' and tid!=null">tid=#{tid} and is_del = 0</if>
         </where>
     </select>
 
     <insert id="addField" parameterType="edu.gdou.gym_java.entity.model.Field" useGeneratedKeys="true" keyProperty="fid">
     insert into Field values (null, #{tid}, #{money}, #{description}, #{num});
     </insert>
+
+    <update id="deleteField" parameterType="edu.gdou.gym_java.entity.model.Field">
+        update Field
+        <set>
+            is_del = #{isDel}
+        </set>
+        where fid = #{fid}
+    </update>
 
     <update id="updateStatus">
         update Time_arrange
@@ -178,8 +187,17 @@ order by inode
         </set>
 </insert>
 
+    <update id="deleteType" parameterType="edu.gdou.gym_java.entity.model.FieldType">
+        update Field_type
+        <set>
+            is_del = #{isDel}
+        </set>
+        where tid = #{tid}
+    </update>
+
+
     <select id="queryTypeByName" resultType="java.lang.Integer">
-        select count(*) from Field_type where type_name = #{typeName}
+        select count(*) from Field_type where type_name = #{typeName} and is_del = 0
     </select>
 
     <select id="queryCheckByTime" resultType="edu.gdou.gym_java.entity.model.FieldCheck">

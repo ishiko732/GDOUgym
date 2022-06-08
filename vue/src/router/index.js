@@ -162,12 +162,6 @@ const routes = [
           },
           {
             //查询管理员信息路由
-            path:'/home/userManagement/queryManager',
-            name:'queryManager',
-            component:()=>import('../views/user/queryManager.vue')
-          },
-          {
-            //查询管理员用户路由
             path:'/home/userManagement/queryManagerInfo',
             name:'queryManagerInfo',
             component:()=>import('../views/user/queryManagerInfo.vue')

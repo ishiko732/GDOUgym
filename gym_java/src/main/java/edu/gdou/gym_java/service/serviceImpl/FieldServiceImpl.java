@@ -371,4 +371,16 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         }
         return sum;
     }
+
+    @Override
+    public Boolean deleteType(FieldType fieldType) {
+        fieldType.setIsDel(1);
+        return getBaseMapper().deleteType(fieldType);
+    }
+
+    @Override
+    public Boolean deleteField(Field field) {
+        field.setIsDel(1);
+        return getBaseMapper().deleteField(field);
+    }
 }

@@ -24,4 +24,9 @@ public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, R
     public List<RentEquipment> queryRentEquipment(Integer rid, Integer eid, String eName, Integer uid, String username, Integer rentTime, Integer number) {
         return getBaseMapper().queryRentEquipment(rid,eid,eName,uid,username,rentTime,number);
     }
+
+    @Override
+    public Double generateEquipmentIncome(String year, String month) {
+        return getBaseMapper().generateEquipmentIncome(year,month);
+    }
 }

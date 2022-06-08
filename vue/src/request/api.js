@@ -76,10 +76,22 @@ export const addField = (params) => request.post("/field/addField", params)
 //编辑场地
 export const updateField = (params) => request.post("/field/updateField", params)
 
+// 注销
+export const Logout = () => request.get("/user/logout")
 
+// 通过学工号查询用户
+export const QueryUserInfoById = (params) => request.get("/user/queryUserInfoById",{params})
 
+// 通过用户id查询用户
+export const QueryUserInfoByUid = (params) => request.get("/user/queryUserInfo",{params})
 
+// 查询全部用户
+export const QueryUsers = (params) => request.get("/user/queryUsers",{params})
 
+// 导入信息
+export const ExportUser = (params) => request.post("/user/exportUser",params)
 
+// 查询管理员信息
+export const QueryManagerInfo = (params) => request.post("/user/queryManagerByName",params)
 
 

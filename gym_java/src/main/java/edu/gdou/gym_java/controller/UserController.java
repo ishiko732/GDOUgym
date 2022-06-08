@@ -3,8 +3,8 @@ package edu.gdou.gym_java.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.gson.Gson;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
-import edu.gdou.gym_java.entity.enums.RoleEnums;
 import edu.gdou.gym_java.entity.model.MyPage;
 import edu.gdou.gym_java.entity.model.User;
 import edu.gdou.gym_java.service.RoleService;
@@ -42,11 +42,13 @@ public class UserController {
     private final UserService userService;
     private final RoleService roleService;
     private final MD5 md5;
+    private final Gson gson;
 
-    public UserController(UserService userService, RoleService roleService,MD5 md5) {
+    public UserController(UserService userService, RoleService roleService, MD5 md5, Gson gson) {
         this.userService = userService;
         this.roleService = roleService;
         this.md5 = md5;
+        this.gson = gson;
     }
     @RequestMapping(value = "/currentUser",method=RequestMethod.GET)
     @RequiresAuthentication
@@ -121,7 +123,7 @@ public class UserController {
             return new ResponseBean(200, "用户已注册", null);
         }
         val role_entity = roleService.getIdByInfo(role);
-        val register_user = new User(null, username, password, role_entity.getId(), role_entity);
+        val register_user = new User(null, username, password, role_entity.getId(), role_entity,null);
         val aBoolean = userService.register(register_user, id);
         if(aBoolean == null){
             log.info("用户尝试注册失败：账号"+username+"，密码："+password+"，角色："+role+"学号："+id);
@@ -143,14 +145,25 @@ public class UserController {
     @PostMapping("/exportUser")
     @RequiresPermissions(logical = Logical.AND, value = {"导入学生信息", "导入教师信息"})
     public ResponseBean excelReader(@RequestParam(value = "file",required = false) MultipartFile excel,
-                                    @RequestParam(value="map",required = false) Map<String,String> map) {
+                                    @RequestParam(value="map",required = false) String map) {
         if (excel!=null){
             val map1 = userService.exportInfoByFile(excel);
             return new ResponseBean(200,map1!=null?"导入信息":"导入失败",map1);
         }
         if(map!=null){
-            val map1 = userService.exportInfo(Collections.singletonList(map));
-            return new ResponseBean(200,map1!=null?"导入信息":"导入失败",map1);
+            val mapArrayList = new ArrayList<Map<String,String>>();
+            Object message = gson.fromJson(map, Object.class);
+            if(message instanceof List){
+                return new ResponseBean(200,"导入失败,类型错误",null);
+            }
+            val map2 = gson.fromJson(map, Map.class);
+            if((map2.containsKey("id") && (map2.get("id") instanceof String))){
+                mapArrayList.add(map2);
+                val map1 = userService.exportInfo(mapArrayList);
+                return new ResponseBean(200,map1!=null?"导入信息":"导入失败",map1);
+            } else{
+                return new ResponseBean(200,"导入失败,未获取到有效的数据", "所有类型都必须为String类型");
+            }
         }
         return new ResponseBean(200,"导入失败",null);
     }
@@ -174,10 +187,15 @@ public class UserController {
         return new ResponseBean(200,ret?"修改成功":"验证原密码失败","修改的用户为:"+name);
     }
 
-    @PostMapping("/queryManagerByName")
+    @RequestMapping(value = "/queryManagerByName",method = {RequestMethod.GET,RequestMethod.POST})
     @RequiresPermissions(logical = Logical.AND, value = {"查询管理员信息"})
-    public ResponseBean queryManagerByName(@RequestParam("username")String username){
+    public ResponseBean queryManagerByName(@RequestParam(value = "username",required = false)String username){
         List<User> users = userService.queryManagerByUsername(username);
+        Collections.sort(users);
+        for (User user : users) {
+            val objectMap = userService.selectInfoByUid(user.getId());
+            user.setInfo(objectMap);
+        }
         return new ResponseBean(200,users.size()>0?"查询成功":"查询结果为空",users);
     }
 
@@ -190,7 +208,7 @@ public class UserController {
             return new ResponseBean(401, "选择的权限非管理员", null);
         }
         val role_entity = roleService.getIdByInfo(role);
-        val manager = new User(null, username, password, role_entity.getId(), role_entity);
+        val manager = new User(null, username, password, role_entity.getId(), role_entity,null);
         if (userService.addManager(manager)) {
             return new ResponseBean(200, "管理员添加成功！", null);
         } else {

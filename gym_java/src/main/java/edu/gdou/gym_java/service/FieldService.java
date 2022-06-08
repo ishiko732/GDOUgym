@@ -68,4 +68,8 @@ public interface FieldService extends IService<Field> {
     Boolean checkCancelTime(FieldCheck fieldCheck);
 
     Integer querySumMoney(String beginDate, String endDate);
+
+    Boolean deleteType(FieldType fieldType);
+
+    Boolean deleteField(Field field);
 }

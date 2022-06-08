@@ -1,5 +1,6 @@
 package edu.gdou.gym_java.entity.model;
 
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,39 +10,33 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-/**
- * <p>
- * 器材表
- * </p>
- *
- * @author lzh
- * @since 2022-06-02
- */
+
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("Equipment")
-@ApiModel(value = "Equipment对象", description = "")
-public class Equipment {
-    private static final long serialVersionUID = 1L;
-
-    @ApiModelProperty("器材id")
+@TableName("Fix_equipment_bill")
+@ApiModel(value = "Fix_equipment_bill", description = "")
+public class FixEquipmentBill {
+    @ApiModelProperty("器材维修账单ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @ApiModelProperty("器材id")
+    @TableField("eid")
+    private Integer eid;;
+
     @ApiModelProperty("器材名称")
-    @TableField(value="name")
-    private String name;
+    @TableField("number")
+    private Integer number;;
 
-    @ApiModelProperty("器材类型")
-    @TableField(value = "types")
-    private String types;
-
-    @ApiModelProperty("器材数量")
-    @TableField(value = "number")
-    private Integer number;
-
-    @ApiModelProperty("器材价格")
-    @TableField(value = "price")
+    @ApiModelProperty("器材租用费用")
+    @TableField("price")
     private Double price;
+
+    @ApiModelProperty("器材维修时间")
+    @TableField("fixDate")
+    private Date fixDate;
+
 }
