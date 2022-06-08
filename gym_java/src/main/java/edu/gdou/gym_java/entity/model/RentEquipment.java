@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * <p>
  * 器材租用表
@@ -51,4 +53,8 @@ public class RentEquipment {
     @ApiModelProperty("租用数量")
     @TableField(value="number")
     private Integer number;
+
+    @ApiModelProperty("器材租用日期")
+    @TableField(value="rentDate")
+    private Date rentDate;
 }

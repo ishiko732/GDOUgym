@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Map;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -24,7 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("User")
 @ApiModel(value = "User对象", description = "用户表")
-public class User implements Serializable {
+public class User implements Serializable,Comparable<User> {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,4 +48,11 @@ public class User implements Serializable {
     @TableField(exist = false)
     private Role role;
 
+    @Override
+    public int compareTo(User o) {
+        return this.getId()-o.getId();
+    }
+
+    @TableField(exist = false)
+    private Map<String,Object> info;
 }

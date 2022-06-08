@@ -36,3 +36,22 @@ export const QueryAnnType = () => request.get("/announcement/type")
 
 // 修改密码
 export const UpdatePassword = (params) => request.post("/user/changePassword",params)
+
+// 注销
+export const Logout = () => request.get("/user/logout")
+
+// 通过学工号查询用户
+export const QueryUserInfoById = (params) => request.get("/user/queryUserInfoById",{params})
+
+// 通过用户id查询用户
+export const QueryUserInfoByUid = (params) => request.get("/user/queryUserInfo",{params})
+
+// 查询全部用户
+export const QueryUsers = (params) => request.get("/user/queryUsers",{params})
+
+// 导入信息
+export const ExportUser = (params) => request.post("/user/exportUser",params)
+
+// 查询管理员信息
+export const QueryManagerInfo = (params) => request.post("/user/queryManagerByName",params)
+

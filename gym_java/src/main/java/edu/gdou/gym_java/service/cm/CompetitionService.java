@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Set;
  * @since 2022-06-04
  */
 public interface CompetitionService extends IService<Competition> {
-    Integer createEvent(int uid, String name, Timestamp timestamp,int eventLength,Double money,String context);
+    Map<String,Integer> createEvent(int uid, String name, Timestamp timestamp, int eventLength, Double money, String context);
     Boolean cancelEvent(int cid,int uid,String context);
     Set<Competition> queryEvents(@Nullable Integer cid, @Nullable String name, @Nullable String uname,@Nullable TimeLimit time);
     List<Integer> eventSetFields(Integer cid,List<Integer> fcIds);

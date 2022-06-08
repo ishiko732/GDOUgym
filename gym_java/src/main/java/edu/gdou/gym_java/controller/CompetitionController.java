@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,8 +68,8 @@ public class CompetitionController {
             uid_int = user.getId();
         }
         val timeStamp = TimeUtils.StringToTimeStamp(time);
-        val cid = competitionService.createEvent(uid_int, name, timeStamp, length, Double.valueOf(money), context);
-        return new ResponseBean(200, "赛事审核id信息", cid);
+        val map = competitionService.createEvent(uid_int, name, timeStamp, length, Double.valueOf(money), context);
+        return new ResponseBean(200, "赛事审核id信息", map);
     }
 
     @RequiresPermissions("赛事取消")
@@ -136,7 +137,7 @@ public class CompetitionController {
         val cfid_int=Integer.parseInt(cfId);
         val competitionField = competitionService.fieldUserLinkEvent(
                 cfid_int, Integer.parseInt(uid), context);
-        return new ResponseBean(200,competitionField.getUid().equals(cfid_int)?"绑定成功":"绑定失败",competitionField);
+        return new ResponseBean(200,competitionField.getUid().equals(Integer.parseInt(uid))?"绑定成功":"绑定失败",competitionField);
     }
 
     @RequestMapping(value = "/updateUserEvent",method = RequestMethod.POST)
@@ -186,16 +187,19 @@ public class CompetitionController {
     // 审核部分
     @RequestMapping(value = "/queryCheck",method = RequestMethod.GET)
     @RequiresPermissions("赛事审核")
-    public ResponseBean queryCheck(@RequestParam(value = "uid",required = false)String uid,
+    public ResponseBean queryCheck(@RequestParam(value = "id",required = false)String id,
+                                   @RequestParam(value = "uid",required = false)String uid,
                                    @RequestParam(value = "status",required = false)String status){
-        if(uid==null){
+        if(id!=null){
+            return new ResponseBean(200,"查询到审核数据",checkService.getById(id));
+        }else if(uid==null){
             return new ResponseBean(200,"查询到审核数据",checkService.queryList(status));
         }else{
             return new ResponseBean(200,"查询到审核数据",checkService.queryListByUid(status,Integer.parseInt(uid)));
         }
     }
 
-    @RequestMapping(value = "/check",method = RequestMethod.GET)
+    @RequestMapping(value = "/check",method = RequestMethod.POST)
     @RequiresPermissions("赛事审核")
     public ResponseBean checkStatus(@RequestParam(value = "check_id") String id, @RequestParam(value = "status")String status,@RequestParam("reason") String reason){
         val user = userService.currentUser();

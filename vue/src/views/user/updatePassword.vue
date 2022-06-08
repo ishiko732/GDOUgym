@@ -36,7 +36,7 @@ export default {
         }
     },
     created(){
-        this.username = this.$store.state.username
+        this.username = localStorage.getItem("username")
     },
     methods:{
         updatePassword(){
