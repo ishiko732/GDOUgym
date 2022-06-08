@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { queryType,addType } from '@/request/api'
+import { queryType,addType,deleteType } from '@/request/api'
 export default {
   name: "siteTypeManagement",
   data(){
@@ -79,8 +79,11 @@ export default {
     message(row,index) {
       this.$router.push({ path: '/home/siteManagement/siteMessage', query: { tid: this.siteData[index].tid } })
     },
-    del(row,index) {
-      console.log(index);
+    del(row) {
+      deleteType({tid:row.tid}).then(res=>{
+        this.$message(res.msg)
+        location.reload()
+      })
     },
     addtype(){
       addType({typeName:this.type}).then(res=>{

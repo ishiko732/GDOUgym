@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import {queryFixEquipment} from '@/request/api'
+import {queryFixEquipment,confirmFixEquipment} from '@/request/api'
 export default {
   data(){
     return{
@@ -47,15 +47,21 @@ export default {
       this.$router.go(-1)
     },
     fix(a,b){
-      console.log(a)
+      confirmFixEquipment({eid:a.reid}).then(res=>{
+        this.$message(res.msg)
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      })
     },
   },
   created() {
     queryFixEquipment().then(res=>{
+      console.log(res)
       res.data.forEach(item=>{
         var obj={}
         obj.type=item.type
-        obj.reid=item.reid
+        obj.reid=item.fid
         obj.name=item.name
         obj.number=item.number
         this.fixData.push(obj)

@@ -76,6 +76,15 @@ export const addField = (params) => request.post("/field/addField", params)
 //编辑场地
 export const updateField = (params) => request.post("/field/updateField", params)
 
+//用户付费
+export const pay = (params) => request.post("/field/pay", params)
+
+//删除场地类型
+export const deleteType = (params) => request.post("/field/deleteType", params)
+
+//删除场地类型
+export const deleteField = (params) => request.post("/field/deleteField", params)
+
 // 注销
 export const Logout = () => request.get("/user/logout")
 
@@ -112,8 +121,15 @@ export const applyRecycleEquipment = (params) => request.post("/equipment/applyR
 //查询回收器材
 export const queryRecycleEquipment = () => request.get("/equipment/queryRecycleEquipment")
 
+//确认回收器材
+export const confirmRecycleEquipment = (params) => request.post("/equipment/confirmRecycleEquipment",params)
+
+
 //申请维护器材
 export const applyFixEquipment = (params) => request.post("/equipment/applyFixEquipment",params)
 
 //查询维护器材
 export const queryFixEquipment = () => request.get("/equipment/queryFixEquipment")
+
+//确认器材维护
+export const confirmFixEquipment = (params) => request.post("equipment/confirmFixEquipment",params)

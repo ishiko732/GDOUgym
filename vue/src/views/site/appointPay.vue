@@ -2,7 +2,7 @@
   <div style="height:3000px;">
     <el-card class="box-card" style="margin-top:20px;" v-for="(item, index) in appointmentData">
       <div slot="header" class="clearfix">
-        <span> 订单号 {{ item[0].money }}</span>
+        <span> 订单号 {{ item[0].id }}</span>
       </div>
       <div class="appointment_table">
         <template>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { queryCheckByUid, cancelCheckById } from '@/request/api'
+import { queryCheckByUid, cancelCheckById,pay } from '@/request/api'
 export default {
   data () {
     return {
@@ -77,6 +77,13 @@ export default {
     check (a,b) {
       if (a.state == "已退回") {
         this.$message.error("已退回不能操作")
+      }else {
+        pay({id:a.id}).then(res=>{
+          this.$message(res.msg)
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        })
       }
     },
   }

@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import {queryRecycleEquipment} from '@/request/api'
+import {queryRecycleEquipment,confirmRecycleEquipment} from '@/request/api'
 export default {
   data(){
     return{
@@ -46,8 +46,14 @@ export default {
     cancel(){
       this.$router.go(-1)
     },
-    recycle(a,b){
+    recycle(a){
       console.log(a)
+      confirmRecycleEquipment({eid:a.reid}).then(res=>{
+        this.$message(res.msg)
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      })
     },
   },
   created() {
