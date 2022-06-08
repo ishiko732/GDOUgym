@@ -28,4 +28,7 @@ public interface FixEquipmentService  extends IService<FixEquipment> {
 
     //多条件查询器材维修记录
     List<FixEquipment> queryFixEquipment(Integer fid,String name,Integer number,String type);
+
+    //根据fid删除器材回收记录
+    Boolean deleteFixEquipmentByFid(Integer fid);
 }
