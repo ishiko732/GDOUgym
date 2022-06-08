@@ -36,6 +36,10 @@ public class FieldType implements Serializable {
     @TableField("type_name")
     private String typeName;
 
+    @ApiModelProperty("场地类型删除标识符")
+    @TableField("is_del")
+    private Integer isDel;
+
     @TableField(exist = false)
     private List<Field> fieldList;
 

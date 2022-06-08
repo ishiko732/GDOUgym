@@ -75,4 +75,8 @@ public interface FieldMapper extends BaseMapper<Field> {
     Integer queryTypeByName(String typeName);
 
     List<FieldCheck> queryCheckByTime(String beginDate, String endDate);
+
+    Boolean deleteType(FieldType fieldType);
+
+    Boolean deleteField(Field field);
 }

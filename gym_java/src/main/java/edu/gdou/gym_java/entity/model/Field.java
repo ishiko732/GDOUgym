@@ -48,5 +48,8 @@ public class Field implements Serializable {
     @TableField("num")
     private Integer num;
 
+    @ApiModelProperty("场地删除标识符")
+    @TableField("is_del")
+    private Integer isDel;
 
 }
