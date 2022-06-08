@@ -16,8 +16,8 @@
       </el-table-column>
       <el-table-column
           prop="price"
-          label="每小时器材租用费用"
-          width="180">
+          label="每小时器材租用费用(元)"
+          width="250">
       </el-table-column>
       <el-table-column
           prop="time"
@@ -29,54 +29,28 @@
 </template>
 
 <script>
+import {queryEquipmentRentStandard} from "@/request/api";
+
 export default {
   data(){
     return{
-      priceData: [{
-        name: '篮球',
-        price: 20,
-        time: 3
-      },
-        {
-          name: '篮球',
-          price: 20,
-          time: 3
-        },{
-          name: '篮球',
-          price: 20,
-          time: 3
-        },{
-          name: '篮球',
-          price: 20,
-          time: 3
-        },{
-          name: '篮球',
-          price: 20,
-          time: 3
-        },{
-          name: '篮球',
-          price: 20,
-          time: 3
-        },{
-          name: '篮球',
-          price: 20,
-          time: 3
-        },{
-          name: '篮球',
-          price: 20,
-          time: 3
-        },{
-          name: '篮球',
-          price: 20,
-          time: 3
-        },{
-          name: '篮球',
-          price: 20,
-          time: 3
-        }
-      ]
+      priceData: []
     }
   },
+  created() {
+    this.priceData=[]
+    queryEquipmentRentStandard().then(res=>{
+      res.data.forEach(item=>{
+        var obj={}
+        obj.name=item.name
+        obj.price=item.price
+        obj.time=item.maxRentTime
+        obj.eid=item.eid
+        obj.erid=item.erid
+        this.priceData.push(obj)
+      })
+    })
+  }
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-<div style="width: 1650px;height: 1000px">
+<div style="width: 1650px;">
   <div class="first_container">
     <div class="title">体育馆器材查询</div>
     <div class="equipment_type">
@@ -21,7 +21,7 @@
       <el-table
           :data="equipment_data"
           border
-          style="width: 100%">
+          style="width: 100%;">
         <el-table-column
             prop="type"
             label="器材种类"
@@ -40,16 +40,6 @@
         <el-table-column
             prop="available_number"
             label="可用器材数量"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            prop="returned_number"
-            label="已归还器材数量"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            prop="noreturn_number"
-            label="未归还器材数量"
             >
         </el-table-column>
       </el-table>
@@ -57,9 +47,9 @@
     <div class="btns">
       <el-button type="primary"  round @click="price">租用收费</el-button>
       <el-button type="primary"  round @click="recycleEquipment">回收器材</el-button>
-      <el-button type="primary" v-show="showForStudent" round @click="addEquipment">新增器材</el-button>
-      <el-button type="primary" v-show="showForStudent" round @click="fixEquipment">维修器材</el-button>
-      <el-button type="primary" v-show="showForStudent" round @click="deleteEquipment">删除器材</el-button>
+      <el-button type="primary"  round @click="addEquipment" v-show="roleId==1||roleId==5?true:false">新增器材</el-button>
+      <el-button type="primary"  round @click="fixEquipment">维修器材</el-button>
+      <el-button type="primary"  round @click="deleteEquipment" v-show="roleId==1||roleId==5?true:false">删除器材</el-button>
       <el-button type="primary"  round @click="rentEquipment">租用器材</el-button>
     </div>
   </div>
@@ -68,91 +58,18 @@
 </template>
 
 <script>
+import {availableEquipmentCount, queryEquipment} from "@/request/api";
+
 export default {
   name: "equipmentManagement",
   data(){
     return{
+      roleId:0,
       equipment_type:"",
       equipment_name:"",
       equipment_number:"",
-      equipment_data: [{
-        type: '2016-05-02',
-        name: '王小虎',
-        number: '上海市普陀区金沙江路 1518 弄',
-        available_number:"1",
-        returned_number:"2",
-        noreturn_number:"3"
-      },
-        {
-          type: '2016-05-02',
-          name: '王小虎',
-          number: '上海市普陀区金沙江路 1518 弄',
-          available_number:"1",
-          returned_number:"2",
-          noreturn_number:"3"
-        },
-        {
-          type: '2016-05-02',
-          name: '王小虎',
-          number: '上海市普陀区金沙江路 1518 弄',
-          available_number:"1",
-          returned_number:"2",
-          noreturn_number:"3"
-        },
-        {
-          type: '2016-05-02',
-          name: '王小虎',
-          number: '上海市普陀区金沙江路 1518 弄',
-          available_number:"1",
-          returned_number:"2",
-          noreturn_number:"3"
-        },
-        {
-          type: '2016-05-02',
-          name: '王小虎',
-          number: '上海市普陀区金沙江路 1518 弄',
-          available_number:"1",
-          returned_number:"2",
-          noreturn_number:"3"
-        },{
-          type: '2016-05-02',
-          name: '王小虎',
-          number: '上海市普陀区金沙江路 1518 弄',
-          available_number:"1",
-          returned_number:"2",
-          noreturn_number:"3"
-        },
-        {
-          type: '2016-05-02',
-          name: '王小虎',
-          number: '上海市普陀区金沙江路 1518 弄',
-          available_number:"1",
-          returned_number:"2",
-          noreturn_number:"3"
-        },{
-          type: '2016-05-02',
-          name: '王小虎',
-          number: '上海市普陀区金沙江路 1518 弄',
-          available_number:"1",
-          returned_number:"2",
-          noreturn_number:"3"
-        },{
-          type: '2016-05-02',
-          name: '王小虎',
-          number: '上海市普陀区金沙江路 1518 弄',
-          available_number:"1",
-          returned_number:"2",
-          noreturn_number:"3"
-        },{
-          type: '2016-05-02',
-          name: '王小虎',
-          number: '上海市普陀区金沙江路 1518 弄',
-          available_number:"1",
-          returned_number:"2",
-          noreturn_number:"3"
-        }
-      ],
-      showForStudent:true,
+      wholeData:[],
+      equipment_data: [],
     }
   },
   methods:{
@@ -179,7 +96,23 @@ export default {
     }
   },
   created() {
-
+    this.roleId=localStorage.getItem("roleId")
+      queryEquipment({name:"",types:"",number:0}).then(res=>{
+      this.wholeData=res.data
+      console.log(this.wholeData)
+      res.data.forEach((item,index)=>{
+        var obj={}
+        obj.id=item.id
+        availableEquipmentCount({eid:item.id}).then(res=>{
+          obj.available_number=res.data
+          obj.type=item.types
+          obj.number=item.number
+          obj.name=item.name
+          this.equipment_data.push(obj)
+        })
+      })
+        console.log(this.equipment_data)
+    })
   }
 }
 </script>
@@ -218,7 +151,7 @@ export default {
   margin-left: 230px;
   margin: 0 auto;
   margin-top: 10px;
-  .el-table-column,.el-table{
+  /deep/.cell{
     text-align: center;
   }
   .btns{

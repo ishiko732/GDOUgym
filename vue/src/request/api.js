@@ -94,4 +94,15 @@ export const ExportUser = (params) => request.post("/user/exportUser",params)
 // 查询管理员信息
 export const QueryManagerInfo = (params) => request.post("/user/queryManagerByName",params)
 
+//查询器材
+export const queryEquipment = (params) => request.get("/equipment/queryEquipment",{params})
+
+//查询器材可用数量
+export const availableEquipmentCount = (params) => request.get("/equipment/availableEquipmentCount",{params})
+
+//查询器材可用数量
+export const queryEquipmentRentStandard = () => request.get("/equipment/queryEquipmentRentStandard")
+
+
+
 
