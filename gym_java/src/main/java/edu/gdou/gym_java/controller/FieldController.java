@@ -67,6 +67,18 @@ public class FieldController {
         return new ResponseBean(200,addType?"添加成功":"添加失败",fieldType);
     }
 
+    //删除场地类型
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
+    @PostMapping("/deleteType")
+    public ResponseBean deleteType(@RequestParam("tid") String tid){
+        FieldType fieldType = fieldService.queryTypeById(Integer.valueOf(tid));
+        if (fieldType==null){
+            return new ResponseBean(200,"该场地类型不存在",null);
+        }
+        Boolean deleteType = fieldService.deleteType(fieldType);
+        return new ResponseBean(200,deleteType?"删除成功":"删除失败",null);
+    }
+
     //添加场地
     @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/addField")
@@ -84,6 +96,18 @@ public class FieldController {
         } else {
             return new ResponseBean(200, "场地添加失败", null);
         }
+    }
+
+    //删除场地
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
+    @PostMapping("/deleteField")
+    public ResponseBean deleteField(@RequestParam("fid") String fid){
+        Field field = fieldService.queryFieldById(Integer.valueOf(fid));
+        if (field==null){
+            return new ResponseBean(200,"该场地不存在",null);
+        }
+        Boolean deleteField = fieldService.deleteField(field);
+        return new ResponseBean(200,deleteField?"删除成功":"删除失败",null);
     }
 
     //编辑场地
@@ -115,11 +139,20 @@ public class FieldController {
     @PostMapping("/updateStatus")
     public ResponseBean updateStatus(@RequestParam("timeId") String timeId ,
                                     @RequestParam("status") String status){
-            if (fieldService.updateStatus(Integer.valueOf(timeId),status)) {
+
+        if (!status.equals("上课用地")&&!status.equals("校队预留") && !status.equals("维护") && !status.equals("空闲")){
+            return new ResponseBean(200, "状态错误", null);
+        }
+        TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(timeId));
+        if(timeArrange != null) {
+            if (fieldService.updateStatus(Integer.valueOf(timeId), status)) {
                 return new ResponseBean(200, "场地时间段状态更新成功！", status);
             } else {
                 return new ResponseBean(200, "场地时间段状态更新失败", null);
             }
+        }
+        return new ResponseBean(200, "该时间段不存在", null);
+
     }
 
     // 场地收费标准查询
@@ -318,6 +351,11 @@ public class FieldController {
             if (fieldCheck.getStatus().equals("审核中")) {
                 fieldCheck.setStatus("已取消");
                 fieldService.updateCheck(fieldCheck);
+                //2022-06-08 9:25 fix bug取消订单，根据订单里的安排表id更新时间段状态为空闲
+                List<OrderItem> orderItemList = fieldService.queryOrderItemByFcid(Integer.valueOf(id));
+                for (int i=0;i<orderItemList.size();i++){
+                    fieldService.updateStatus(orderItemList.get(i).getTimeId(),"空闲"); //编辑状态
+                }
                 fieldCheck.setUser(null);
                 return new ResponseBean(200, "取消预约成功", fieldCheck);
             }else if (fieldCheck.getStatus().equals("待支付")) {
