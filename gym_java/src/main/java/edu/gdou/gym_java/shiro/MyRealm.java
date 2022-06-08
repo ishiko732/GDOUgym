@@ -95,7 +95,7 @@ public class MyRealm extends AuthorizingRealm {
                 return new SimpleAuthenticationInfo(token, token, "my_realm");
             }
         }
-        log.info("token是否过期："+JWTUtil.isExp(token));
+        log.info("[doGetAuthenticationInfo] token是否过期："+JWTUtil.isExp(token));
         throw new AuthenticationException("Token已过期(Token expired or incorrect.)");// 已过期
     }
 

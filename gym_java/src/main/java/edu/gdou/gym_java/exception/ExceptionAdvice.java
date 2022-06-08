@@ -1,4 +1,4 @@
-package edu.gdou.gym_java.shiro;
+package edu.gdou.gym_java.exception;
 
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.exception.CustomException;
