@@ -78,6 +78,8 @@ export default {
             }
         },
         
+    },created(){
+        this.query()
     }
 }
 </script>

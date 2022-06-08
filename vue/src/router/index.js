@@ -238,5 +238,5 @@ router.beforeEach((to,from,next)=>{
     }
   }
 })
-
+document.title = "海大体育馆管理系统"
 export default router
