@@ -89,6 +89,12 @@ public class FieldController {
         Field field = new Field();
         field.setTid(Integer.valueOf(tid));
         field.setDescription(description);
+        Integer isExist=(fieldService.queryFieldByDes(field));
+        if (isExist==1){
+            return new ResponseBean(200,"该类型下所描述的场地已存在",null);
+        }else if (isExist>1){
+            return new ResponseBean(200,"数据错误",null);
+        }
         field.setNum(Integer.valueOf(num));
         field.setMoney(Integer.valueOf(money));
         if (fieldService.addField(field)) {

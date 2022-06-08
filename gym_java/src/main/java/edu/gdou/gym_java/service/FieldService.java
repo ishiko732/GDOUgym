@@ -72,4 +72,6 @@ public interface FieldService extends IService<Field> {
     Boolean deleteType(FieldType fieldType);
 
     Boolean deleteField(Field field);
+
+    Integer queryFieldByDes(Field field);
 }

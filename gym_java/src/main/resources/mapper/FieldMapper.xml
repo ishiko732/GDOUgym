@@ -79,7 +79,7 @@ order by inode
     </select>
 
     <insert id="addField" parameterType="edu.gdou.gym_java.entity.model.Field" useGeneratedKeys="true" keyProperty="fid">
-    insert into Field values (null, #{tid}, #{money}, #{description}, #{num});
+    insert into Field values (null, #{tid}, #{money}, #{description}, #{num},0);
     </insert>
 
     <update id="deleteField" parameterType="edu.gdou.gym_java.entity.model.Field">
@@ -198,6 +198,10 @@ order by inode
 
     <select id="queryTypeByName" resultType="java.lang.Integer">
         select count(*) from Field_type where type_name = #{typeName} and is_del = 0
+    </select>
+
+    <select id="queryFieldByDes" resultType="java.lang.Integer">
+        select count(*) from Field where description = #{description} and tid =#{tid} and is_del = 0
     </select>
 
     <select id="queryCheckByTime" resultType="edu.gdou.gym_java.entity.model.FieldCheck">

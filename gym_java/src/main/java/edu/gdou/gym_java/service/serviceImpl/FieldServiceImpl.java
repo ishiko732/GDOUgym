@@ -383,4 +383,9 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         field.setIsDel(1);
         return getBaseMapper().deleteField(field);
     }
+
+    @Override
+    public Integer queryFieldByDes(Field field) {
+        return getBaseMapper().queryFieldByDes(field);
+    }
 }
