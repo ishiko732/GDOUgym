@@ -73,7 +73,6 @@ public class MyRealm extends AuthorizingRealm {
         if (username == null) {
             throw new AuthenticationException("token 验证失败");
         }
-        log.info("token是否过期："+JWTUtil.isExp(token));
         if (!JWTUtil.isExp(token)) {
             // 解密获得username，用于和数据库进行对比
             User userBean = userService.getUser(username);
@@ -96,6 +95,7 @@ public class MyRealm extends AuthorizingRealm {
                 return new SimpleAuthenticationInfo(token, token, "my_realm");
             }
         }
+        log.info("token是否过期："+JWTUtil.isExp(token));
         throw new AuthenticationException("Token已过期(Token expired or incorrect.)");// 已过期
     }
 
