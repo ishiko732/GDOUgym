@@ -3,6 +3,7 @@ package edu.gdou.gym_java.controller;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.service.*;
+import edu.gdou.gym_java.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -47,16 +48,9 @@ public class EquipmentController {
     public ResponseBean queryEquipment(@RequestParam(value = "name",required = false)String name,
                                        @RequestParam(value = "types",required = false)String types,
                                        @RequestParam(value = "number",required = false)String number){
-        List<Equipment> equipment;
-        if (StringUtils.isNumeric(number)){
-            equipment = equipmentService.queryEquipment(name,types,Integer.parseInt(number));
-            return new ResponseBean(200,"查询成功",equipment);
-        }else if(number==null){
-            equipment = equipmentService.queryEquipment(name, types, null);
-            return new ResponseBean(200,"查询成功",equipment);
-        }else {
-            return new ResponseBean(200,"查询失败，输入的number为非数字",null);
-        }
+        List<Equipment> equipment = equipmentService.queryEquipment(name, types, StringUtils.isNumeric(number) ? Integer.parseInt(number) : null);
+        return new ResponseBean(200,"查询成功",equipment);
+
     }
 
     @PostMapping("/addEquipment")
@@ -71,7 +65,7 @@ public class EquipmentController {
 
     @PostMapping("/addEquipmentRentStandard")
     @RequiresPermissions(logical = Logical.AND, value = {"新增器材租用标准"})
-    public ResponseBean addEquipmentRentStandard(@RequestParam("eid")String eid,@RequestParam("price")String price,@RequestParam("rentTime")String rentTime){
+    public ResponseBean addEquipmentRentStandard(@RequestParam("eid")String eid,@RequestParam("price")String price,@RequestParam("maxRentTime")String rentTime){
         if (NumberUtils.isNumber(price)||StringUtils.isNumeric(rentTime)){
             Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
             if (equipment==null){
@@ -128,7 +122,7 @@ public class EquipmentController {
     @RequiresPermissions(logical = Logical.AND, value = {"查询维修器材"})
     public ResponseBean queryFixEquipment(@RequestParam(value = "fid",required = false) String fid,@RequestParam(value = "name",required = false)String name,
                                           @RequestParam(value = "number",required = false)String number,@RequestParam(value = "type",required = false)String type){
-        List<FixEquipment> fixEquipments = fixEquipmentService.queryFixEquipment(fid != null ? Integer.parseInt(fid) : null, name, number != null ? Integer.parseInt(number) : null, type);
+        List<FixEquipment> fixEquipments = fixEquipmentService.queryFixEquipment(StringUtils.isNumeric(fid) ? Integer.parseInt(fid) : null, name, StringUtils.isNumeric(number) ? Integer.parseInt(number) : null, type);
         return new ResponseBean(200,"查询成功",fixEquipments);
     }
 
@@ -155,7 +149,7 @@ public class EquipmentController {
         }
     }
 
-    @PostMapping("/availableEquipmentCount")
+    @GetMapping("/availableEquipmentCount")
     @RequiresPermissions(logical = Logical.AND, value = {"查询器材"})
     public ResponseBean availableEquipmentCount(@RequestParam("eid")String eid){
         if (StringUtils.isNumeric(eid)) {
@@ -213,7 +207,7 @@ public class EquipmentController {
     @RequiresPermissions(logical = Logical.AND, value = {"查询回收器材"})
     public ResponseBean queryRecycleEquipment(@RequestParam(value = "reid",required = false)String reid,@RequestParam(value = "name",required = false)String name,
                                               @RequestParam(value = "number",required = false)String number,@RequestParam(value = "type",required = false)String type){
-        List<RecycleEquipment> recycleEquipments = recycleEquipmentService.queryRecycleEquipment(reid != null ? Integer.parseInt(reid) : null, name, number != null ? Integer.parseInt(number) : null, type);
+        List<RecycleEquipment> recycleEquipments = recycleEquipmentService.queryRecycleEquipment(StringUtils.isNumeric(reid) ? Integer.parseInt(reid) : null, name,StringUtils.isNumeric(number)?Integer.parseInt(number) : null, type);
         return new ResponseBean(200,"查询成功",recycleEquipments);
     }
 
@@ -268,7 +262,7 @@ public class EquipmentController {
     }
 
     @GetMapping("/queryRentEquipmentByEid")
-    @RequiresPermissions(logical = Logical.AND, value = {"查询器材租用"})
+    @RequiresPermissions(logical = Logical.AND, value = {"查询器材"})
     public ResponseBean queryRentEquipmentByEid(@RequestParam("rid")String rid){
         if(StringUtils.isNumeric(rid)){
             RentEquipment rentEquipment = rentEquipmentService.queryRentEquipmentByEid(Integer.parseInt(rid));
@@ -279,13 +273,14 @@ public class EquipmentController {
     }
 
     @GetMapping("/queryRentEquipment")
-    @RequiresPermissions(logical = Logical.AND, value = {"查询器材租用"})
+    @RequiresPermissions(logical = Logical.AND, value = {"查询器材"})
     public ResponseBean queryRentEquipment(@RequestParam(value = "rid",required = false) String rid, @RequestParam(value = "eid",required = false)String eid,
                                            @RequestParam(value = "eName",required = false)String eName, @RequestParam(value = "uid",required = false)String uid,
                                            @RequestParam(value = "username",required = false)String username, @RequestParam(value = "rentTime",required = false)String rentTime,
                                            @RequestParam(value = "number",required = false)String number){
-        List<RentEquipment> rentEquipments = rentEquipmentService.queryRentEquipment(rid != null ? Integer.parseInt(rid) : null, eid != null ? Integer.parseInt(eid) : null, eName, uid != null ? Integer.parseInt(uid) : null,
-                                                                                    username, rentTime != null ? Integer.parseInt(rentTime) : null, number != null ? Integer.parseInt(number) : null);
+        List<RentEquipment> rentEquipments = rentEquipmentService.queryRentEquipment(StringUtils.isNumeric(rid) ? Integer.parseInt(rid) : null, StringUtils.isNumeric(eid) ? Integer.parseInt(eid) : null, eName,
+                StringUtils.isNumeric(uid) ? Integer.parseInt(uid) : null, username, StringUtils.isNumeric(rentTime) ? Integer.parseInt(rentTime) : null,
+                StringUtils.isNumeric(number) ? Integer.parseInt(number) : null);
         return new ResponseBean(200,"查询成功",rentEquipments);
     }
 

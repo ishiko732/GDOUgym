@@ -35,11 +35,11 @@ public class EquipmentRentStandard {
     private Integer eid;
 
     @ApiModelProperty("器材名称")
-    @TableField(value="eid")
+    @TableField(value="name")
     private String name;
 
     @ApiModelProperty("器材租用费用")
-    @TableField(value="eid")
+    @TableField(value="price")
     private Double price;
 
     @ApiModelProperty("器材租用时间")
