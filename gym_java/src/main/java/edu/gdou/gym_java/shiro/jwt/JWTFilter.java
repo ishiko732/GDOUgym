@@ -65,10 +65,10 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             try {
                 executeLogin(request, response);
             } catch (AuthenticationException e) {
-                log.error("shiro 验证异常 {}", getException(e));
+                log.error("shiro 验证异常 {}", e.getMessage());
                 response401( response, e.getMessage());
             } catch (Exception e) {
-                log.error("shiro 验证异常 {}", getException(e));
+                log.error("shiro 验证异常 {}", e.getMessage());
                 response401(response, e.getMessage());
                 return false;
             }

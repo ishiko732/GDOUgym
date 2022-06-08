@@ -1,6 +1,5 @@
 package edu.gdou.gym_java;
 
-import edu.gdou.gym_java.utils.MD5;
 import edu.gdou.gym_java.utils.SpringContextHolder;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

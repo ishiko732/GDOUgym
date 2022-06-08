@@ -44,8 +44,6 @@ public class GlobalException {
         if (e instanceof AuthorizationException){
             return new ResponseBean(401,"没有权限访问",null);
         }else {
-            log.warn(e.getMessage(), e);
-            log.info("catch UnknownAccountException");
             return new ResponseBean(403,"操作被禁止",e.getMessage());
         }
     }
