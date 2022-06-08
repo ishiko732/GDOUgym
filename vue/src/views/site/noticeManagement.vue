@@ -20,7 +20,7 @@ export default {
     }
   },
   created () { 
-    QueryNewAnn({ type: "场馆" }).then(res => {
+    QueryNewAnn({ type: "场地" }).then(res => {
       this.time = res.data[0].createDate
       this.msg=res.data[0].content
     })

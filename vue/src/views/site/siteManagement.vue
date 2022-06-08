@@ -33,7 +33,7 @@ export default {
     };
   },
   created () { 
-    this.roleId = this.$store.state.roleId
+    this.roleId = localStorage.getItem("roleId")
     console.log(this.roleId);
   },
   methods: {
