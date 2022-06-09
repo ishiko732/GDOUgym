@@ -11,10 +11,6 @@
         <span class="name">器材名称</span>
         <el-input v-model="equipment_name" placeholder="请输入器材名称"></el-input>
       </div>
-      <div class="equipment_number">
-        <span class="number">器材数量</span>
-        <el-input v-model="equipment_number" placeholder="请输入器材数量"></el-input>
-      </div>
       <el-button type="primary" @click="search" class="search">查询</el-button>
     </div>
     <div class="second_container">
@@ -81,7 +77,7 @@
           </el-table-column>
           <el-table-column
               prop="available_number"
-              label="可用器材数量"
+              label="可租用器材数量"
           >
           </el-table-column>
         </el-table>
@@ -203,11 +199,11 @@ export default {
     },
     search(){
       this.equipment_data=[]
-      queryEquipment({name:this.equipment_name,types:this.equipment_type,number:0}).then(res=>{
-        res.data.forEach((item,index)=>{
+      queryEquipment({name:this.equipment_name,types:this.equipment_type,number:""}).then(res=>{
+        res.data[0].forEach((item,index)=>{
           var obj={}
           obj.id=item.id
-          obj.available_number=item.available_number
+          obj.available_number=res.data[1][index]
           obj.type=item.types
           obj.number=item.number
           obj.name=item.name
@@ -283,13 +279,13 @@ export default {
   },
   created() {
     this.roleId=localStorage.getItem("roleId")
-      queryEquipment({name:"",types:"",number:0}).then(res=>{
-      this.wholeData=res.data
+      queryEquipment({name:"",types:"",number:""}).then(res=>{
+      this.wholeData=res.data[0]
       console.log(this.wholeData)
-      res.data.forEach((item,index)=>{
+      res.data[0].forEach((item,index)=>{
         var obj={}
         obj.id=item.id
-        obj.available_number=item.available_number
+        obj.available_number=res.data[1][index]
         obj.type=item.types
         obj.number=item.number
         obj.name=item.name
@@ -308,12 +304,14 @@ export default {
 .first_container{
   width: 50%;
   margin: 0 auto;
+  margin-top: 2%;
   .title{
     font-size: 30px;
     text-align: center;
   }
-  .equipment_type,.equipment_name,.equipment_number{
-    margin-top: 20px;
+  .equipment_type,.equipment_name,{
+    margin-top: 4%;
+    margin-bottom: 2%;
     font-size: 18px;
     margin-left: 35%;
     width: 60%;
@@ -322,7 +320,7 @@ export default {
       width: 40%;
       margin-left: 20px;
     }
-    .type,.number,.name{
+    .type,.name{
       line-height: 37px;
     }
   }
@@ -344,7 +342,7 @@ export default {
   .btns{
     margin-top: 15px;
     margin-bottom: 10px;
-    margin-left: 27%;
+    margin-left: 60%;
     display: flex;
   }
 }
