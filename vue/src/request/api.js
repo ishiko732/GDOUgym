@@ -152,4 +152,8 @@ export const addEquipment = (params) => request.post("/equipment/addEquipment",p
 //租用器材
 export const addRentEquipment = (params) => request.post("/equipment/addRentEquipment",params)
 
+//修改场地状态
+export const updateStatus = (params) => request.post("/field/updateStatus",params)
+
+
 

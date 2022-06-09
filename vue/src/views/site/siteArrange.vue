@@ -45,7 +45,7 @@
     <div style="display:flex;margin-top: 3%;justify-content: space-evenly;" v-show="msgData.length>0?true:false">
       <span style="margin-top:6px;">你选中的是:</span>
       <el-input v-model="row" style="width:10%;" disabled></el-input>
-      <el-input v-model="col" style="width:10%;" placeholder="空闲,预约中"></el-input>
+      <el-input v-model="col" style="width:10%;" placeholder="校队预留，上课用地，维护"></el-input>
       <el-input v-model="date" style="width:10%;" disabled></el-input>
       <el-button @click="submit">提交</el-button>
     </div>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { queryType, queryFieldByType, listTimeByDate, queryDate, orderField } from '@/request/api'
+import {queryType, queryFieldByType, listTimeByDate, queryDate, orderField, updateStatus} from '@/request/api'
 export default {
   name: "siteAppointment",
   data () {
@@ -191,7 +191,12 @@ export default {
       
     },
     submit () {
-      
+      updateStatus({timeId:this.timeId,status:this.col}).then(res=>{
+        this.$message(res.msg)
+        setTimeout(()=>{
+          location.reload()
+        },1000)
+      })
     }
   }
 }
