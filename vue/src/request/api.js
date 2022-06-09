@@ -132,4 +132,7 @@ export const applyFixEquipment = (params) => request.post("/equipment/applyFixEq
 export const queryFixEquipment = () => request.get("/equipment/queryFixEquipment")
 
 //确认器材维护
-export const confirmFixEquipment = (params) => request.post("equipment/confirmFixEquipment",params)
+export const confirmFixEquipment = (params) => request.post("/equipment/confirmFixEquipment",params)
+
+// 赛事创建
+export const createCompetition = (params) => request.post("/competition/create",params)
