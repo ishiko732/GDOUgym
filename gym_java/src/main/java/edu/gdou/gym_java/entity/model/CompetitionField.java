@@ -73,6 +73,8 @@ public class CompetitionField implements Serializable {
     @TableField("time")
     private String time;
 
+    @TableField(exist = false)
+    private String name;
 
 
 }
