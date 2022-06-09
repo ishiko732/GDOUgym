@@ -132,4 +132,24 @@ export const applyFixEquipment = (params) => request.post("/equipment/applyFixEq
 export const queryFixEquipment = () => request.get("/equipment/queryFixEquipment")
 
 //确认器材维护
-export const confirmFixEquipment = (params) => request.post("equipment/confirmFixEquipment",params)
+export const confirmFixEquipment = (params) => request.post("/equipment/confirmFixEquipment",params)
+
+//新增器材收费
+export const addEquipmentRentStandard = (params) => request.post("/equipment/addEquipmentRentStandard",params)
+
+//查询租用器材
+export const queryRentEquipment = (params) => request.get("/equipment/queryRentEquipment",{params})
+
+//查询租用器材按照id
+export const queryRentEquipmentByEid = (params) => request.get("/equipment/queryRentEquipmentByEid",{params})
+
+//归还器材
+export const redeemEquipment = (params) => request.post("/equipment/redeemEquipment",params)
+
+//新增器材
+export const addEquipment = (params) => request.post("/equipment/addEquipment",params)
+
+//租用器材
+export const addRentEquipment = (params) => request.post("/equipment/addRentEquipment",params)
+
+

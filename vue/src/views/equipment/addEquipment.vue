@@ -19,8 +19,16 @@
         <span class="number">器材价钱</span>
         <el-input v-model="price" placeholder="请输入器材数量"></el-input>
       </div>
+      <div class="number_div">
+        <span class="number">租用价钱</span>
+        <el-input v-model="rentPrice" placeholder="请输入租用价格"></el-input>
+      </div>
+      <div class="number_div">
+        <span class="number">租用时间</span>
+        <el-input v-model="maxRentTime" placeholder="最大租用时间"></el-input>
+      </div>
       <div class="btn">
-        <el-button type="success" plain @click="save">保存</el-button>
+        <el-button type="success" plain @click="save">新增</el-button>
         <el-button type="success" plain @click="cancel">取消</el-button>
       </div>
     </div>
@@ -28,10 +36,14 @@
 </template>
 
 <script>
+import {addEquipment} from "@/request/api";
+
 export default {
   name: "addEquipment",
   data(){
     return{
+      rentPrice:"",
+      maxRentTime:"",
       price:"",
       type:"",
       number:"",
@@ -43,7 +55,20 @@ export default {
       this.$router.go(-1)
     },
     save(){
-      this.$router.go(-1)
+
+      addEquipment({
+        name:this.name,
+        types:this.type,
+        number:parseInt(this.number),
+        price:parseInt(this.price),
+        maxRentTime:parseInt(this.maxRentTime),
+        rentPrice:parseInt(this.rentPrice)
+      }).then(res=>{
+        this.$message(res.msg)
+        setTimeout(()=>{
+          location.reload()
+        },1000)
+      })
     },
   },
 }
@@ -54,7 +79,7 @@ export default {
   margin: 0 auto;
   width: 600px;
   height: 500px;
-  margin-top: 5%;
+  margin-top: 2%;
   .title{
     font-size: 30px;
     text-align: center;
