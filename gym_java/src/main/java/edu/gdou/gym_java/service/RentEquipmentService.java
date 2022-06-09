@@ -24,4 +24,6 @@ public interface RentEquipmentService extends IService<RentEquipment> {
 
     //根据器材id和status查询正在被租用的器材数量
     Integer queryRentEquipmentAvailableCount(Integer id);
+
+    List<RentEquipment> queryRentEquipmentByUid(Integer id);
 }
