@@ -37,8 +37,8 @@ public class RefereeAnnouncement {
     private String introduction;
 
     @TableField("starttime")
-    private Timestamp startTime;
+    private String startTime;
 
     @TableField("endtime")
-    private Timestamp endTime;
+    private String endTime;
 }
