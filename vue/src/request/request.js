@@ -2,7 +2,7 @@
 import axios from "axios";
 
 //设置axios为form-data
-axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.transformRequest = [function (data) {
     if(Object.prototype.toString.call(data)=='[object FormData]'){
