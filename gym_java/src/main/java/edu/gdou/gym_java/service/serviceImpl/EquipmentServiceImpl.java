@@ -53,7 +53,7 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
     }
 
     @Override
-    public Boolean updateEquipmentCount(Equipment equipment) {
+    public Boolean updateEquipment(Equipment equipment) {
         getBaseMapper().updateById(equipment);
         return  getBaseMapper().updateById(equipment)==1;
     }
