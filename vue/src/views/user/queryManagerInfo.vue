@@ -55,7 +55,7 @@ export default {
             this.ManagerInfoList=[]    //清空数组
             if(this.username!=""){
                 QueryManagerInfo({username:this.username}).then(res=>{
-                    console.log(res);
+                    // console.log(res);
                     if(res.code=="200"){
                         if(res.msg=="查询结果为空"){
                             this.$message.warning(res.msg)
@@ -69,7 +69,7 @@ export default {
                 })
             }else{
                 QueryManagerInfo().then(res=>{
-                    console.log(res);
+                    // console.log(res);
                     this.ManagerInfoList = res.data
                 }).catch(err=>{
                     // console.log("err:",err.response.data);

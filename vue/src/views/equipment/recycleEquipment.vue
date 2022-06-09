@@ -47,7 +47,7 @@ export default {
       this.$router.go(-1)
     },
     recycle(a){
-      console.log(a)
+      // console.log(a)
       confirmRecycleEquipment({eid:a.reid}).then(res=>{
         this.$message(res.msg)
         setTimeout(() => {

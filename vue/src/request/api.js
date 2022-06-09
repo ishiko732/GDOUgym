@@ -152,4 +152,20 @@ export const addEquipment = (params) => request.post("/equipment/addEquipment",p
 //租用器材
 export const addRentEquipment = (params) => request.post("/equipment/addRentEquipment",params)
 
+// 赛事创建
+export const CreateCompetition = (params) => request.post("/competition/create",params)
 
+// 查询赛事
+export const QueryEvent = (params) => request.get("/competition/queryEvent",{params})
+
+// 取消赛事
+export const CancelEvent = (params) => request.post("/competition/cancel",params)
+
+// 查询赛事审核
+export const QueryEventCheck = (params) => request.get("/competition/queryCheck",{params})
+
+// 赛事审核
+export const EventCheck = (params) => request.post("/competition/check",params)
+
+// 查询裁判公告信息
+export const QueryRefereeAnn = (params) => request.get("/competition/queryRefereeAnnouncements",{params})

@@ -61,7 +61,7 @@ export default {
   created() {
     this.username=localStorage.getItem("username")
     queryRentEquipment({username:this.username}).then(res=>{
-      console.log(res)
+      // console.log(res)
       res.data.forEach(item=>{
         var obj={}
         obj.name=item.ename

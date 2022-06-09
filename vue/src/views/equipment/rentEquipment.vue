@@ -100,7 +100,7 @@ export default {
   },
   created() {
     queryEquipment().then(res=>{
-      console.log(res)
+      // console.log(res)
       res.data[0].forEach((item,index)=>{
         var obj={}
         obj.id=item.id
@@ -112,7 +112,7 @@ export default {
         obj.money=item.rentPrice
         this.rentData.push(obj)
       })
-      console.log(this.rentData)
+      // console.log(this.rentData)
       var length=this.rentData.length;
       for (let i = 0; i < length; i++) {
         let obj={}
