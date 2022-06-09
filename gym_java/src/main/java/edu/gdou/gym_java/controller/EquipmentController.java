@@ -10,6 +10,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 /**
@@ -45,8 +46,13 @@ public class EquipmentController {
     public ResponseBean queryEquipment(@RequestParam(value = "name",required = false)String name,
                                        @RequestParam(value = "types",required = false)String types,
                                        @RequestParam(value = "number",required = false)String number){
-        List<Equipment> equipment = equipmentService.queryEquipment(name, types, StringUtils.isNumeric(number) ? Integer.parseInt(number) : null);
-        return new ResponseBean(200,"查询成功",equipment);
+        List<Equipment> equipments = equipmentService.queryEquipment(name, types, StringUtils.isNumeric(number) ? Integer.parseInt(number) : null);
+        ArrayList available = new ArrayList();
+        for (Equipment equipment : equipments) {
+            Integer count = equipmentService.availableEquipmentCount(equipment.getId());
+            available.add(count);
+        }
+        return new ResponseBean(200,"查询成功", new List[]{equipments, available});
     }
 
     @PostMapping("/addEquipment")
@@ -252,6 +258,13 @@ public class EquipmentController {
         }else{
             return new ResponseBean(200,"输入的参数为非数字",null);
         }
+    }
+
+    @PostMapping("/queryRentEquipmentByUid")
+    public ResponseBean responseBean(){
+        User user = userService.currentUser();
+        List<RentEquipment> rentEquipments = rentEquipmentService.queryRentEquipmentByUid(user.getId());
+        return new ResponseBean(200,"查询成功",rentEquipments);
     }
 
     @PostMapping("/redeemEquipment")
