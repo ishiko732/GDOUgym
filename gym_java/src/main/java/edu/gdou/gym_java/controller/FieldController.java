@@ -33,9 +33,11 @@ import java.util.*;
 public class FieldController {
     private final FieldService fieldService;
     private final UserService userService;
-    public FieldController(FieldService fieldService,UserService userService) {
+    private final Gson gson;
+    public FieldController(FieldService fieldService, UserService userService, Gson gson) {
         this.fieldService = fieldService;
         this.userService = userService;
+        this.gson = gson;
     }
     //id查询场地类型
     @RequiresAuthentication
@@ -165,7 +167,6 @@ public class FieldController {
     @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
     @PostMapping("/updateStatusById")
     public ResponseBean updateStatusById(@RequestBody Map<String,Object> map){
-        Gson gson = new Gson();
         val objectList =gson.fromJson(gson.toJson(map.get("timeArrangeList")),List.class);
         val timeArranges = new ArrayList<TimeArrange>();
         for (Object obj : objectList) {

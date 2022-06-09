@@ -30,12 +30,15 @@ public class RefereeAnnouncement {
     @TableField("competition_name")
     private String competitionName;
 
+    @TableField("field_name")
+    private String fieldName;
+
     @TableField("introduction")
     private String introduction;
 
     @TableField("starttime")
-    private Timestamp startTime;
+    private String startTime;
 
     @TableField("endtime")
-    private Timestamp endTime;
+    private String endTime;
 }
