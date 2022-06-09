@@ -45,7 +45,7 @@ public class CompetitionCancel implements Serializable {
 
     @ApiModelProperty("取消的时间")
     @TableField("cancellation_time")
-    private Timestamp cancellationTime;
+    private String cancellationTime;
 
 
 }

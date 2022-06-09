@@ -50,7 +50,7 @@ public class Competition implements Serializable {
     @ApiModelProperty("赛事时间")
     @NotNull(message = "赛事时间不能未空")
     @TableField("competition_time")
-    private Timestamp competitionTime;
+    private String competitionTime;
 
     @ApiModelProperty("赛事时长，按分钟计算")
     @NotNull(message = "赛事时长不能未空")
@@ -69,7 +69,7 @@ public class Competition implements Serializable {
 
     @ApiModelProperty("赛事时间")
     @TableField("create_time")
-    private Timestamp createTime;
+    private String createTime;
 
     @ApiModelProperty("赛事场地")
     @TableField(exist = false)
