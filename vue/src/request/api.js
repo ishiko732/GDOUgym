@@ -155,5 +155,7 @@ export const addRentEquipment = (params) => request.post("/equipment/addRentEqui
 //修改场地状态
 export const updateStatus = (params) => request.post("/field/updateStatus",params)
 
+//修改全部场地状态
+export const updateStatusById = (params) => request.post("/field/updateStatusById",params)
 
 
