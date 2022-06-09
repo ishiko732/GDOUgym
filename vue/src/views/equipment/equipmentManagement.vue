@@ -39,6 +39,25 @@
               width="180">
           </el-table-column>
           <el-table-column
+              prop="money"
+              label="每小时器材租用费用(元)"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              prop="time"
+              label="器材可租用时间(天)"
+              width="150"
+          >
+          </el-table-column>
+          <el-table-column
+              v-if="roleId==1||roleId==5?true:false"
+              label="收费编辑"
+              width="150">
+            <template slot-scope="scope">
+              <i class="el-icon-edit" @click="edit(scope.row,scope.$index)"></i>
+            </template>
+          </el-table-column>
+          <el-table-column
               v-if="roleId==1||roleId==5?true:false"
               label="器材报废"
               width="150">
@@ -68,11 +87,11 @@
         </el-table>
       </div>
       <div class="btns">
-        <el-button type="primary"  round @click="price">租用收费</el-button>
         <el-button type="primary"  round @click="recycleEquipment" v-show="roleId==1||roleId==5?true:false">回收审核</el-button>
         <el-button type="primary"  round @click="addEquipment" v-show="roleId==1||roleId==5?true:false">新增器材</el-button>
         <el-button type="primary"  round @click="fixEquipment" v-show="roleId==1||roleId==5?true:false">维修审核</el-button>
         <el-button type="primary"  round @click="rentEquipment">租用器材</el-button>
+        <el-button type="primary"  round @click="returnEquipment">归还器材</el-button>
       </div>
     </div>
     <el-dialog
@@ -117,6 +136,24 @@
     <el-button type="primary" @click="fix_equip">确 定</el-button>
   </span>
     </el-dialog>
+    <el-dialog
+        title="更改收费标准"
+        :visible.sync="edit_dialogVisible"
+        width="30%"
+    >
+      <div style="display: flex;margin-bottom: 10px;margin-left: 100px;">
+        <span style="margin-top: 10px">租用价格:&nbsp;&nbsp;&nbsp;</span>
+        <el-input v-model="edit_price" style="width: 50%"></el-input>
+      </div>
+      <div style="display: flex;margin-bottom: 10px;margin-left: 100px;">
+        <span style="margin-top: 10px">租用时间:&nbsp;&nbsp;&nbsp;</span>
+        <el-input v-model="maxRentTime" style="width: 50%"></el-input>
+      </div>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="edit_dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="edit_pricebtn">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </div>
 </template>
@@ -129,10 +166,14 @@ export default {
   name: "equipmentManagement",
   data(){
     return{
+      edit_price:"",
+      money:"",
+      maxRentTime:"",
       eid:0,
       del_number:0,
       recycle_number:0,
       fix_number:0,
+      edit_dialogVisible:false,
       fix_dialogVisible:false,
       recycle_dialogVisible:false,
       del_dialogVisible:false,
@@ -145,6 +186,9 @@ export default {
     }
   },
   methods:{
+    returnEquipment(){
+      this.$router.push({path:"/home/returnEquipment"})
+    },
     recycleEquipment(){
       this.$router.push({path:"/home/recycleEquipment"})
     },
@@ -157,32 +201,39 @@ export default {
     fixEquipment(){
       this.$router.push({path:"/home/fixEquipment"})
     },
-    price(){
-      this.$router.push({path:"/home/price"})
-    },
     search(){
       this.equipment_data=[]
       queryEquipment({name:this.equipment_name,types:this.equipment_type,number:0}).then(res=>{
         res.data.forEach((item,index)=>{
           var obj={}
           obj.id=item.id
-          availableEquipmentCount({eid:item.id}).then(res=>{
-            obj.available_number=res.data
-            obj.type=item.types
-            obj.number=item.number
-            obj.name=item.name
-            this.equipment_data.push(obj)
-          })
+          obj.available_number=item.available_number
+          obj.type=item.types
+          obj.number=item.number
+          obj.name=item.name
+          obj.time=item.maxRentTime
+          obj.money=item.rentPrice
+          this.equipment_data.push(obj)
         })
+        console.log(this.equipment_data)
       })
     },
     fix(a){
-      this.fix_dialogVisible=true
-      this.eid=a.id
+      if(a.number!=0){
+        this.fix_dialogVisible=true
+        this.eid=a.id
+      }else{
+        this.$message("数量为0，不能进行此操作")
+      }
     },
     del(a){
-      this.del_dialogVisible=true
-      this.eid=a.id
+      if(a.number!=0){
+        this.del_dialogVisible=true
+        this.eid=a.id
+      }else{
+        this.$message("数量为0，不能进行此操作")
+      }
+
     },
     recycle(a){
       this.recycle_dialogVisible=true
@@ -218,6 +269,17 @@ export default {
       })
       this.fix_dialogVisible=false
     },
+    edit(a,b){
+      if(a.number!=0){
+        this.edit_dialogVisible=true
+        this.eid=a.eid
+      }else{
+        this.$message("数量为0，不能进行此操作")
+      }
+    },
+    edit_pricebtn(){
+
+    }
   },
   created() {
     this.roleId=localStorage.getItem("roleId")
@@ -227,13 +289,14 @@ export default {
       res.data.forEach((item,index)=>{
         var obj={}
         obj.id=item.id
-        availableEquipmentCount({eid:item.id}).then(res=>{
-          obj.available_number=res.data
-          obj.type=item.types
-          obj.number=item.number
-          obj.name=item.name
-          this.equipment_data.push(obj)
-        })
+        obj.available_number=item.available_number
+        obj.type=item.types
+        obj.number=item.number
+        obj.name=item.name
+        obj.time=item.maxRentTime
+        obj.money=item.rentPrice
+        this.equipment_data.push(obj)
+
       })
         console.log(this.equipment_data)
     })
@@ -271,7 +334,7 @@ export default {
   }
 }
 .second_container{
-  width: 70%;
+  width: 95%;
   margin-left: 230px;
   margin: 0 auto;
   margin-top: 10px;
@@ -279,9 +342,9 @@ export default {
     text-align: center;
   }
   .btns{
-    margin-top: 10px;
+    margin-top: 15px;
     margin-bottom: 10px;
-    margin-left: 15%;
+    margin-left: 27%;
     display: flex;
   }
 }
