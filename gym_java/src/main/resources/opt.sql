@@ -88,10 +88,11 @@ from Competition;
 
 # 根据cid查找裁判和公告
 alter view referee_announcements as
-select cid,Competition_field.id as cfId,fcId,Competition_field.uid,truename as judgment,Competition.name as competition_name,Competition_field.introduction,competition_time as starttime,timestampadd(minute ,60,competition_time) as endtime
+select cid,Competition_field.id as cfId,fcId,Competition_field.uid,truename as judgment,Competition.name as competition_name,Fc.name as field_name,Competition_field.introduction,competition_time as starttime,timestampadd(minute ,60,competition_time) as endtime
 from Competition_field
 left join Competition on Competition_field.cid = Competition.id
 left join UserInfo UI on Competition_field.uid = UI.uid
+left join Field_check Fc on Competition_field.fcId = Fc.id
 where Competition_field.uid is not null and timestampadd(minute ,60,competition_time) >= now()
 order by cid,fcId;
 

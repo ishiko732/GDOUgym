@@ -115,6 +115,7 @@ public interface CompetitionMapper extends BaseMapper<Competition> {
             @Result(property = "startTime",column = "startTime"),
             @Result(property = "endTime",column = "endTime"),
             @Result(property = "time",column = "time"),
+            @Result(property = "name",column = "id",javaType = String.class,one=@One(select = "edu.gdou.gym_java.mapper.FieldMapper.queryNameByFcid")),
             @Result(property = "competitionEquipments",javaType = Set.class,column = "id",
                     many=@Many(select = "edu.gdou.gym_java.mapper.CompetitionMapper.queryCompetitionEquipmentByCfid"))
     })
