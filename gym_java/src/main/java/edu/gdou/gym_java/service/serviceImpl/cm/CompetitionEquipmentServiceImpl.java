@@ -25,8 +25,10 @@ public class CompetitionEquipmentServiceImpl extends ServiceImpl<CompetitionEqui
         HashMap<String, Object> map = new HashMap<>();
         map.put("eid",eid);
         List<CompetitionEquipment> CompetitionEquipments = getBaseMapper().selectByMap(map);
-        for (CompetitionEquipment compositionEquipment : CompetitionEquipments) {
-            count+=compositionEquipment.getNumber();
+        if (CompetitionEquipments.size()!=0){
+            for (CompetitionEquipment compositionEquipment : CompetitionEquipments) {
+                count+=compositionEquipment.getNumber();
+            }
         }
         return count;
     }

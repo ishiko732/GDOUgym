@@ -50,8 +50,10 @@ public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, R
         map.put("status",0);
         int count = 0;
         List<RentEquipment> rentEquipments = getBaseMapper().selectByMap(map);
-        for (RentEquipment rentEquipment : rentEquipments) {
-            count+=rentEquipment.getNumber();
+        if (rentEquipments.size()!=0) {
+            for (RentEquipment rentEquipment : rentEquipments) {
+                count+=rentEquipment.getNumber();
+            }
         }
         return count;
     }
