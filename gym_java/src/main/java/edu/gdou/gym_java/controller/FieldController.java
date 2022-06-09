@@ -1,6 +1,7 @@
 package edu.gdou.gym_java.controller;
 
 
+import com.google.gson.Gson;
 import edu.gdou.gym_java.entity.VO.FieldCheckVo;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.enums.CheckStatus;
@@ -158,8 +159,33 @@ public class FieldController {
             }
         }
         return new ResponseBean(200, "该时间段不存在", null);
-
     }
+
+    //编辑场地时间段状态（批量）
+    @RequiresRoles(logical = Logical.OR, value = {"超级管理员", "场地管理员"})
+    @PostMapping("/updateStatusById")
+    public ResponseBean updateStatusById(@RequestBody Map<String,Object> map){
+        Gson gson = new Gson();
+        val objectList =gson.fromJson(gson.toJson(map.get("timeArrangeList")),List.class);
+        val timeArranges = new ArrayList<TimeArrange>();
+        for (Object obj : objectList) {
+            timeArranges.add(gson.fromJson(gson.toJson(obj), TimeArrange.class));
+        }
+        for (TimeArrange timeArrange : timeArranges){
+            if (!timeArrange.getStatus().equals("上课用地")&&!timeArrange.getStatus().equals("校队预留") &&
+                    !timeArrange.getStatus().equals("维护")&& !timeArrange.getStatus().equals("空闲")){
+                return new ResponseBean(200, "状态错误", timeArrange.getStatus());
+            }
+        }
+            if (fieldService.updateStatusById(timeArranges)) {
+                return new ResponseBean(200, "场地时间段状态更新成功！", null);
+            } else {
+                return new ResponseBean(200, "场地时间段状态更新失败", null);
+            }
+    }
+
+
+
 
     // 场地收费标准查询
     @RequiresAuthentication
