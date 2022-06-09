@@ -6,7 +6,9 @@ import edu.gdou.gym_java.mapper.RentEquipmentMapper;
 import edu.gdou.gym_java.service.RentEquipmentService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, RentEquipment> implements RentEquipmentService {
@@ -21,12 +23,36 @@ public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, R
     }
 
     @Override
-    public List<RentEquipment> queryRentEquipment(Integer rid, Integer eid, String eName, Integer uid, String username, Integer rentTime, Integer number) {
-        return getBaseMapper().queryRentEquipment(rid,eid,eName,uid,username,rentTime,number);
+    public List<RentEquipment> queryRentEquipment(Integer rid, Integer eid, String eName, Integer uid, String username, Integer rentTime, Integer number,Integer status) {
+        return getBaseMapper().queryRentEquipment(rid,eid,eName,uid,username,rentTime,number,status);
     }
 
     @Override
     public Double generateEquipmentIncome(String year, String month) {
         return getBaseMapper().generateEquipmentIncome(year,month);
+    }
+
+    @Override
+    public Boolean redeemEquipment(int rid) {
+        RentEquipment rentEquipment = getBaseMapper().selectById(rid);
+        if (rentEquipment!=null){
+            rentEquipment.setStatus(1);
+            return getBaseMapper().updateById(rentEquipment)==1;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Integer queryRentEquipmentAvailableCount(Integer id) {
+        HashMap map = new HashMap<String,Object>();
+        map.put("eid",id);
+        map.put("status",0);
+        int count = 0;
+        List<RentEquipment> rentEquipments = getBaseMapper().selectByMap(map);
+        for (RentEquipment rentEquipment : rentEquipments) {
+            count+=rentEquipment.getNumber();
+        }
+        return count;
     }
 }

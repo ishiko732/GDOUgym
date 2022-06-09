@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.gdou.gym_java.utils.TimeUtils;
 import org.springframework.stereotype.Service;
 import java.sql.*;
+import java.text.Format;
 import java.text.ParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -387,5 +388,15 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     @Override
     public Integer queryFieldByDes(Field field) {
         return getBaseMapper().queryFieldByDes(field);
+    }
+
+    @Override
+    public boolean updateStatusById(ArrayList<TimeArrange> timeArranges) {
+        for (TimeArrange timeArrange : timeArranges){
+            if (!getBaseMapper().updateStatus(timeArrange.getTimeId(),timeArrange.getStatus())){
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -14,8 +14,14 @@ public interface RentEquipmentService extends IService<RentEquipment> {
 
     //多条件查询器材租用记录
     List<RentEquipment> queryRentEquipment(Integer rid, Integer eid, String eName, Integer uid,
-                                           String username, Integer rentTime, Integer number);
+                                           String username, Integer rentTime, Integer number,Integer status);
 
     //根据月份查询收入
     Double generateEquipmentIncome(String year,String month);
+
+    //归还器材
+    Boolean redeemEquipment(int rid);
+
+    //根据器材id和status查询正在被租用的器材数量
+    Integer queryRentEquipmentAvailableCount(Integer id);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public interface RentEquipmentMapper extends BaseMapper<RentEquipment> {
     //多条件查询器材租用记录
     List<RentEquipment> queryRentEquipment(Integer rid,Integer eid,String eName,Integer uid,
-                                           String username,Integer rentTime,Integer number);
+                                           String username,Integer rentTime,Integer number,Integer status);
 
     //根据月份查询收入
     Double generateEquipmentIncome(String year,String month);

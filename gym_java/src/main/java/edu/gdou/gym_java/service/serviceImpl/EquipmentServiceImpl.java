@@ -26,6 +26,8 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
     private FixEquipmentService fixEquipmentService;
     @Autowired
     private CompetitionEquipmentService compositionEquipmentService;
+    @Autowired
+    private RentEquipmentService rentEquipmentService;
     @Override
     public List<Equipment> queryEquipment(String name, String types, Integer number) {
         return getBaseMapper().queryEquipment(name,types,number);
@@ -39,11 +41,10 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 
     @Override
     public Integer availableEquipmentCount(Integer eid) {
-        Integer fixCount = fixEquipmentService.queryFixEquipmentCountByFid(eid);
         Integer compositionCount = compositionEquipmentService.queryCompositionEquipmentCountByEid(eid);
-
+        Integer rentEquipmentCount = rentEquipmentService.queryRentEquipmentAvailableCount(eid);
         Equipment equipment = getBaseMapper().selectById(eid);
-        return equipment.getNumber()-fixCount-compositionCount;
+        return equipment.getNumber()-compositionCount-rentEquipmentCount;
     }
 
     @Override

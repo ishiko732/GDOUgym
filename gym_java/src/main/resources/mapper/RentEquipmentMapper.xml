@@ -14,6 +14,7 @@
             <if test="username!='' and username!=null">and username = #{username}</if>
             <if test="rentTime!='' and rentTime!=null">and rentTime = #{rentTime}</if>
             <if test="number!='' and number!=null">and number = #{number}</if>
+            <if test="status!='' and status!=null">and status = #{status}</if>
         </where>
     </select>
     
