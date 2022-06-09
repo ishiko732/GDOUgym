@@ -230,6 +230,7 @@ export default {
       
     },
     submit () {
+      this.requestList=[]
       this.msgData.forEach((item,index)=>{
         console.log(item)
         let obj1={}
@@ -287,13 +288,14 @@ export default {
       })
       var obj={}
       obj.timeArrangeList=this.requestList
-      console.log(JSON.stringify(obj))
-      updateStatusById({map:JSON.stringify(obj)},{
-      }).then(res=>{
+      // console.log(JSON.stringify(obj))
+      console.log(obj)
+      updateStatusById(obj).then(res=>{
         console.log(res)
+      }).catch(e => {
+        console.log(e)
       })
     }
-
   }
 }
 </script>

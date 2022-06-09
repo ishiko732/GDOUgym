@@ -156,6 +156,13 @@ export const addRentEquipment = (params) => request.post("/equipment/addRentEqui
 export const updateStatus = (params) => request.post("/field/updateStatus",params)
 
 //修改全部场地状态
-export const updateStatusById = (params) => request.post("/field/updateStatusById",params)
+export const updateStatusById = (params) => request({
+    method: "post",
+    url:"/field/updateStatusById",
+    data:params,
+    headers: {"Content-Type": "application/json"},
+    transformRequest: [data => JSON.stringify(data)]
+})
+
 
 
