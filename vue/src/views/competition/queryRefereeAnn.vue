@@ -26,7 +26,7 @@
                         width="100">
                         </el-table-column>
                         <el-table-column
-                        prop="judgment"
+                        prop="fieldName"
                         label="场地名称"
                         width="100">
                         </el-table-column>
@@ -72,7 +72,7 @@ export default {
                 this.$message.warning("赛事id为空")
             }else{
                 QueryRefereeAnn({cid:this.cid}).then(res=>{
-                    console.log(res);
+                    // console.log(res);
                     if(res.data.length==0){
                         this.$message.warning("没有当前赛事的裁判信息")
                     }

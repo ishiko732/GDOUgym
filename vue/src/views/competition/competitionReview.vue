@@ -55,7 +55,7 @@
                         <el-table-column
                         prop="status"
                         label="状态"
-                        width="80">
+                        width="100">
                         </el-table-column>
                     </el-table>
                 </el-form-item>

@@ -52,7 +52,17 @@
                         <el-table-column
                         prop="competitionTime"
                         label="赛事时间"
-                        width="240">
+                        width="180">
+                        </el-table-column>
+                        <el-table-column
+                        prop="eventLength"
+                        label="赛事时长(单位为：分钟)"
+                        width="120">
+                        </el-table-column>
+                        <el-table-column
+                        prop="fieldName"
+                        label="场地名称"
+                        width="180">
                         </el-table-column>
                         <el-table-column
                         prop="introduction"
@@ -89,13 +99,17 @@ export default {
                 name:this.name,
                 uname:this.uname
             }).then(res=>{
-                console.log(res);
-                // this.eventInfoList=res.data
+                // console.log(res);
                 res.data.forEach(item=>{
-                        if(item.isCheck=="审核通过"){
-                            this.eventInfoList.push(item)
-                        }
-                    })
+                    if(item.isCheck=="审核通过"){
+                        let fieldName = ""
+                        item.competitionFields.forEach(item2=>{
+                            fieldName = fieldName+item2.name+"；"
+                        })
+                        item.fieldName = fieldName
+                        this.eventInfoList.push(item)
+                    }
+                })
                 if(this.eventInfoList.length==0){
                     this.$message.warning("未查询到赛事")
                 }
@@ -116,16 +130,20 @@ export default {
                     start_time:this.startTime,
                     end_time:this.endTime
                 }).then(res=>{
-                    console.log(res);
-                    // this.eventInfoList=res.data
+                    // console.log(res);
                     res.data.forEach(item=>{
                         if(item.isCheck=="审核通过"){
+                            let fieldName = ""
+                            item.competitionFields.forEach(item2=>{
+                                fieldName = fieldName+item2.name+"；"
+                            })
+                            item.fieldName = fieldName
                             this.eventInfoList.push(item)
                         }
                     })
                     if(this.eventInfoList.length==0){
-                    this.$message.warning("未查询到赛事")
-                }
+                        this.$message.warning("未查询到赛事")
+                    }
                 }).catch(err=>{
                     this.$message.error(err.response.data.data+"，请重新登录")
                 })
