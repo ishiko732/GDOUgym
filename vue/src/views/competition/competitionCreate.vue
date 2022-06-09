@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { createCompetition } from "@/request/api";
+import { CreateCompetition } from "@/request/api";
 export default {
     data () {
         return {
@@ -53,7 +53,7 @@ export default {
             }else if(this.time_length<10){
                 this.$message.warning("赛事时长小于10分钟")
             }else{
-                createCompetition({
+                CreateCompetition({
                     event_name:this.name,
                     event_time:this.time,
                     event_length:this.time_length,
@@ -83,20 +83,20 @@ export default {
 </script>
  
 <style lang = "less" scoped>
-    .form{
-        width: 450px;
-        margin: 50px 300px;
-        h2{
-            text-align: center;
-            margin-bottom: 50px;
-            margin-left: 80px;
-        }
-        .button{
-            padding-left: 50px;
-            text-align: center;
-            .el-button{
-                margin: 0 40px;
-            }
+.form{
+    width: 450px;
+    margin: 50px 300px;
+    h2{
+        text-align: center;
+        margin-bottom: 50px;
+        margin-left: 80px;
+    }
+    .button{
+        padding-left: 50px;
+        text-align: center;
+        .el-button{
+            margin: 0 40px;
         }
     }
+}
 </style>

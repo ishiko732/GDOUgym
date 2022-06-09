@@ -281,7 +281,7 @@ export default {
     this.roleId=localStorage.getItem("roleId")
       queryEquipment({name:"",types:"",number:""}).then(res=>{
       this.wholeData=res.data[0]
-      console.log(this.wholeData)
+      // console.log(this.wholeData)
       res.data[0].forEach((item,index)=>{
         var obj={}
         obj.id=item.id
@@ -294,7 +294,7 @@ export default {
         this.equipment_data.push(obj)
 
       })
-        console.log(this.equipment_data)
+        // console.log(this.equipment_data)
     })
   }
 }
@@ -309,7 +309,7 @@ export default {
     font-size: 30px;
     text-align: center;
   }
-  .equipment_type,.equipment_name,{
+  .equipment_type,.equipment_name{
     margin-top: 4%;
     margin-bottom: 2%;
     font-size: 18px;

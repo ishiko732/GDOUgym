@@ -57,7 +57,7 @@ export default {
   },
   created() {
     queryFixEquipment().then(res=>{
-      console.log(res)
+      // console.log(res)
       res.data.forEach(item=>{
         var obj={}
         obj.type=item.type
