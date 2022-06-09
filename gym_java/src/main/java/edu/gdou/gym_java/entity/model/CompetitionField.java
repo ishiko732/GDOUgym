@@ -63,15 +63,15 @@ public class CompetitionField implements Serializable {
     // 通过场地审核fcId -> 到order_item(fcId)找到tid-> time_arrange(tid) 找到start,endTime
     @ApiModelProperty("场地开始使用时间")
     @TableField(exist = false)
-    private Timestamp startTime;
+    private String startTime;
 
     @ApiModelProperty("场地结束使用时间")
     @TableField(exist = false)
-    private Timestamp endTime;
+    private String endTime;
 
     @ApiModelProperty("赛事场地更新时间")
     @TableField("time")
-    private Timestamp time;
+    private String time;
 
 
 

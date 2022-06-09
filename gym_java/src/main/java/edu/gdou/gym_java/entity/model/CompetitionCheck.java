@@ -49,11 +49,11 @@ public class CompetitionCheck implements Serializable {
 
     @ApiModelProperty("创建审核时间")
     @TableField("create_time")
-    private Timestamp createTime;
+    private String createTime;
 
     @ApiModelProperty("审核时间")
     @TableField("check_time")
-    private Timestamp checkTime;
+    private String checkTime;
 
     @TableField(exist = false)
     private Competition competition;

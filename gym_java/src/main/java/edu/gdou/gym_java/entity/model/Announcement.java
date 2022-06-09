@@ -45,11 +45,11 @@ public class Announcement implements Serializable {
 
     @ApiModelProperty("发布时间")
     @TableField("createDate")
-    private LocalDateTime createDate;
+    private String createDate;
 
     @ApiModelProperty("修改时间")
     @TableField("updateDate")
-    private LocalDateTime updateDate;
+    private String updateDate;
 
 
 }
