@@ -30,6 +30,9 @@ public class RefereeAnnouncement {
     @TableField("competition_name")
     private String competitionName;
 
+    @TableField("field_name")
+    private String fieldName;
+
     @TableField("introduction")
     private String introduction;
 
