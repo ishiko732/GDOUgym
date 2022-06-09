@@ -57,4 +57,12 @@ public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, R
         }
         return count;
     }
+
+    @Override
+    public List<RentEquipment> queryRentEquipmentByUid(Integer uid) {
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("uid",uid);
+        List<RentEquipment> rentEquipments = getBaseMapper().selectByMap(map);
+        return rentEquipments;
+    }
 }

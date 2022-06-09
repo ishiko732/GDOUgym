@@ -260,6 +260,13 @@ public class EquipmentController {
         }
     }
 
+    @PostMapping("/queryRentEquipmentByUid")
+    public ResponseBean responseBean(){
+        User user = userService.currentUser();
+        List<RentEquipment> rentEquipments = rentEquipmentService.queryRentEquipmentByUid(user.getId());
+        return new ResponseBean(200,"查询成功",rentEquipments);
+    }
+
     @PostMapping("/redeemEquipment")
     public ResponseBean redeemEquipment(@RequestParam("rid")String rid){
         if (StringUtils.isNumeric(rid)) {
