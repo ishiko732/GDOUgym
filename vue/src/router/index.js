@@ -261,6 +261,12 @@ const routes = [
         name: 'price',
         component:()=>import('../views/equipment/price'),
       },
+      {
+        //归还器材路由
+        path: '/home/returnEquipment',
+        name: 'returnEquipment',
+        component:()=>import('../views/equipment/returnEquipment'),
+      },
     ]
   },
   

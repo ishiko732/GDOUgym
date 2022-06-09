@@ -46,7 +46,7 @@ public class RecycleEquipmentServiceImpl extends ServiceImpl<RecycleEquipmentMap
             int delete = getBaseMapper().deleteById(recycleEquipment.getReid());
             if (delete==1){
                 equipment.setNumber(equipment.getNumber()+recycleEquipment.getNumber());
-                Boolean flag = equipmentService.updateEquipmentCount(equipment);
+                Boolean flag = equipmentService.updateEquipment(equipment);
                 return flag;
             }else{
                 return false;

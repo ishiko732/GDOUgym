@@ -41,8 +41,10 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 
     @Override
     public Integer availableEquipmentCount(Integer eid) {
-        Integer compositionCount = compositionEquipmentService.queryCompositionEquipmentCountByEid(eid);
-        Integer rentEquipmentCount = rentEquipmentService.queryRentEquipmentAvailableCount(eid);
+        Integer compositionCount=0;
+        Integer rentEquipmentCount=0;
+        compositionCount = compositionEquipmentService.queryCompositionEquipmentCountByEid(eid);
+        rentEquipmentCount = rentEquipmentService.queryRentEquipmentAvailableCount(eid);
         Equipment equipment = getBaseMapper().selectById(eid);
         return equipment.getNumber()-compositionCount-rentEquipmentCount;
     }
@@ -53,7 +55,7 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
     }
 
     @Override
-    public Boolean updateEquipmentCount(Equipment equipment) {
+    public Boolean updateEquipment(Equipment equipment) {
         getBaseMapper().updateById(equipment);
         return  getBaseMapper().updateById(equipment)==1;
     }

@@ -44,4 +44,12 @@ public class Equipment {
     @ApiModelProperty("器材价格")
     @TableField(value = "price")
     private Double price;
+
+    @ApiModelProperty("器材价格")
+    @TableField(value = "rentPrice")
+    private Double rentPrice;
+
+    @ApiModelProperty("器材价格")
+    @TableField(value = "maxRentTime")
+    private Integer maxRentTime;
 }
