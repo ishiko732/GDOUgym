@@ -85,18 +85,6 @@ export const deleteType = (params) => request.post("/field/deleteType", params)
 //删除场地类型
 export const deleteField = (params) => request.post("/field/deleteField", params)
 
-//修改场地状态
-export const updateStatus = (params) => request.post("/field/updateStatus",params)
-
-//修改全部场地状态
-export const updateStatusById = (params) => request({
-    method: "post",
-    url:"/field/updateStatusById",
-    data:params,
-    headers: {"Content-Type": "application/json"},
-    transformRequest: [data => JSON.stringify(data)]
-})
-
 // 注销
 export const Logout = () => request.get("/user/logout")
 
@@ -166,6 +154,7 @@ export const addRentEquipment = (params) => request.post("/equipment/addRentEqui
 
 // 赛事创建
 export const CreateCompetition = (params) => request.post("/competition/create",params)
+
 // 查询赛事
 export const QueryEvent = (params) => request.get("/competition/queryEvent",{params})
 
