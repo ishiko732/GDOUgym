@@ -6,7 +6,6 @@ import edu.gdou.gym_java.entity.VO.RefereeAnnouncement;
 import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.CompetitionEquipment;
-import edu.gdou.gym_java.entity.model.CompetitionField;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.service.cm.CompetitionCheckService;
@@ -14,15 +13,14 @@ import edu.gdou.gym_java.service.cm.CompetitionService;
 import edu.gdou.gym_java.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
