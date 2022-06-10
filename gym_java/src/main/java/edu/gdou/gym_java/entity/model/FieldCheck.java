@@ -40,7 +40,7 @@ public class FieldCheck implements Serializable {
 
     @ApiModelProperty("费用")
     @TableField("money")
-    private Integer money;
+    private Double money;
 
     @ApiModelProperty("审核状态")
     @TableField("status")

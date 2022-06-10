@@ -15,7 +15,7 @@ public class FieldCheckVo implements Serializable {
 
     private String time;
 
-    private Integer money;
+    private Double money;
 
     private String status;
 

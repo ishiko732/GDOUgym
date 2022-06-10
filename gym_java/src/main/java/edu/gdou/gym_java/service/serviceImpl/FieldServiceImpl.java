@@ -7,6 +7,8 @@ import edu.gdou.gym_java.service.FieldService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.gdou.gym_java.utils.TimeUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.sql.*;
 import java.text.Format;
 import java.text.ParseException;
@@ -23,6 +25,7 @@ import java.util.List;
  * @since 2022-05-31
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements FieldService {
 
     private static final java.sql.Time[] time = new java.sql.Time[]{
@@ -322,8 +325,8 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     }
 
     @Override
-    public Integer queryMoneyByTimeId(Integer timeId) {
-        Integer money = 0;
+    public Double queryMoneyByTimeId(Integer timeId) {
+        Double money = 0.00;
         TimeArrange timeArrange = getBaseMapper().queryTimeById(timeId);
         FieldDate fieldDate = getBaseMapper().queryDateById(timeArrange.getFdid());
         Field field = getBaseMapper().queryFieldById(fieldDate.getField().getFid());
@@ -362,8 +365,8 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     }
 
     @Override
-    public Integer querySumMoney(String beginDate, String endDate) {
-        Integer sum=0;
+    public Double querySumMoney(String beginDate, String endDate) {
+        Double sum=0.00;
         List<FieldCheck> fieldCheckList = getBaseMapper().queryCheckByTime(beginDate,endDate);
         if (fieldCheckList.size()>0){
             for (int i=0;i<fieldCheckList.size();i++){

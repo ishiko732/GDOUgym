@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -30,6 +31,7 @@ import java.util.*;
  */
 @Service
 @Slf4j
+@Transactional(rollbackFor = Exception.class)
 public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Competition> implements CompetitionService {
     private final CompetitionCheckService checkService;
     private final CompetitionCancelService cancelService;
