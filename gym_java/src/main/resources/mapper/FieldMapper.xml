@@ -206,7 +206,11 @@ order by inode
 
     <select id="queryCheckByTime" resultType="edu.gdou.gym_java.entity.model.FieldCheck">
         select * from Field_check where status = '已完成' and time between #{beginDate} and #{endDate}
+    </select>
 
-
+    <select id="queryTime" resultType="edu.gdou.gym_java.entity.model.TimeArrange">
+        SELECT DISTINCT ta.time_id,ta.`start_time`,ta.`end_time` FROM time_arrange AS ta,Field AS f,Order_item AS oi,Field_date AS fd,Field_type AS ft
+        WHERE ta.`fdid`=fd.`id` AND fd.`fid`=f.`fid` AND f.`tid`=ft.`tid`  AND fd.`date`=#{date} AND
+            f.`fid`=#{fid}  AND ft.`tid` =#{tid} AND fd.`inode` =(#{index}-1) AND ta.`status`='空闲'
     </select>
 </mapper>
