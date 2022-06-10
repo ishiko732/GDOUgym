@@ -84,11 +84,11 @@ export default {
   },
   methods:{
     rent(row,index){
-      if(row.number==0){
-        this.$message.error("数量为零不能租用")
+      let number=parseInt(this.datalist[index].rentNumber)
+      let rentTime=parseInt(this.datalist[index].time)
+      if(number<=0){
+        this.$message.error("数量小于零不能租用")
       }else{
-        let number=parseInt(this.datalist[index].rentNumber)
-        let rentTime=parseInt(this.datalist[index].time)
         addRentEquipment({eid:row.id,rentTime:rentTime,number:number}).then(res=>{
           this.$message(res.msg)
           setTimeout(()=>{

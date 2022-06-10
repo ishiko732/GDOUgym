@@ -181,3 +181,45 @@ export const EventCheck = (params) => request.post("/competition/check",params)
 
 // 查询裁判公告信息
 export const QueryRefereeAnn = (params) => request.get("/competition/queryRefereeAnnouncements",{params})
+
+// 加载日期
+export const loadingDate = () => request.get("/field/loadingDate")
+
+// 查询场地号
+export const QueryFid = (params) => request.get("/field/queryNumByFid",{params})
+
+// 查询时间段
+export const QueryTime = (params) => request.post("/field/queryTime",params)
+
+// 赛事预约场地
+export const ComArrangeField = (params) => request({
+    method:"post",
+    url:"/field/orderFieldByCom",
+    data:params,
+    headers:{"Content-Type":"application/json"},
+    transformRequest:[data=>JSON.stringify(data)]
+})
+
+// 设置赛事场地（传场地审核id）
+export const EventSetFields = (params) => request({
+    method:"post",
+    url:"/competition/eventSetFields",
+    data:params,
+    headers:{"Content-Type":"application/json"},
+    transformRequest:[data=>JSON.stringify(data)]
+})
+
+// 赛事器材申请
+export const EventArrangeEquip = (params) => request({
+    method:"post",
+    url:"/competition/equipmentLinkField",
+    data:params,
+    headers:{"Content-Type":"application/json"},
+    transformRequest:[data=>JSON.stringify(data)]
+})
+
+// 赛事场地绑定裁判
+export const ArrangeComReferee = (params) => request.post("/competition/updateUserEvent",params)
+
+// 查询场地id列表
+export const QueryComField = () => request.get("/competition/queryCompetitionField")

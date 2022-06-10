@@ -60,6 +60,11 @@
                         width="120">
                         </el-table-column>
                         <el-table-column
+                        prop="cfId"
+                        label="场地id"
+                        width="100">
+                        </el-table-column>
+                        <el-table-column
                         prop="fieldName"
                         label="场地名称"
                         width="180">
@@ -99,14 +104,17 @@ export default {
                 name:this.name,
                 uname:this.uname
             }).then(res=>{
-                // console.log(res);
+                console.log(res);
                 res.data.forEach(item=>{
                     if(item.isCheck=="审核通过"){
                         let fieldName = ""
+                        let cfId = ""
                         item.competitionFields.forEach(item2=>{
                             fieldName = fieldName+item2.name+"；"
+                            cfId = cfId+item2.id+", "
                         })
                         item.fieldName = fieldName
+                        item.cfId = cfId
                         this.eventInfoList.push(item)
                     }
                 })
@@ -134,10 +142,13 @@ export default {
                     res.data.forEach(item=>{
                         if(item.isCheck=="审核通过"){
                             let fieldName = ""
+                            let cfId = ""
                             item.competitionFields.forEach(item2=>{
                                 fieldName = fieldName+item2.name+"；"
+                                cfId = cfId+item2.id+", "
                             })
                             item.fieldName = fieldName
+                            item.cfId = cfId
                             this.eventInfoList.push(item)
                         }
                     })
@@ -155,7 +166,7 @@ export default {
  
 <style lang = "less" scoped>
     .form{
-        width: 1000px;
+        width: 1100px;
         margin: 20px 300px;
         h2{
             text-align: center;

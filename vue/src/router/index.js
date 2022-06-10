@@ -63,16 +63,10 @@ const routes = [
             component:()=>import('../views/competition/comFieldArrange.vue')
           },
           {
-            //赛事器材申请路由
+            //赛事器材安排路由
             path:'/home/comManagement/comEquipArrange',
             name:'comEquipArrange',
             component:()=>import('../views/competition/comEquipArrange.vue')
-          },
-          {
-            //赛事器材审核路由
-            path:'/home/comManagement/comEquipReview',
-            name:'comEquipReview',
-            component:()=>import('../views/competition/comEquipReview.vue')
           },
           {
             //裁判简介公告路由
