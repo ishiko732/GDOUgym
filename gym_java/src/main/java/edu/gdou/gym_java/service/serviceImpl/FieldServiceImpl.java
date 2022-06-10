@@ -210,8 +210,24 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
                 timeArrangeList.add(timeArrange);
             }
             fieldCheckVo.setTimeArrangeList(timeArrangeList);
-            FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(0).getFdid());
-            fieldCheckVo.setDate(fieldDate.getDate().toString());
+            List<String> dateList = new ArrayList<>();
+            for (int n=0;n<timeArrangeList.size();n++){
+                FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(n).getFdid());
+                dateList.add(fieldDate.getDate().toString());
+            }
+            for(int j=0;j<dateList.size()-1;j++){
+                for (int k=j+1;k<dateList.size();k++){
+                    if(dateList.get(j).equals(dateList.get(k))){
+                        dateList.remove(k);
+                        k--;
+                    }
+                }
+            }
+            String date="";
+            for (String str:dateList){
+                date=date+str+" ";
+            }
+            fieldCheckVo.setDate(date);
             fieldCheckVos.add(fieldCheckVo);
         }
 
@@ -247,8 +263,24 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
                 timeArrangeList.add(timeArrange);
             }
             fieldCheckVo.setTimeArrangeList(timeArrangeList);
-            FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(0).getFdid());
-            fieldCheckVo.setDate(fieldDate.getDate().toString());
+            List<String> dateList = new ArrayList<>();
+            for (int n=0;n<timeArrangeList.size();n++){
+                FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(n).getFdid());
+                dateList.add(fieldDate.getDate().toString());
+            }
+                for(int j=0;j<dateList.size()-1;j++){
+        for (int k=j+1;k<dateList.size();k++){
+            if(dateList.get(j).equals(dateList.get(k))){
+                dateList.remove(k);
+                k--;
+            }
+        }
+    }
+                    String date="";
+           for (String str:dateList){
+               date=date+str+" ";
+           }
+            fieldCheckVo.setDate(date);
             fieldCheckVos.add(fieldCheckVo);
         }
         return fieldCheckVos;

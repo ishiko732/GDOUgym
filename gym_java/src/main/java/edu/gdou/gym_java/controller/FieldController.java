@@ -445,21 +445,22 @@ public class FieldController {
             for (Object obj : objectList) {
                 queryTimeVos.add(gson.fromJson(gson.toJson(obj), QueryTimeVo.class));
             }
-        Set<String> nameList = new HashSet<>();
+        List<String> nameList = new ArrayList<>();
         String name="";
         List<Integer> ids = new ArrayList<>();
         for (int i=0;i<queryTimeVos.size();i++){
           nameList.add(queryTimeVos.get(i).getName());
             ids.add(queryTimeVos.get(i).getTimeId());
         }
-//    for(int j=0;j<nameList.size()-1;j++){
-//        for (int k=j+1;k<nameList.size();k++){
-//            if(nameList.get(j).equals(nameList.get(k))){
-//                nameList.remove(k);
-//                k--;
-//            }
-//        }
-//    }
+        //用set顺序会变倒序
+    for(int j=0;j<nameList.size()-1;j++){
+        for (int k=j+1;k<nameList.size();k++){
+            if(nameList.get(j).equals(nameList.get(k))){
+                nameList.remove(k);
+                k--;
+            }
+        }
+    }
     for (String str:nameList){
         name = name + str +" ";
     }
