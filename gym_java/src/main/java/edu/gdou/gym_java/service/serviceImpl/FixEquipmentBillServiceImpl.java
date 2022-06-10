@@ -6,8 +6,10 @@ import edu.gdou.gym_java.mapper.FixEquipmentBillMapper;
 
 import edu.gdou.gym_java.service.FixEquipmentBillService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class FixEquipmentBillServiceImpl extends ServiceImpl<FixEquipmentBillMapper, FixEquipmentBill> implements FixEquipmentBillService {
     @Override
     public Boolean addFixEquipmentBill(FixEquipmentBill fixEquipmentBill) {

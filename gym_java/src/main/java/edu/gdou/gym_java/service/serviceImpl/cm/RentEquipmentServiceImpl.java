@@ -5,12 +5,14 @@ import edu.gdou.gym_java.entity.model.RentEquipment;
 import edu.gdou.gym_java.mapper.RentEquipmentMapper;
 import edu.gdou.gym_java.service.RentEquipmentService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class RentEquipmentServiceImpl extends ServiceImpl<RentEquipmentMapper, RentEquipment> implements RentEquipmentService {
     @Override
     public Boolean addRentEquipment(RentEquipment rentEquipment) {
