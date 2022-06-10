@@ -10,7 +10,6 @@ import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.utils.TimeUtils;
-import io.swagger.models.auth.In;
 import lombok.val;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
