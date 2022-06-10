@@ -178,7 +178,7 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
                 if (select!=null&&select.size()>0){
                     val equipment = select.iterator().next();
                     val updateWrapper = new UpdateWrapper<CompetitionEquipment>();
-                    val num = equipment.getNumber() + competitionEquipment.getNumber();
+                    val num = competitionEquipment.getNumber();
                     updateWrapper.eq("id",equipment.getId()).set("number", num);
                     if(equipmentService.getBaseMapper().update(null,updateWrapper)!=0){
                         competitionEquipment.setId(equipment.getId());
@@ -192,5 +192,15 @@ public class CompetitionServiceImpl extends ServiceImpl<CompetitionMapper, Compe
         log.info(competitionEquipments.toString());
         competitionEquipments.removeIf(competitionEquipment -> competitionEquipment.getId()==null);
         return competitionEquipments;
+    }
+
+    @Override
+    public Set<CompetitionField> queryCompetitionFieldByCid(Integer cid) {
+        return getBaseMapper().queryCompetitionFieldByCid(cid);
+    }
+
+    @Override
+    public Set<CompetitionEquipment> queryCompetitionEquipmentByCfid(Integer cfId) {
+        return getBaseMapper().queryCompetitionEquipmentByCfid(cfId);
     }
 }

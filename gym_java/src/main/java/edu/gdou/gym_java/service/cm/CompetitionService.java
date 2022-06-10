@@ -4,6 +4,8 @@ import edu.gdou.gym_java.entity.VO.RefereeAnnouncement;
 import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.model.*;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
@@ -30,4 +32,7 @@ public interface CompetitionService extends IService<Competition> {
     // TODO 收入支出查询
     boolean updateUserEvent(int cfId, int uid,String context);
     List<RefereeAnnouncement> queryRefereeAnnouncements(@Nullable Integer cid);
+
+    Set<CompetitionField> queryCompetitionFieldByCid(Integer cid);
+    Set<CompetitionEquipment> queryCompetitionEquipmentByCfid( Integer cfId);
 }
