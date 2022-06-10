@@ -6,6 +6,7 @@ import edu.gdou.gym_java.entity.VO.RefereeAnnouncement;
 import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.CompetitionEquipment;
+import edu.gdou.gym_java.entity.model.CompetitionField;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.service.cm.CompetitionCheckService;
@@ -13,16 +14,15 @@ import edu.gdou.gym_java.service.cm.CompetitionService;
 import edu.gdou.gym_java.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -207,4 +207,18 @@ public class CompetitionController {
         return new ResponseBean(200,"审核处理结果",aBoolean);
     }
 
+    // 查询赛事场地
+    @RequestMapping(value = "/queryCompetitionField",method = RequestMethod.GET)
+    @RequiresPermissions("赛事查询")
+    public ResponseBean queryCompetitionFieldByCid(@RequestParam(value = "cid",required = false) String cid){
+
+        return new ResponseBean(200,"赛事场地列表",competitionService.queryCompetitionFieldByCid(cid==null?null:Integer.parseInt(cid)));
+    }
+
+    // 查询赛事场地-器材
+    @RequestMapping(value = "/queryCompetitionEquipment",method = RequestMethod.GET)
+    @RequiresPermissions("赛事查询")
+    public ResponseBean queryCompetitionEquipmentByCfid(@RequestParam(value = "cfid",required = false) String cfid){
+        return new ResponseBean(200,"查询赛事-场地器材列表",competitionService.queryCompetitionEquipmentByCfid(cfid==null?null:Integer.parseInt(cfid)));
+    }
 }

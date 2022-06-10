@@ -121,7 +121,18 @@ public interface CompetitionMapper extends BaseMapper<Competition> {
     })
     Set<CompetitionField> queryCompetitionFieldByCid(@Param("cid") Integer cid);
 
-    @Select("select * from Competition_equipment where cfid=#{cfId}")
+
+    @Select({
+            "<script>",
+            "select *",
+            "from Competition_equipment",
+            "<where>",
+            "<if test='cfId !=null'>",
+            "cfid=#{cid}",
+            "</if>",
+            "</where>",
+            "</script>"
+    })
     Set<CompetitionEquipment> queryCompetitionEquipmentByCfid(@Param("cfId") Integer cfId);
 
 }
