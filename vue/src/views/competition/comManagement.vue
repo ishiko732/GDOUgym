@@ -7,8 +7,6 @@
               :class="$route.path=='/home/comManagement/competitionReview'?'active':''">赛事审核</span>
         <span class="top_text" @click="comFieldArrange"
               :class="$route.path=='/home/comManagement/comFieldArrange'?'active':''">比赛场地安排</span>
-        <span class="top_text" @click="comEquipReview"
-              :class="$route.path=='/home/comManagement/comEquipReview'?'active':''">赛事器材审核</span>
       </div>
     </div>
     <div class="top_bottom">
@@ -18,7 +16,7 @@
         <span class="top_text" @click="competitionCancel"
               :class="$route.path=='/home/comManagement/competitionCancel'?'active':''">赛事取消</span>
         <span class="top_text" @click="comEquipArrange"
-              :class="$route.path=='/home/comManagement/comEquipArrange'?'active':''">赛事器材申请</span>
+              :class="$route.path=='/home/comManagement/comEquipArrange'?'active':''">赛事器材安排</span>
         <span class="top_text" @click="refereeAnnouncement"
               :class="$route.path=='/home/comManagement/refereeAnnouncement'?'active':''">裁判简介公告</span>
       </div>

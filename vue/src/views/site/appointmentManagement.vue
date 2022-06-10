@@ -45,11 +45,11 @@ export default {
   },
   created () { 
     queryCheck().then(res => {
-      console.log(res.data);
+      // console.log(res.data);
       res.data.forEach((item,index) => {
         var obj = {}
         var arr = []
-        console.log(item.timeArrangeList[0].startTime);
+        // console.log(item.timeArrangeList[0].startTime);
         obj.username = item.userName
         obj.site=item.name
         obj.id = item.id
@@ -60,7 +60,7 @@ export default {
         arr.push(obj)
         this.appointmentData.push(arr)
       });
-      console.log(this.appointmentData);
+      // console.log(this.appointmentData);
     })
   },
   methods: {

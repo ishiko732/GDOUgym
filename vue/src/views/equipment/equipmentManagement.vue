@@ -211,7 +211,7 @@ export default {
           obj.money=item.rentPrice
           this.equipment_data.push(obj)
         })
-        console.log(this.equipment_data)
+        // console.log(this.equipment_data)
       })
     },
     fix(a){
@@ -237,7 +237,7 @@ export default {
     },
     del_equip(){
       reduceEquipmentCount({eid:this.eid,number:this.del_number}).then(res=>{
-        console.log(res)
+        // console.log(res)
         this.$message(res.msg)
         setTimeout(()=>{
           location.reload();
@@ -247,7 +247,7 @@ export default {
     },
     recycle_equip(){
       applyRecycleEquipment({eid:this.eid,number:parseInt(this.recycle_number)}).then(res=>{
-        console.log(res)
+        // console.log(res)
         this.$message(res.msg)
         setTimeout(()=>{
           location.reload();
@@ -257,7 +257,7 @@ export default {
     },
     fix_equip(){
       applyFixEquipment({eid:this.eid,number:this.fix_number}).then(res=>{
-        console.log(res)
+        // console.log(res)
         this.$message(res.msg)
         setTimeout(()=>{
           location.reload();
