@@ -194,6 +194,7 @@ public class UserController {
         Collections.sort(users);
         for (User user : users) {
             val objectMap = userService.selectInfoByUid(user.getId());
+            user.setRole(roleService.getById(user.getRoleId()));
             user.setInfo(objectMap);
         }
         return new ResponseBean(200,users.size()>0?"查询成功":"查询结果为空",users);

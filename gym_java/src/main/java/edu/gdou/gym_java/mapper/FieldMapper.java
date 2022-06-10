@@ -86,4 +86,6 @@ public interface FieldMapper extends BaseMapper<Field> {
 
     @Select("select name from Field_check where id=#{fcid}")
     String queryNameByFcid(@Param("fcid")Integer fcid);
+
+    List<TimeArrange> queryTime(Date date, Integer tid, Integer fid, Integer index);
 }

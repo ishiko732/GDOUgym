@@ -16,33 +16,33 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = GymJavaApplication.class)
 @Slf4j
 class AnnouncementServiceImplTest {
-    @Autowired
-    AnnouncementService announcementService;
-    @Test
-    void insertAnnouncement() {
+//    @Autowired
+//    AnnouncementService announcementService;
+//    @Test
+//    void insertAnnouncement() {
+////        for (int i = 1; i <= 5; i++) {
+////            val ret=announcementService.insertAnnouncement("馆内罚款","1","测试公告"+i);
+////            log.info("test"+i+":"+ret);
+////        }
+//        val ret=announcementService.insertAnnouncement("馆内罚款",1,"测试公告");
+//    }
+//
+//    @Test
+//    void updateAnnouncement() {
 //        for (int i = 1; i <= 5; i++) {
-//            val ret=announcementService.insertAnnouncement("馆内罚款","1","测试公告"+i);
+//            val ret=announcementService.updateAnnouncement(i,1,"(new)测试公告"+i);
 //            log.info("test"+i+":"+ret);
 //        }
-        val ret=announcementService.insertAnnouncement("馆内罚款",1,"测试公告");
-    }
-
-    @Test
-    void updateAnnouncement() {
-        for (int i = 1; i <= 5; i++) {
-            val ret=announcementService.updateAnnouncement(i,1,"(new)测试公告"+i);
-            log.info("test"+i+":"+ret);
-        }
-    }
-
-    @Test
-    void queryNewAnnouncement() {
-//        System.out.println(announcementService.queryNewAnnouncement(null));
-        System.out.println(announcementService.queryNewAnnouncement("馆内罚款"));
-    }
-
-    @Test
-    void queryAnnouncementLogs() {
-        System.out.println(announcementService.queryAnnouncementLogs("馆内罚款"));
-    }
+//    }
+//
+//    @Test
+//    void queryNewAnnouncement() {
+////        System.out.println(announcementService.queryNewAnnouncement(null));
+//        System.out.println(announcementService.queryNewAnnouncement("馆内罚款"));
+//    }
+//
+//    @Test
+//    void queryAnnouncementLogs() {
+//        System.out.println(announcementService.queryAnnouncementLogs("馆内罚款"));
+//    }
 }

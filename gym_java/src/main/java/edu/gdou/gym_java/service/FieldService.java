@@ -4,6 +4,7 @@ import edu.gdou.gym_java.entity.VO.FieldCheckVo;
 import edu.gdou.gym_java.entity.model.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,4 +78,6 @@ public interface FieldService extends IService<Field> {
     Integer queryFieldByDes(Field field);
 
     boolean updateStatusById(ArrayList<TimeArrange> timeArranges);
+
+    List<TimeArrange> queryTime(Date date, Integer tid, Integer fid, Integer index);
 }

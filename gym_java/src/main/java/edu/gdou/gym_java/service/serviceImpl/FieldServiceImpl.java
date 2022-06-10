@@ -43,7 +43,7 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
             new Time(19, 0, 0),
             new Time(20, 0, 0),
             new Time(21, 0, 0),
-            new Time(22, 0, 0)
+//            new Time(22, 0, 0)
     };
 
 
@@ -105,7 +105,7 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         if (results.size() > 0) {
             j = results.get(0).getInode();
         }
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 13; i++) {
             TimeArrange timeArrange = new TimeArrange();
             timeArrange.setStartTime(time[i]);
             timeArrange.setEndTime(time[i + 1]);
@@ -210,8 +210,24 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
                 timeArrangeList.add(timeArrange);
             }
             fieldCheckVo.setTimeArrangeList(timeArrangeList);
-            FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(0).getFdid());
-            fieldCheckVo.setDate(fieldDate.getDate().toString());
+            List<String> dateList = new ArrayList<>();
+            for (int n=0;n<timeArrangeList.size();n++){
+                FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(n).getFdid());
+                dateList.add(fieldDate.getDate().toString());
+            }
+            for(int j=0;j<dateList.size()-1;j++){
+                for (int k=j+1;k<dateList.size();k++){
+                    if(dateList.get(j).equals(dateList.get(k))){
+                        dateList.remove(k);
+                        k--;
+                    }
+                }
+            }
+            String date="";
+            for (String str:dateList){
+                date=date+str+" ";
+            }
+            fieldCheckVo.setDate(date);
             fieldCheckVos.add(fieldCheckVo);
         }
 
@@ -247,8 +263,24 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
                 timeArrangeList.add(timeArrange);
             }
             fieldCheckVo.setTimeArrangeList(timeArrangeList);
-            FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(0).getFdid());
-            fieldCheckVo.setDate(fieldDate.getDate().toString());
+            List<String> dateList = new ArrayList<>();
+            for (int n=0;n<timeArrangeList.size();n++){
+                FieldDate fieldDate = getBaseMapper().queryDateById(timeArrangeList.get(n).getFdid());
+                dateList.add(fieldDate.getDate().toString());
+            }
+                for(int j=0;j<dateList.size()-1;j++){
+        for (int k=j+1;k<dateList.size();k++){
+            if(dateList.get(j).equals(dateList.get(k))){
+                dateList.remove(k);
+                k--;
+            }
+        }
+    }
+                    String date="";
+           for (String str:dateList){
+               date=date+str+" ";
+           }
+            fieldCheckVo.setDate(date);
             fieldCheckVos.add(fieldCheckVo);
         }
         return fieldCheckVos;
@@ -401,5 +433,10 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
             }
         }
         return true;
+    }
+
+    @Override
+    public List<TimeArrange> queryTime(Date date, Integer tid, Integer fid, Integer index) {
+        return getBaseMapper().queryTime(date,tid,fid,index);
     }
 }
