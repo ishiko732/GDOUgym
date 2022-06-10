@@ -8,6 +8,7 @@ import edu.gdou.gym_java.service.cm.CompetitionCheckService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 @Service
 public class CompetitionCheckServiceImpl extends ServiceImpl<CompetitionCheckMapper, CompetitionCheck> implements CompetitionCheckService {
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer init_check(int cid) {
         val initCompetition = new Init_Competition(cid);
         val initCheck = getBaseMapper().init_check(initCompetition);

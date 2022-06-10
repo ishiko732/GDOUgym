@@ -10,6 +10,7 @@ import edu.gdou.gym_java.service.FixEquipmentService;
 import edu.gdou.gym_java.mapper.FixEquipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class FixEquipmentServiceImpl  extends ServiceImpl<FixEquipmentMapper, FixEquipment> implements FixEquipmentService {
 
     @Override

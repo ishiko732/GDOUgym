@@ -43,6 +43,18 @@ export const queryType = () => request.get("field/queryType")
 //按照类型查询场地
 export const queryFieldByType = (params) => request.get("field/queryFieldByType", { params })
 
+//修改场地状态
+export const updateStatus = (params) => request.post("/field/updateStatus",params)
+
+//修改全部场地状态
+export const updateStatusById = (params) => request({
+    method: "post",
+    url:"/field/updateStatusById",
+    data:params,
+    headers: {"Content-Type": "application/json"},
+    transformRequest: [data => JSON.stringify(data)]
+})
+
 //查询场地安排表
 export const listTimeByDate = (params) => request.post("/field/listTimeByDate", params)
 
