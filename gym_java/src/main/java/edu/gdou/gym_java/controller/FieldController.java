@@ -34,7 +34,7 @@ public class FieldController {
     private final FieldService fieldService;
     private final UserService userService;
     private final Gson gson;
-    public FieldController(FieldService fieldService, UserService userService, Gson gson) {
+    public FieldController(FieldService fieldService,UserService userService,Gson gson) {
         this.fieldService = fieldService;
         this.userService = userService;
         this.gson = gson;
@@ -99,7 +99,7 @@ public class FieldController {
             return new ResponseBean(200,"数据错误",null);
         }
         field.setNum(Integer.valueOf(num));
-        field.setMoney(Integer.valueOf(money));
+        field.setMoney(Double.parseDouble(money));
         if (fieldService.addField(field)) {
             return new ResponseBean(200, "场地添加成功！", field);
         } else {
@@ -131,7 +131,7 @@ public class FieldController {
         if (field!=null){
             field.setDescription(description);
             field.setNum(Integer.valueOf(num));
-            field.setMoney(Integer.valueOf(money));
+            field.setMoney(Double.parseDouble(money));
             if (fieldService.updateField(field)) {
                 return new ResponseBean(200, "场地更新成功！", field);
             } else {
@@ -149,7 +149,7 @@ public class FieldController {
     public ResponseBean updateStatus(@RequestParam("timeId") String timeId ,
                                     @RequestParam("status") String status){
 
-        if (!status.equals("上课用地")&&!status.equals("校队预留") && !status.equals("维护") && !status.equals("空闲")){
+        if (!status.equals("预约中")&&!status.equals("上课用地")&&!status.equals("校队预留") && !status.equals("维护") && !status.equals("空闲")){
             return new ResponseBean(200, "状态错误", null);
         }
         TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(timeId));
@@ -173,7 +173,7 @@ public class FieldController {
             timeArranges.add(gson.fromJson(gson.toJson(obj), TimeArrange.class));
         }
         for (TimeArrange timeArrange : timeArranges){
-            if (!timeArrange.getStatus().equals("上课用地")&&!timeArrange.getStatus().equals("校队预留") &&
+            if (!timeArrange.getStatus().equals("预约中")&&!timeArrange.getStatus().equals("上课用地")&&!timeArrange.getStatus().equals("校队预留") &&
                     !timeArrange.getStatus().equals("维护")&& !timeArrange.getStatus().equals("空闲")){
                 return new ResponseBean(200, "状态错误", timeArrange.getStatus());
             }
@@ -193,7 +193,7 @@ public class FieldController {
     @GetMapping("/queryMoneyByTimeId")
     public ResponseBean queryMoneyByTimeId(@RequestParam("timeId") String timeId_par){
         Integer timeId = Integer.valueOf(timeId_par);
-        Integer money = fieldService.queryMoneyByTimeId(timeId);
+        Double money = fieldService.queryMoneyByTimeId(timeId);
             return new ResponseBean(200, "场地收费标准查询成功", money);
     }
 
@@ -260,7 +260,7 @@ public class FieldController {
         fieldCheck.setTime(new java.sql.Timestamp(System.currentTimeMillis()));
         fieldCheck.setName(name);
         fieldCheck.setCard( map.get("id").toString());
-        fieldCheck.setMoney(Integer.valueOf(money_par));
+        fieldCheck.setMoney(Double.parseDouble(money_par));
         fieldCheck.setStatus("审核中");
         fieldCheck.setUser(user);
        Boolean addCheck = false;
@@ -350,7 +350,7 @@ public class FieldController {
     @PostMapping("/querySumMoney")
     public ResponseBean querySumMoney(@RequestParam("beginDate")String beginDate,
                                       @RequestParam("endDate")String endDate){
-       Integer sumMoney = fieldService.querySumMoney(beginDate,endDate);
+        Double sumMoney = fieldService.querySumMoney(beginDate,endDate);
         return new ResponseBean(200,"场地收入查询成功",sumMoney);
     }
 
@@ -425,7 +425,7 @@ public class FieldController {
         val card=String.valueOf(objectMap.get("id"));
         val status =CheckStatus.CHECKING.getStatus();
         val com_name = "(赛事)" + name;
-        val money = Integer.valueOf(money_par);
+        val money = Double.parseDouble(money_par);
         val fieldCheck = new FieldCheck(null,null,money, status, com_name,card,null,user);
         for (String id : ids) {
             TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(id));

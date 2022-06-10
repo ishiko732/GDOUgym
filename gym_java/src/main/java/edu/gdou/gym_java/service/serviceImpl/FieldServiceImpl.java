@@ -322,8 +322,8 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     }
 
     @Override
-    public Integer queryMoneyByTimeId(Integer timeId) {
-        Integer money = 0;
+    public Double queryMoneyByTimeId(Integer timeId) {
+        Double money = 0.00;
         TimeArrange timeArrange = getBaseMapper().queryTimeById(timeId);
         FieldDate fieldDate = getBaseMapper().queryDateById(timeArrange.getFdid());
         Field field = getBaseMapper().queryFieldById(fieldDate.getField().getFid());
@@ -362,8 +362,8 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     }
 
     @Override
-    public Integer querySumMoney(String beginDate, String endDate) {
-        Integer sum=0;
+    public Double querySumMoney(String beginDate, String endDate) {
+        Double sum=0.00;
         List<FieldCheck> fieldCheckList = getBaseMapper().queryCheckByTime(beginDate,endDate);
         if (fieldCheckList.size()>0){
             for (int i=0;i<fieldCheckList.size();i++){
