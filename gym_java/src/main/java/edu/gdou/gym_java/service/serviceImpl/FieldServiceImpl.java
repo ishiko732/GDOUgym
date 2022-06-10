@@ -402,4 +402,9 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         }
         return true;
     }
+
+    @Override
+    public List<TimeArrange> queryTime(Date date, Integer tid, Integer fid, Integer index) {
+        return getBaseMapper().queryTime(date,tid,fid,index);
+    }
 }

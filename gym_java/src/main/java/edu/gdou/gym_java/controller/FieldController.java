@@ -3,12 +3,14 @@ package edu.gdou.gym_java.controller;
 
 import com.google.gson.Gson;
 import edu.gdou.gym_java.entity.VO.FieldCheckVo;
+import edu.gdou.gym_java.entity.VO.QueryTimeVo;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.enums.CheckStatus;
 import edu.gdou.gym_java.entity.model.*;
 import edu.gdou.gym_java.service.FieldService;
 import edu.gdou.gym_java.service.UserService;
 import edu.gdou.gym_java.utils.TimeUtils;
+import io.swagger.models.auth.In;
 import lombok.val;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -169,16 +171,35 @@ public class FieldController {
     public ResponseBean updateStatusById(@RequestBody Map<String,Object> map){
         val objectList =gson.fromJson(gson.toJson(map.get("timeArrangeList")),List.class);
         val timeArranges = new ArrayList<TimeArrange>();
+        val timeArranges_db = new ArrayList<TimeArrange>();
         for (Object obj : objectList) {
             timeArranges.add(gson.fromJson(gson.toJson(obj), TimeArrange.class));
         }
-        for (TimeArrange timeArrange : timeArranges){
-            if (!timeArrange.getStatus().equals("预约中")&&!timeArrange.getStatus().equals("上课用地")&&!timeArrange.getStatus().equals("校队预留") &&
-                    !timeArrange.getStatus().equals("维护")&& !timeArrange.getStatus().equals("空闲")){
-                return new ResponseBean(200, "状态错误", timeArrange.getStatus());
+        for (int i=0;i<timeArranges.size();i++){
+            if (!timeArranges.get(i).getStatus().equals("占用")&&
+                    !timeArranges.get(i).getStatus().equals("预约中")&&
+                    !timeArranges.get(i).getStatus().equals("上课用地")&&
+                    !timeArranges.get(i).getStatus().equals("校队预留") &&
+                    !timeArranges.get(i).getStatus().equals("维护")&&
+                    !timeArranges.get(i).getStatus().equals("空闲")){
+                return new ResponseBean(200, "状态错误", timeArranges.get(i).getStatus());
+            }
+
+            TimeArrange timeArrange_db = fieldService.queryTimeById(timeArranges.get(i).getTimeId());
+            if (!timeArranges.get(i).getStatus().equals("预约中")&&timeArrange_db.getStatus().equals("预约中")){
+                return new ResponseBean(200, "该场地预约中，请先在审核处理！", timeArrange_db.getStatus());
+            }
+            if (!timeArranges.get(i).getStatus().equals("占用")&&timeArrange_db.getStatus().equals("占用")){
+                return new ResponseBean(200, "该场地已被预约！", timeArrange_db.getStatus());
+            }
+            if (timeArranges.get(i).getStatus().equals("占用")&&!timeArrange_db.getStatus().equals("占用")){
+                return new ResponseBean(200, "错误操作，不能使用占用字段更改非占用的场地状态！", timeArranges.get(i).getStatus());
+            }
+            if (!timeArranges.get(i).getStatus().equals(timeArrange_db.getStatus())) {
+                timeArranges_db.add(timeArranges.get(i));
             }
         }
-            if (fieldService.updateStatusById(timeArranges)) {
+            if (fieldService.updateStatusById(timeArranges_db)) {
                 return new ResponseBean(200, "场地时间段状态更新成功！", null);
             } else {
                 return new ResponseBean(200, "场地时间段状态更新失败", null);
@@ -414,21 +435,44 @@ public class FieldController {
 
     //赛事预约场地审核，审核项设置为审核中，日期安排项设置为预约中
     //name页面用场地类型+场地描述+序号生成
+
+
     @RequiresAuthentication
     @PostMapping("/orderFieldByCom")
-    public ResponseBean orderFieldByCom(@RequestParam("timeIds") String[] ids ,
-                                   @RequestParam(value = "name") String name,
-                                   @RequestParam(value = "money",required = false,defaultValue = "0") String money_par){
+    public ResponseBean orderFieldByCom(@RequestBody Map<String,Object> map){
+        val queryTimeVos = new ArrayList<QueryTimeVo>();
+            val objectList =gson.fromJson(gson.toJson(map.get("queryTimeVos")),List.class);
+            for (Object obj : objectList) {
+                queryTimeVos.add(gson.fromJson(gson.toJson(obj), QueryTimeVo.class));
+            }
+        Set<String> nameList = new HashSet<>();
+        String name="";
+        List<Integer> ids = new ArrayList<>();
+        for (int i=0;i<queryTimeVos.size();i++){
+          nameList.add(queryTimeVos.get(i).getName());
+            ids.add(queryTimeVos.get(i).getTimeId());
+        }
+//    for(int j=0;j<nameList.size()-1;j++){
+//        for (int k=j+1;k<nameList.size();k++){
+//            if(nameList.get(j).equals(nameList.get(k))){
+//                nameList.remove(k);
+//                k--;
+//            }
+//        }
+//    }
+    for (String str:nameList){
+        name = name + str +" ";
+    }
         val user = userService.currentUser();
         val objectMap = userService.selectInfoByUid(user.getId());
         //新增审核
         val card=String.valueOf(objectMap.get("id"));
         val status =CheckStatus.CHECKING.getStatus();
-        val com_name = "(赛事)" + name;
-        val money = Double.parseDouble(money_par);
+        val com_name =  name;
+        val money = 0.0;
         val fieldCheck = new FieldCheck(null,null,money, status, com_name,card,null,user);
-        for (String id : ids) {
-            TimeArrange timeArrange = fieldService.queryTimeById(Integer.valueOf(id));
+        for (Integer id : ids) {
+            TimeArrange timeArrange = fieldService.queryTimeById(id);
             if (!timeArrange.getStatus().equals("空闲")) {
                 return new ResponseBean(200, "存在占用场地", null);
             }
@@ -437,15 +481,16 @@ public class FieldController {
         Boolean addOrderItem =false;
         // 若添加审核失败，应当不做绑定时间操作
         if (addCheck){
-            for (int i = 0; i < ids.length; i++) {
+            for (int i = 0; i < ids.size(); i++) {
+                fieldService.updateStatus(ids.get(i),"预约中"); //编辑状态
                 OrderItem orderItem = new OrderItem();
-                orderItem.setTimeId(Integer.valueOf(ids[i]));
+                orderItem.setTimeId(ids.get(i));
                 orderItem.setFcid(fieldCheck.getId());
                 addOrderItem  = fieldService.addOrderItem(orderItem);
             }
         }
-        return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败", com_name);
-
+        fieldCheck.setUser(null);
+        return new ResponseBean(200,addCheck&&addOrderItem?"提交审核成功":"提交审核失败", fieldCheck);
     }
 
     @RequiresAuthentication
@@ -464,6 +509,36 @@ public class FieldController {
 
         return new ResponseBean(200,dateValid.size()==7?"查询成功":"查询结果为空",dateValid);
     }
+
+//场号列表
+    @RequiresAuthentication
+    @GetMapping("/queryNumByFid")
+    public ResponseBean queryNumByFid(@RequestParam("fid")String fid){
+        List<Integer> nums = new ArrayList<>();
+                Field field = fieldService.queryFieldById(Integer.valueOf(fid));
+        for (int i=0;i<field.getNum();i++){
+            nums.add(i+1);
+        }
+        return new ResponseBean(200,nums.size()>0?"查询成功":"查询结果为空",nums);
+    }
+
+    //空闲时间段列表
+    @RequiresAuthentication
+    @PostMapping("/queryTime")
+    public ResponseBean queryTime(@RequestParam("date")String date_par,
+                                  @RequestParam("tid")String tid_par,
+                                   @RequestParam("fid")String fid_par,
+                                   @RequestParam("index")String index_par
+                                            ){
+        Date date = Date.valueOf(date_par);
+        Integer tid = Integer.valueOf(tid_par);
+        Integer fid = Integer.valueOf(fid_par);
+        Integer index = Integer.valueOf(index_par);
+        List<TimeArrange> timeArrangeList = fieldService.queryTime(date,tid,fid,index);
+
+        return new ResponseBean(200,timeArrangeList.size()>0?"查询成功":"没有空闲时间段",timeArrangeList);
+    }
+
 
 
     @RequiresAuthentication
