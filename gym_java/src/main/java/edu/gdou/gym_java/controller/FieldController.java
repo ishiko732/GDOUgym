@@ -169,16 +169,35 @@ public class FieldController {
     public ResponseBean updateStatusById(@RequestBody Map<String,Object> map){
         val objectList =gson.fromJson(gson.toJson(map.get("timeArrangeList")),List.class);
         val timeArranges = new ArrayList<TimeArrange>();
+        val timeArranges_db = new ArrayList<TimeArrange>();
         for (Object obj : objectList) {
             timeArranges.add(gson.fromJson(gson.toJson(obj), TimeArrange.class));
         }
-        for (TimeArrange timeArrange : timeArranges){
-            if (!timeArrange.getStatus().equals("预约中")&&!timeArrange.getStatus().equals("上课用地")&&!timeArrange.getStatus().equals("校队预留") &&
-                    !timeArrange.getStatus().equals("维护")&& !timeArrange.getStatus().equals("空闲")){
-                return new ResponseBean(200, "状态错误", timeArrange.getStatus());
+        for (int i=0;i<timeArranges.size();i++){
+            if (!timeArranges.get(i).getStatus().equals("占用")&&
+                    !timeArranges.get(i).getStatus().equals("预约中")&&
+                    !timeArranges.get(i).getStatus().equals("上课用地")&&
+                    !timeArranges.get(i).getStatus().equals("校队预留") &&
+                    !timeArranges.get(i).getStatus().equals("维护")&&
+                    !timeArranges.get(i).getStatus().equals("空闲")){
+                return new ResponseBean(200, "状态错误", timeArranges.get(i).getStatus());
+            }
+
+            TimeArrange timeArrange_db = fieldService.queryTimeById(timeArranges.get(i).getTimeId());
+            if (!timeArranges.get(i).getStatus().equals("预约中")&&timeArrange_db.getStatus().equals("预约中")){
+                return new ResponseBean(200, "该场地预约中，请先在审核处理！", timeArrange_db.getStatus());
+            }
+            if (!timeArranges.get(i).getStatus().equals("占用")&&timeArrange_db.getStatus().equals("占用")){
+                return new ResponseBean(200, "该场地已被预约！", timeArrange_db.getStatus());
+            }
+            if (timeArranges.get(i).getStatus().equals("占用")&&!timeArrange_db.getStatus().equals("占用")){
+                return new ResponseBean(200, "错误操作，不能使用占用字段更改非占用的场地状态！", timeArranges.get(i).getStatus());
+            }
+            if (!timeArranges.get(i).getStatus().equals(timeArrange_db.getStatus())) {
+                timeArranges_db.add(timeArranges.get(i));
             }
         }
-            if (fieldService.updateStatusById(timeArranges)) {
+            if (fieldService.updateStatusById(timeArranges_db)) {
                 return new ResponseBean(200, "场地时间段状态更新成功！", null);
             } else {
                 return new ResponseBean(200, "场地时间段状态更新失败", null);
