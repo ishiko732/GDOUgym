@@ -15,71 +15,27 @@
             label="器材名称"
             width="180">
         </el-table-column>
-        <el-table-column
-            prop="price"
-            label="每小时器材租用费用(元)"
-            width="250">
-        </el-table-column>
-        <el-table-column
-            prop="time"
-            label="器材可租用时间(天)"
-            >
-        </el-table-column>
-        <el-table-column
-            v-if="roleId==1||roleId==5?true:false"
-            label="器材报废"
-            width="150">
-          <template slot-scope="scope">
-            <i class="el-icon-edit" @click="edit(scope.row,scope.$index)"></i>
-          </template>
-        </el-table-column>
+
       </el-table>
     </el-card>
-    <el-dialog
-        title="更改收费标准"
-        :visible.sync="dialogVisible"
-        width="30%"
-    >
-      <div style="display: flex;margin-bottom: 10px;margin-left: 100px;">
-        <span style="margin-top: 10px">租用价格:&nbsp;&nbsp;&nbsp;</span>
-        <el-input v-model="price" style="width: 50%"></el-input>
-      </div>
-      <div style="display: flex;margin-bottom: 10px;margin-left: 100px;">
-        <span style="margin-top: 10px">租用时间:&nbsp;&nbsp;&nbsp;</span>
-        <el-input v-model="maxRentTime" style="width: 50%"></el-input>
-      </div>
-      <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="edit_price">确 定</el-button>
-  </span>
-    </el-dialog>
+
   </div>
 </div>
 </template>
 
 <script>
-import {queryEquipmentRentStandard} from "@/request/api";
+import {queryEquipmentRentStandard,addEquipmentRentStandard} from "@/request/api";
 
 export default {
   data(){
     return{
       eid:0,
       roleId:0,
-      dialogVisible:false,
-      price:"",
-      maxRentTime:"",
       priceData: []
     }
   },
   methods:{
-    edit(a,b){
-      this.dialogVisible=true
-      this.eid=a.eid
-      console.log(a)
-    },
-    edit_price(){
 
-    }
   },
   created() {
     this.roleId=localStorage.getItem("roleId")

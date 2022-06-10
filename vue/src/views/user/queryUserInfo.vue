@@ -71,7 +71,7 @@ export default {
             this.UserInfoList=[]    //清空数组
             if(this.uid!=""){
                 QueryUserInfoByUid({ID:this.uid}).then(res=>{
-                    console.log(res);
+                    // console.log(res);
                     if(res.code=="200"){
                         if(res.msg=="未获取到用户信息"){
                             this.$message.warning(res.msg)
@@ -157,7 +157,5 @@ export default {
         /deep/.el-input__inner,.el-input{
             width: 300px;
         }
-        
-    
     }
 </style>

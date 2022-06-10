@@ -132,4 +132,40 @@ export const applyFixEquipment = (params) => request.post("/equipment/applyFixEq
 export const queryFixEquipment = () => request.get("/equipment/queryFixEquipment")
 
 //确认器材维护
-export const confirmFixEquipment = (params) => request.post("equipment/confirmFixEquipment",params)
+export const confirmFixEquipment = (params) => request.post("/equipment/confirmFixEquipment",params)
+
+//新增器材收费
+export const addEquipmentRentStandard = (params) => request.post("/equipment/addEquipmentRentStandard",params)
+
+//查询租用器材
+export const queryRentEquipment = (params) => request.get("/equipment/queryRentEquipment",{params})
+
+//查询租用器材按照id
+export const queryRentEquipmentByEid = (params) => request.get("/equipment/queryRentEquipmentByEid",{params})
+
+//归还器材
+export const redeemEquipment = (params) => request.post("/equipment/redeemEquipment",params)
+
+//新增器材
+export const addEquipment = (params) => request.post("/equipment/addEquipment",params)
+
+//租用器材
+export const addRentEquipment = (params) => request.post("/equipment/addRentEquipment",params)
+
+// 赛事创建
+export const CreateCompetition = (params) => request.post("/competition/create",params)
+
+// 查询赛事
+export const QueryEvent = (params) => request.get("/competition/queryEvent",{params})
+
+// 取消赛事
+export const CancelEvent = (params) => request.post("/competition/cancel",params)
+
+// 查询赛事审核
+export const QueryEventCheck = (params) => request.get("/competition/queryCheck",{params})
+
+// 赛事审核
+export const EventCheck = (params) => request.post("/competition/check",params)
+
+// 查询裁判公告信息
+export const QueryRefereeAnn = (params) => request.get("/competition/queryRefereeAnnouncements",{params})

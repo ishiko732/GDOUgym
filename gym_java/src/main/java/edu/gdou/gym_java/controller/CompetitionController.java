@@ -2,6 +2,7 @@ package edu.gdou.gym_java.controller;
 
 
 import com.google.gson.Gson;
+import edu.gdou.gym_java.entity.VO.RefereeAnnouncement;
 import edu.gdou.gym_java.entity.VO.TimeLimit;
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.entity.model.CompetitionEquipment;
@@ -158,11 +159,8 @@ public class CompetitionController {
     @RequestMapping(value = "/queryRefereeAnnouncements",method = RequestMethod.GET)
     @RequiresPermissions("查询最新公告")
     public ResponseBean queryRefereeAnnouncements(@RequestParam(value = "cid",required = false)String cid) {
-        if(cid==null){
-            return new ResponseBean(200,"查询裁判公告信息", competitionService.queryRefereeAnnouncements(null));
-        }else{
-            return new ResponseBean(200,"查询裁判公告信息", competitionService.queryRefereeAnnouncements(Integer.parseInt(cid)));
-        }
+        List<RefereeAnnouncement> refereeAnnouncements = competitionService.queryRefereeAnnouncements(cid==null?null:Integer.parseInt(cid));
+        return new ResponseBean(200,"查询裁判公告信息", refereeAnnouncements);
     }
 
     /**

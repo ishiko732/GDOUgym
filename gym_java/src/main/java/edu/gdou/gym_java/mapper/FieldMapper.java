@@ -4,6 +4,8 @@ import edu.gdou.gym_java.entity.model.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.sql.Date;
 import java.util.List;
@@ -81,4 +83,7 @@ public interface FieldMapper extends BaseMapper<Field> {
     Boolean deleteField(Field field);
 
     Integer queryFieldByDes(Field field);
+
+    @Select("select name from Field_check where id=#{fcid}")
+    String queryNameByFcid(@Param("fcid")Integer fcid);
 }

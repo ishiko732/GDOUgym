@@ -10,6 +10,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 /**
@@ -24,19 +25,16 @@ import java.util.List;
 @RequestMapping("/equipment")
 public class EquipmentController {
     private final EquipmentService equipmentService;
-    private final EquipmentRentStandardService equipmentRentStandardService;
     private final FixEquipmentService fixEquipmentService;
     private final RecycleEquipmentService recycleEquipmentService;
     private final UserService userService;
     private final RentEquipmentService rentEquipmentService;
     private final FixEquipmentBillService fixEquipmentBillService;
-    public EquipmentController(EquipmentService equipmentService,EquipmentRentStandardService equipmentRentStandardService,
-                               UserService userService,FixEquipmentService fixEquipmentService,
-                               RecycleEquipmentService recycleEquipmentService,RentEquipmentService rentEquipmentService,
-                               FixEquipmentBillService fixEquipmentBillService){
+    public EquipmentController(EquipmentService equipmentService, UserService userService,
+                               FixEquipmentService fixEquipmentService, RecycleEquipmentService recycleEquipmentService,
+                               RentEquipmentService rentEquipmentService, FixEquipmentBillService fixEquipmentBillService){
         this.fixEquipmentService = fixEquipmentService;
         this.equipmentService = equipmentService;
-        this.equipmentRentStandardService = equipmentRentStandardService;
         this.recycleEquipmentService = recycleEquipmentService;
         this.userService = userService;
         this.rentEquipmentService = rentEquipmentService;
@@ -48,54 +46,48 @@ public class EquipmentController {
     public ResponseBean queryEquipment(@RequestParam(value = "name",required = false)String name,
                                        @RequestParam(value = "types",required = false)String types,
                                        @RequestParam(value = "number",required = false)String number){
-        List<Equipment> equipment = equipmentService.queryEquipment(name, types, StringUtils.isNumeric(number) ? Integer.parseInt(number) : null);
-        return new ResponseBean(200,"查询成功",equipment);
-
+        List<Equipment> equipments = equipmentService.queryEquipment(name, types, StringUtils.isNumeric(number) ? Integer.parseInt(number) : null);
+        ArrayList available = new ArrayList();
+        for (Equipment equipment : equipments) {
+            Integer count = equipmentService.availableEquipmentCount(equipment.getId());
+            available.add(count);
+        }
+        return new ResponseBean(200,"查询成功", new List[]{equipments, available});
     }
 
     @PostMapping("/addEquipment")
     @RequiresPermissions(logical = Logical.AND, value = {"新增器材"})
-    public ResponseBean addEquipment(@RequestParam("name") String name,@RequestParam("types") String types,@RequestParam("number") String number,@RequestParam("price") String price){
-        if(StringUtils.isNumeric(number)|| NumberUtils.isNumber(price)){
-            return new ResponseBean(200,equipmentService.addEquipment(new Equipment(null,name,types,Integer.parseInt(number),Double.parseDouble(price)))?"添加成功":"添加失败",null);
+    public ResponseBean addEquipment(@RequestParam("name") String name,@RequestParam("types") String types,
+                                     @RequestParam("number") String number,@RequestParam("price") String price,
+                                     @RequestParam("rentPrice")String rentPrice,@RequestParam("maxRentTime")String maxRentTime){
+        if(StringUtils.isNumeric(number)|| NumberUtils.isNumber(price)|| NumberUtils.isNumber(rentPrice)||StringUtils.isNumeric(maxRentTime)){
+            return new ResponseBean(200,equipmentService.addEquipment(new Equipment(null,name,types,Integer.parseInt(number),Double.parseDouble(price),Double.parseDouble(rentPrice),Integer.parseInt(maxRentTime)))?"添加成功":"添加失败",null);
         }else{
-            return new ResponseBean(200,"添加失败，输入的数量为非数字",null);
+            return new ResponseBean(200,"添加失败，输入的部分参数为非数字",null);
         }
     }
 
-    @PostMapping("/addEquipmentRentStandard")
-    @RequiresPermissions(logical = Logical.AND, value = {"新增器材租用标准"})
-    public ResponseBean addEquipmentRentStandard(@RequestParam("eid")String eid,@RequestParam("price")String price,@RequestParam("maxRentTime")String rentTime){
-        if (NumberUtils.isNumber(price)||StringUtils.isNumeric(rentTime)){
+    @PostMapping("/updateEquipment")
+    @RequiresPermissions(logical = Logical.AND, value = {"新增器材"})
+    public ResponseBean updateEquipmentRentStandard(@RequestParam(value = "rentPrice",required = false)String rentPrice,
+                                                    @RequestParam(value = "maxRentTime",required = false)String maxRentTime,
+                                                    @RequestParam(value = "eid",required = false)String eid){
+        if (StringUtils.isNumeric(eid)) {
             Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
-            if (equipment==null){
-                return new ResponseBean(200,"添加失败，该器材不存在",null);
+            if (equipment!=null){
+                equipment.setPrice(NumberUtils.isNumber(rentPrice)?Double.parseDouble(rentPrice):equipment.getPrice());
+                equipment.setMaxRentTime(StringUtils.isNumeric(maxRentTime)?Integer.parseInt(maxRentTime):equipment.getMaxRentTime());
+                Boolean flag = equipmentService.updateEquipment(equipment);
+                return new ResponseBean(200,flag?"器材更新成功":"器材更新失败",null);
             }else{
-                EquipmentRentStandard equipmentRentStandard = new EquipmentRentStandard(null, equipment.getId(), equipment.getName(), Double.parseDouble(price), Integer.parseInt(rentTime));
-                Boolean flag = equipmentRentStandardService.addEquipmentRentStandard(equipmentRentStandard);
-                return new ResponseBean(200,flag?"添加成功":"添加失败",null);
+                return new ResponseBean(200,"该器材不存在",null);
             }
         }else{
-            return new ResponseBean(200,"添加失败，输入的price或rentTime或eid为非数字",null);
+            return new ResponseBean(200,"添加失败，输入的eid为非数字",null);
         }
+
     }
 
-
-    @GetMapping("/queryEquipmentRentStandard")
-    @RequiresPermissions(logical = Logical.AND, value = {"查询器材租用标准"})
-    public ResponseBean queryEquipmentRentStandard(){
-        return new ResponseBean(200,"查询成功",equipmentRentStandardService.queryEquipmentRentStandard());
-    }
-
-    @GetMapping("/queryEquipmentRentStandardByEid")
-    @RequiresPermissions(logical = Logical.AND, value = {"查询器材租用标准"})
-    public ResponseBean queryEquipmentRentStandardByEid(@RequestParam("eid")String eid){
-        if (StringUtils.isNumeric(eid)){
-            return new ResponseBean(200,"查询成功",equipmentRentStandardService.queryEquipmentRentStandardByEid(Integer.parseInt(eid)));
-        }else{
-            return new ResponseBean(200,"输入的eid为非数字",null);
-        }
-    }
 
     @PostMapping("/applyFixEquipment")
     @RequiresPermissions(logical = Logical.AND, value = {"申请维护器材"})
@@ -110,7 +102,7 @@ public class EquipmentController {
                     Boolean flag = fixEquipmentService.applyFixEquipment(fixEquipment);
                     if (flag){
                         equipment.setNumber(equipment.getNumber()-Integer.parseInt(number));
-                        Boolean update = equipmentService.updateEquipmentCount(equipment);
+                        Boolean update = equipmentService.updateEquipment(equipment);
                         return new ResponseBean(200,update?"器材维修申报成功":"器材维修申报失败",null);
                     }else{
                         return new ResponseBean(200,"器材维修申报失败",null);
@@ -145,7 +137,7 @@ public class EquipmentController {
             }else{
                 if (fixEquipmentService.deleteFixEquipmentByFid(fixEquipment.getFid())) {
                     equipment.setNumber(equipment.getNumber()+fixEquipment.getNumber());
-                    Boolean flag = equipmentService.updateEquipmentCount(equipment);
+                    Boolean flag = equipmentService.updateEquipment(equipment);
                     FixEquipmentBill fixEquipmentBill = new FixEquipmentBill(null, equipment.getId(), fixEquipment.getNumber(), equipment.getPrice()/2, new Date());
                     Boolean insert = fixEquipmentBillService.addFixEquipmentBill(fixEquipmentBill);
                     return new ResponseBean(200,flag&&insert?"器材维修确认成功":"器材维修确认失败",null);
@@ -184,7 +176,7 @@ public class EquipmentController {
             }else{
                 if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(Integer.parseInt(eid))){
                     equipment.setNumber(equipment.getNumber()-Integer.parseInt(number));
-                    Boolean flag = equipmentService.updateEquipmentCount(equipment);
+                    Boolean flag = equipmentService.updateEquipment(equipment);
                     return new ResponseBean(200,flag?"器材数量减少成功":"器材数量减少失败",null);
                 }else{
                     return new ResponseBean(200,"器材数量减少失败，器材减少数量大于器材可使用数量",null);
@@ -245,13 +237,12 @@ public class EquipmentController {
         if(StringUtils.isNumeric(eid)||StringUtils.isNumeric(rentTime)||StringUtils.isNumeric(number)){
             User user = userService.currentUser();
             Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
-            EquipmentRentStandard equipmentRentStandard = equipmentRentStandardService.queryEquipmentRentStandardByEid(Integer.parseInt(eid));
-            if (user!=null && equipment!=null && equipmentRentStandard!=null){
-                if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(equipment.getId())&&Integer.parseInt(rentTime)<=equipmentRentStandard.getMaxRentTime()){
+            if (user!=null && equipment!=null){
+                if (Integer.parseInt(number)<=equipmentService.availableEquipmentCount(equipment.getId())&&Integer.parseInt(rentTime)<=equipment.getMaxRentTime()){
                     RentEquipment rentEquipment = new RentEquipment(null, equipment.getId(), equipment.getName(), user.getId(), user.getName(), Integer.parseInt(rentTime), Integer.parseInt(number),new Date(),0);
                     Boolean flag = rentEquipmentService.addRentEquipment(rentEquipment);
                     return new ResponseBean(200,flag?"器材租用成功":"器材租用失败",null);
-                }else if(Integer.parseInt(rentTime)>equipmentRentStandard.getMaxRentTime()){
+                }else if(Integer.parseInt(rentTime)>equipment.getMaxRentTime()){
                     return new ResponseBean(200,"器材租用失败，器材租用时间大于器材可租用时间",null);
                 }else{
                     return new ResponseBean(200,"器材租用失败，器材租用数量大于器材可使用数量",null);
@@ -267,6 +258,13 @@ public class EquipmentController {
         }else{
             return new ResponseBean(200,"输入的参数为非数字",null);
         }
+    }
+
+    @PostMapping("/queryRentEquipmentByUid")
+    public ResponseBean responseBean(){
+        User user = userService.currentUser();
+        List<RentEquipment> rentEquipments = rentEquipmentService.queryRentEquipmentByUid(user.getId());
+        return new ResponseBean(200,"查询成功",rentEquipments);
     }
 
     @PostMapping("/redeemEquipment")
@@ -315,5 +313,6 @@ public class EquipmentController {
         Double outcome = fixEquipmentBillService.generateEquipmentOutcome(year, month);
         return new ResponseBean(200,"查询成功,当月的支出为："+outcome,outcome);
     }
+
 
 }

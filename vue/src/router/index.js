@@ -28,9 +28,66 @@ const routes = [
       },
       {
         //赛事管理路由
-        path: '/home/eventManagement',
+        path: '/home/comManagement',
         name: 'eventManagement',
-        component:()=>import('../views/event/eventManagement'),
+        component:()=>import('../views/competition/comManagement'),
+        children:[
+          {
+            //赛事创建路由
+            path:'/home/comManagement/competitionCreate',
+            name:'competitionCreate',
+            component:()=>import('../views/competition/competitionCreate.vue')
+          },
+          {
+            //赛事审核路由
+            path:'/home/comManagement/competitionReview',
+            name:'competitionReview',
+            component:()=>import('../views/competition/competitionReview.vue')
+          },
+          {
+            //赛事取消路由
+            path:'/home/comManagement/competitionCancel',
+            name:'competitionCancel',
+            component:()=>import('../views/competition/competitionCancel.vue')
+          },
+          {
+            //赛事查询路由
+            path:'/home/comManagement/competitionQuery',
+            name:'competitionQuery',
+            component:()=>import('../views/competition/competitionQuery.vue')
+          },
+          {
+            //比赛场地安排路由
+            path:'/home/comManagement/comFieldArrange',
+            name:'comFieldArrange',
+            component:()=>import('../views/competition/comFieldArrange.vue')
+          },
+          {
+            //赛事器材申请路由
+            path:'/home/comManagement/comEquipArrange',
+            name:'comEquipArrange',
+            component:()=>import('../views/competition/comEquipArrange.vue')
+          },
+          {
+            //赛事器材审核路由
+            path:'/home/comManagement/comEquipReview',
+            name:'comEquipReview',
+            component:()=>import('../views/competition/comEquipReview.vue')
+          },
+          {
+            //裁判简介公告路由
+            path:'/home/comManagement/refereeAnnouncement',
+            name:'refereeAnnouncement',
+            component:()=>import('../views/competition/refereeAnnouncement.vue')
+          },
+          {
+            //查询裁判公告路由
+            path:'/home/comManagement/queryRefereeAnn',
+            name:'queryRefereeAnn',
+            component:()=>import('../views/competition/queryRefereeAnn.vue')
+          },
+
+        ],
       },
       {
         //场地管理路由
@@ -203,6 +260,12 @@ const routes = [
         path: '/home/price',
         name: 'price',
         component:()=>import('../views/equipment/price'),
+      },
+      {
+        //归还器材路由
+        path: '/home/returnEquipment',
+        name: 'returnEquipment',
+        component:()=>import('../views/equipment/returnEquipment'),
       },
     ]
   },

@@ -32,7 +32,7 @@
                 <i class="el-icon-setting"></i>
                 <span slot="title">场地管理</span>
               </el-menu-item>
-              <el-menu-item index="3" @click="eventManagement">
+              <el-menu-item index="3" @click="comManagement">
                 <i class="el-icon-setting"></i>
                 <span slot="title">赛事管理</span>
               </el-menu-item>
@@ -75,8 +75,8 @@ export default {
     siteManagement(){
       this.$router.push({path:'/home/siteManagement'})
     },
-    eventManagement(){
-      this.$router.push({path:'/home/eventManagement'})
+    comManagement(){
+      this.$router.push({path:'/home/comManagement/competitionQuery'})
     },
     logout(){
       Logout().then(res=>{
