@@ -43,7 +43,7 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
             new Time(19, 0, 0),
             new Time(20, 0, 0),
             new Time(21, 0, 0),
-            new Time(22, 0, 0)
+//            new Time(22, 0, 0)
     };
 
 
@@ -105,7 +105,7 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
         if (results.size() > 0) {
             j = results.get(0).getInode();
         }
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 13; i++) {
             TimeArrange timeArrange = new TimeArrange();
             timeArrange.setStartTime(time[i]);
             timeArrange.setEndTime(time[i + 1]);
