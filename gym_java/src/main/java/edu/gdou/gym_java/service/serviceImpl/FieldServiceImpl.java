@@ -7,6 +7,8 @@ import edu.gdou.gym_java.service.FieldService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.gdou.gym_java.utils.TimeUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.sql.*;
 import java.text.Format;
 import java.text.ParseException;
@@ -23,6 +25,7 @@ import java.util.List;
  * @since 2022-05-31
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements FieldService {
 
     private static final java.sql.Time[] time = new java.sql.Time[]{

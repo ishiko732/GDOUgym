@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -120,7 +121,7 @@ public class LogFilter extends OncePerRequestFilter {
             logs.add("responseContentType=" + response.getContentType());
             logs.add("params=" + requestParams);
             logs.add("request=" + requestString);
-            logs.add("response=" + responseString);
+            logs.add("response=" + new Gson().toJson(responseString));
 
             logger.info(String.join(",", logs));
         } catch (Throwable e) {

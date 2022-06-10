@@ -9,6 +9,7 @@ import edu.gdou.gym_java.service.EquipmentService;
 import edu.gdou.gym_java.service.RecycleEquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * @since 2022-06-04
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class RecycleEquipmentServiceImpl extends ServiceImpl<RecycleEquipmentMapper, RecycleEquipment> implements RecycleEquipmentService {
     @Autowired
     private EquipmentService equipmentService;
