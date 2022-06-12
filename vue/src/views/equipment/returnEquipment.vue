@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column
           prop="rentTime"
-          label="租借时间(天)">
+          label="租借时间(小时)">
       </el-table-column>
       <el-table-column
           prop="status"

@@ -41,7 +41,7 @@
           </el-table-column>
           <el-table-column
               prop="time"
-              label="器材可租用时间(天)"
+              label="器材可租用时间(小时)"
               width="150"
           >
           </el-table-column>
