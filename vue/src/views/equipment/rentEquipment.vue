@@ -28,7 +28,7 @@
           </el-table-column>
           <el-table-column
               prop="maxRentTime"
-              label="可租用时间(天)"
+              label="可租用时间(小时)"
               width="180">
           </el-table-column>
           <el-table-column
