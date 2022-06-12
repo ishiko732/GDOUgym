@@ -158,36 +158,6 @@ const routes = [
             component:()=>import('../views/user/updateManager.vue')
           },
           {
-            //创建公告路由
-            path:'/home/userManagement/createAnnouncement',
-            name:'createAnnouncement',
-            component:()=>import('../views/user/announcement/createAnnouncement.vue')
-          },
-          {
-            //修改公告路由
-            path:'/home/userManagement/updateAnnouncement',
-            name:'updateAnnouncement',
-            component:()=>import('../views/user/announcement/updateAnnouncement.vue')
-          },
-          {
-            //查询公告历史记录路由
-            path:'/home/userManagement/queryAnnLogs',
-            name:'queryAnnLogs',
-            component:()=>import('../views/user/announcement/queryAnnLogs.vue')
-          },
-          {
-            //修改公告历史记录路由
-            path:'/home/userManagement/updateAnnLogs',
-            name:'updateAnnLogs',
-            component:()=>import('../views/user/announcement/updateAnnLogs.vue')
-          },
-          {
-            //查询最新公告路由路由
-            path:'/home/userManagement/queryNewAnn',
-            name:'queryNewAnn',
-            component:()=>import('../views/user/announcement/queryNewAnn.vue')
-          },
-          {
             //修改密码路由
             path:'/home/userManagement/updatePassword',
             name:'updatePassword',
@@ -217,6 +187,44 @@ const routes = [
             name:'queryManagerInfo',
             component:()=>import('../views/user/queryManagerInfo.vue')
           }
+        ]
+      },
+      {
+        //公告管理路由
+        path: '/home/annManagement',
+        name: 'annManagerment',
+        component:()=>import('../views/announcement/annManagerment.vue'),
+        children:[
+          {
+            //创建公告路由
+            path:'/home/annManagement/createAnnouncement',
+            name:'createAnnouncement',
+            component:()=>import('../views/announcement/createAnnouncement.vue')
+          },
+          {
+            //修改公告路由
+            path:'/home/annManagement/updateAnnouncement',
+            name:'updateAnnouncement',
+            component:()=>import('../views/announcement/updateAnnouncement.vue')
+          },
+          {
+            //查询公告历史记录路由
+            path:'/home/annManagement/queryAnnLogs',
+            name:'queryAnnLogs',
+            component:()=>import('../views/announcement/queryAnnLogs.vue')
+          },
+          {
+            //修改公告历史记录路由
+            path:'/home/annManagement/updateAnnLogs',
+            name:'updateAnnLogs',
+            component:()=>import('../views/announcement/updateAnnLogs.vue')
+          },
+          {
+            //查询最新公告路由路由
+            path:'/home/annManagement/queryNewAnn',
+            name:'queryNewAnn',
+            component:()=>import('../views/announcement/queryNewAnn.vue')
+          },
         ]
       },
       {
