@@ -40,6 +40,10 @@
                 <i class="el-icon-setting"></i>
                 <span slot="title">器材管理</span>
               </el-menu-item>
+              <el-menu-item index="5" @click="annManagement">
+                <i class="el-icon-setting"></i>
+                <span slot="title">公告管理</span>
+              </el-menu-item>
             </el-menu>
           </el-col>
         </el-row>
@@ -70,13 +74,16 @@ export default {
       this.$router.push({path:'/home/equipmentManagement'})
     },
     userManagement(){
-      this.$router.push({path:'/home/userManagement/queryNewAnn'})
+      this.$router.push({path:'/home/userManagement/updatePassword'})
     },
     siteManagement(){
       this.$router.push({path:'/home/siteManagement'})
     },
     comManagement(){
       this.$router.push({path:'/home/comManagement/competitionQuery'})
+    },
+    annManagement(){
+      this.$router.push({path:'/home/annManagement/queryNewAnn'})
     },
     logout(){
       Logout().then(res=>{

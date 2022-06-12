@@ -11,14 +11,6 @@
               :class="$route.path=='/home/userManagement/updatePwdForce'?'active':''">修改密码(强制)</span>
 
       </div>
-      <div class="manager" v-show="roleId<6?isShowManager=true:isShowManager=false">
-          <span class="top_text" @click="createAnnouncement"
-                :class="$route.path=='/home/userManagement/createAnnouncement'?'active':''">创建公告</span>
-          <span class="top_text" @click="updateAnnouncement"
-                :class="$route.path=='/home/userManagement/updateAnnouncement'?'active':''">修改公告</span>
-          <span class="top_text" @click="queryAnnLogs"
-                :class="$route.path=='/home/userManagement/queryAnnLogs'?'active':''">查询公告历史记录</span>
-        </div>
     </div>
     <div class="top_bottom">
       <div class="superManager" v-show="roleId==1?isShowSuperManager=true:isShowSuperManager=false">
@@ -28,16 +20,12 @@
               :class="$route.path=='/home/userManagement/delManager'?'active':''">删除管理员</span>
         <span class="top_text" @click="updateManager"
               :class="$route.path=='/home/userManagement/updateManager'?'active':''">更新管理员</span>
-        <span class="top_text" @click="updateAnnLogs"
-              :class="$route.path=='/home/userManagement/updateAnnLogs'?'active':''">修改公告历史记录</span>
       </div>
       <div class="user" v-show="roleId<8?isShowUser=true:isShowUser=false">
         <span class="top_text" @click="updatePassword"
               :class="$route.path=='/home/userManagement/updatePassword'?'active':''">修改密码</span>
         <span class="top_text" @click="queryManagerInfo"
               :class="$route.path=='/home/userManagement/queryManagerInfo'?'active':''">查询管理员信息</span>
-        <span class="top_text" @click="queryNewAnn"
-              :class="$route.path=='/home/userManagement/queryNewAnn'?'active':''">查询最新公告</span>
       </div>
     </div>
   </div>
@@ -71,21 +59,6 @@ export default {
     },
     updateManager(){
       this.$router.push({path:"/home/userManagement/updateManager"})
-    },
-    createAnnouncement(){
-      this.$router.push({path:"/home/userManagement/createAnnouncement"})
-    },
-    updateAnnouncement(){
-      this.$router.push({path:"/home/userManagement/updateAnnouncement"})
-    },
-    queryAnnLogs(){
-      this.$router.push({path:"/home/userManagement/queryAnnLogs"})
-    },
-    updateAnnLogs(){
-      this.$router.push({path:"/home/userManagement/updateAnnLogs"})
-    },
-    queryNewAnn(){
-      this.$router.push({path:"/home/userManagement/queryNewAnn"})
     },
     updatePassword(){
       this.$router.push({path:"/home/userManagement/updatePassword"})
