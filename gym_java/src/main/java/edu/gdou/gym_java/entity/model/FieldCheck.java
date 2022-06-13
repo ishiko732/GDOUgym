@@ -5,13 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 
 /**
  * <p>
@@ -21,8 +21,10 @@ import lombok.Setter;
  * @author ylhy
  * @since 2022-05-31
  */
-@Getter
-@Setter
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("field_check")
 @ApiModel(value = "FieldCheck对象", description = "")
 public class FieldCheck implements Serializable {
@@ -35,11 +37,12 @@ public class FieldCheck implements Serializable {
 
     @ApiModelProperty("提交时间")
     @TableField("time")
-    private LocalDateTime time;
+    private Timestamp time;
 
     @ApiModelProperty("费用")
     @TableField("money")
-    private Integer money;
+    private Double money;
+
 
     @ApiModelProperty("审核状态")
     @TableField("status")
@@ -49,13 +52,16 @@ public class FieldCheck implements Serializable {
     @TableField("name")
     private String name;
 
+    @ApiModelProperty("一卡通号码")
+    @TableField("card")
+    private String card;
+
     @TableField(exist = false)
     private Field field;
 
     @TableField(exist = false)
     private User user;
 
-    @TableField(exist = false)
-    private List<OrderItem> orderItemList;
+
 
 }

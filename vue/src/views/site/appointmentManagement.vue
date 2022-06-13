@@ -1,0 +1,113 @@
+<template>
+  <div style="height: 100000px">
+    <el-card class="box-card" style="margin-top:20px;" v-for="(item,index) in appointmentData">
+      <div slot="header" class="clearfix">
+        <span> 订单号 {{item[0].id}}</span>
+      </div>
+      <div class="appointment_table">
+        <template>
+          <el-table :data="appointmentData[index]" style="width: 100%">
+            <el-table-column prop="username" label="用户名" width="200">
+            </el-table-column>
+            <el-table-column prop="site" label="场地" width="250">
+            </el-table-column>
+            <el-table-column prop="time" label="时间" width="250">
+            </el-table-column>
+            <el-table-column prop="date" label="日期" width="250">
+            </el-table-column>
+            <el-table-column prop="money" label="费用/小时" width="200">
+            </el-table-column>
+            <el-table-column prop="state" label="状态" width="200">
+            </el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <i class="el-icon-check" style="margin-left: 5px; cursor: pointer;"
+                  @click="check(scope.row,scope.$index)"></i>
+                <i class="el-icon-close" style="margin-left: 5px; cursor: pointer;"
+                  @click="close(scope.row,scope.$index)"></i>
+              </template>
+            </el-table-column>
+          </el-table>
+        </template>
+      </div>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import { queryCheck, checkOrder } from '@/request/api'
+export default {
+  name: "appointmentManagement",
+  data () {
+    return {
+      appointmentData:[]
+    }
+  },
+  created () { 
+    queryCheck().then(res => {
+      // console.log(res.data);
+      res.data.forEach((item,index) => {
+        var obj = {}
+        var arr = []
+        // console.log(item.timeArrangeList[0].startTime);
+        obj.username = item.userName
+        obj.site=item.name
+        obj.id = item.id
+        obj.date = item.date
+        obj.state = item.status
+        obj.time = item.timeArrangeList[0].startTime +"-"+item.timeArrangeList[0].endTime
+        obj.money = item.money
+        arr.push(obj)
+        this.appointmentData.push(arr)
+      });
+      // console.log(this.appointmentData);
+    })
+  },
+  methods: {
+    close (a, b) { 
+      console.log(a.id);
+      if (a.state == "审核中"||a.state=="已取消") {
+        checkOrder({ id: a.id, status: "审核退回" }).then(res => {
+          this.$message.warning(res.data.name + "已退回")
+          // setTimeout(() => {
+          //   location.reload();
+          // }, 1000);
+        })  
+      } else {
+        this.$message.warning("已经审核完成")
+        // setTimeout(() => {
+        //   location.reload();
+        // }, 1000);
+      }
+      
+    },
+    check (a, b) {
+      if (a.state == "审核中") {
+        checkOrder({ id: a.id, status: "审核通过" }).then(res => {
+        this.$message.success(res.data.name+res.msg)
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      })
+      } else {
+        this.$message.warning("已经审核完成")
+      }  
+    },
+  }
+}
+</script>
+
+<style scoped lang="less">
+
+/deep/ *{
+  overflow: hidden
+}
+/deep/.box-card{ 
+  width: 90%;
+  margin: 0 auto;
+  .clearfix{
+    font-size: 18px;
+  }
+  
+}
+</style>

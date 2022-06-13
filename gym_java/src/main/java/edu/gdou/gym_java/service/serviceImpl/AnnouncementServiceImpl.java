@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -20,6 +21,7 @@ import java.util.Set;
  * @since 2022-06-02
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class AnnouncementServiceImpl extends ServiceImpl<AnnouncementMapper, Announcement> implements AnnouncementService {
     @Override
     public boolean insertAnnouncement(String type, int uid, String content) {

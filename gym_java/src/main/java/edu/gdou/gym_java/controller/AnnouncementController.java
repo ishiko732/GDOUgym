@@ -1,6 +1,4 @@
 package edu.gdou.gym_java.controller;
-
-
 import edu.gdou.gym_java.entity.bean.ResponseBean;
 import edu.gdou.gym_java.service.AnnouncementService;
 import edu.gdou.gym_java.service.UserService;
@@ -9,11 +7,9 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.Objects;
 
 /**
@@ -29,7 +25,6 @@ import java.util.Objects;
 public class AnnouncementController {
     private final AnnouncementService announcementService;
     private final UserService userService;
-
     public AnnouncementController(AnnouncementService announcementService, UserService userService) {
         this.announcementService = announcementService;
         this.userService = userService;

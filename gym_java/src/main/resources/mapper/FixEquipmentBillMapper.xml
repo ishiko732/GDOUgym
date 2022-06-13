@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.gdou.gym_java.mapper.FixEquipmentBillMapper">
+
+    <select id="generateEquipmentOutcome" resultType="Double">
+        SELECT SUM(number*price) FROM Fix_equipment_bill
+        <where>
+            <if test="year!=null and year!=''">YEAR(fixDate) = #{year} </if>
+            <if test="month!=null and month!=''">and MONTH(fixDate) = #{month}</if>
+        </where>
+    </select>
+
+</mapper>

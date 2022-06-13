@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.gdou.gym_java.mapper.RentEquipmentMapper">
+
+    <select id="queryRentEquipment" resultType="edu.gdou.gym_java.entity.model.RentEquipment">
+        select * from Rent_equipment
+        <where>
+            <if test="rid!='' and rid!=null">rid = #{rid}</if>
+            <if test="eid!='' and eid!=null">and eid = #{eid}</if>
+            <if test="eName!='' and eName!=null">and eName = #{eName}</if>
+            <if test="uid!='' and uid!=null">and uid = #{uid}</if>
+            <if test="username!='' and username!=null">and username = #{username}</if>
+            <if test="rentTime!='' and rentTime!=null">and rentTime = #{rentTime}</if>
+            <if test="number!='' and number!=null">and number = #{number}</if>
+            <if test="status!='' and status!=null">and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="generateEquipmentIncome" resultType="Double">
+        SELECT SUM(rentTime*ers.`price`*number)
+        FROM Rent_equipment re INNER JOIN Equipment_rent_standard ers
+        ON  ers.`eid` = re.`eid`
+        <where>
+            <if test="year!=null and year!=''">YEAR(rentDate) = #{year} </if>
+            <if test="month!=null and month!=''">and MONTH(rentDate) = #{month}</if>
+        </where>
+    </select>
+</mapper>

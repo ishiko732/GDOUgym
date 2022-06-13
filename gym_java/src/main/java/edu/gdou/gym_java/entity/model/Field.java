@@ -38,7 +38,7 @@ public class Field implements Serializable {
 
     @ApiModelProperty("收费标准")
     @TableField("money")
-    private Integer money;
+    private Double money;
 
     @ApiModelProperty("场地描述")
     @TableField("description")
@@ -47,6 +47,10 @@ public class Field implements Serializable {
     @ApiModelProperty("场地数量")
     @TableField("num")
     private Integer num;
+
+    @ApiModelProperty("场地删除标识符")
+    @TableField("is_del")
+    private Integer isDel;
 
 
 }

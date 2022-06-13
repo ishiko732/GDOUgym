@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 
 /**
  * <p>
@@ -19,8 +19,9 @@ import lombok.Setter;
  * @author ylhy
  * @since 2022-05-31
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("order_item")
 @ApiModel(value = "OrderItem对象", description = "")
 public class OrderItem implements Serializable {
@@ -34,6 +35,11 @@ public class OrderItem implements Serializable {
     @ApiModelProperty("审核表id")
     @TableField("fcid")
     private Integer fcid;
+
+
+    @ApiModelProperty("安排表id")
+    @TableField("time_id")
+    private Integer timeId;
 
     @TableField(exist = false)
     private TimeArrange timeArrange;

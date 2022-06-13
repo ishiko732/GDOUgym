@@ -31,6 +31,7 @@ public interface UserService extends IService<User> {
     IPage<User> selectUserPage(Page<User> page);
     Boolean changePassword(@NonNull String username, @Nullable String prePassword, String newPassword, Boolean isForced);
     Map<String,Object> selectInfoByUid(@NonNull Integer id);
+    Map<String,Object> selectInfoById(@NonNull String id);
     Map<String,Integer> exportInfo(List<Map<String,String>> mapList) ;
     Map<String,Integer> exportInfoByFile(MultipartFile excel);
 }
