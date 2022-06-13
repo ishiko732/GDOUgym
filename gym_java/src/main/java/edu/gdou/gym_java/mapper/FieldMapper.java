@@ -6,9 +6,6 @@ import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import edu.gdou.gym_java.entity.model.FieldDate;
-import edu.gdou.gym_java.entity.model.FieldType;
-import edu.gdou.gym_java.entity.model.TimeArrange;
 import java.sql.Date;
 import java.util.List;
 

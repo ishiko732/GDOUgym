@@ -69,7 +69,8 @@ SELECT
     COLUMN_NAME
 FROM
     information_schema.COLUMNS
-WHERE table_name = 'UserInfo';
+WHERE
+        table_name = 'UserInfo';
 
 ## 赛事
 

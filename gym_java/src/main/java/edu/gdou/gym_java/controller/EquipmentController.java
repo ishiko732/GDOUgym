@@ -8,11 +8,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.Date;
-import edu.gdou.gym_java.entity.model.Equipment;
-import edu.gdou.gym_java.service.EquipmentRentStandardService;
-import edu.gdou.gym_java.service.EquipmentService;
 import java.util.List;
 /**
  * <p>

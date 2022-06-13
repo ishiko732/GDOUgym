@@ -52,5 +52,4 @@ public class Field implements Serializable {
     @TableField("is_del")
     private Integer isDel;
 
-
 }

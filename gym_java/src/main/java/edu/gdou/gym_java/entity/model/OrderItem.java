@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-
 /**
  * <p>
  * 
@@ -36,21 +35,9 @@ public class OrderItem implements Serializable {
     @TableField("fcid")
     private Integer fcid;
 
-
     @ApiModelProperty("安排表id")
     @TableField("time_id")
     private Integer timeId;
-
-    @TableField(exist = false)
-    private TimeArrange timeArrange;
-
-    @ApiModelProperty("订单状态")
-    @TableField("order_status")
-    private LocalDate orderStatus;
-
-    @ApiModelProperty("创建时间")
-    @TableField("create_time")
-    private String createTime;
 
 
 }

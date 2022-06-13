@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-
 /**
  * <p>
  * 
@@ -21,7 +20,6 @@ import lombok.*;
  * @author ylhy
  * @since 2022-05-31
  */
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,7 +41,6 @@ public class FieldCheck implements Serializable {
     @TableField("money")
     private Double money;
 
-
     @ApiModelProperty("审核状态")
     @TableField("status")
     private String status;
@@ -61,7 +58,6 @@ public class FieldCheck implements Serializable {
 
     @TableField(exist = false)
     private User user;
-
 
 
 }

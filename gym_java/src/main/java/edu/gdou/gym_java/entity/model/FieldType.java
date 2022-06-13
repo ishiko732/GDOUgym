@@ -29,7 +29,6 @@ public class FieldType implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("场地类型id")
-
     @TableId(value = "tid", type = IdType.AUTO)
     private Integer tid;
 

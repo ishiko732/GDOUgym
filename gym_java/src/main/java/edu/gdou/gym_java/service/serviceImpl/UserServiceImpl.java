@@ -40,6 +40,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         this.md5 = md5;
     }
 
+    /**
+     * 注册信息
+     * @param user 用户信息
+     * @param id 学工号
+     * @return true 插入成功，false 插入失败，null 学工号未得到验证
+     */
     @Override
     public User currentUser() {
         String token = (String) SecurityUtils.getSubject().getPrincipal();
@@ -206,5 +212,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Map<String, Object> selectInfoById(@NonNull String id) {
         return getBaseMapper().selectInfoById(id);
     }
-
 }
