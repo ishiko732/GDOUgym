@@ -1,0 +1,72 @@
+.
+├── README.md 帮助文档
+├── babel.config.js 包配置文件
+├── jsconfig.json 包配置文件
+├── package.json 包配置文件
+├── public
+│   ├── favicon.ico 网站图标
+│   └── index.html 默认主页
+├── src
+│   ├── App.vue Vue的入口文件
+│   ├── assets  
+│   │   └── image
+│   │       └── importInfo.png 导入信息提示
+│   ├── main.js Vue的入口JS文件
+│   ├── request
+│   │   ├── api.js 接口文件
+│   │   └── request.js 处理axios请求封装
+│   ├── router
+│   │   └── index.js 路由管理文件
+│   ├── store
+│   │   └── index.js Vuex配置文件
+│   └── views 视图层
+│       ├── Home.vue 系统主页面
+│       ├── Login.vue 系统登录注册页面
+│       ├── announcement 公告模块
+│       │   ├── annManagerment.vue 公告管理首页
+│       │   ├── createAnnouncement.vue 创建公告页面
+│       │   ├── queryAnnLogs.vue 查询公告历史记录页面
+│       │   ├── queryNewAnn.vue 查询最新公告页面
+│       │   ├── updateAnnLogs.vue 修改公告历史记录页面
+│       │   └── updateAnnouncement.vue 修改公告记录页面
+│       ├── competition 赛事模块
+│       │   ├── comEquipArrange.vue 赛事器材安排页面
+│       │   ├── comFieldArrange.vue 赛事场地安排页面
+│       │   ├── comManagement.vue 赛事管理首页
+│       │   ├── competitionCancel.vue 赛事取消页面
+│       │   ├── competitionCreate.vue 赛事创建页面
+│       │   ├── competitionQuery.vue 赛事查询页面
+│       │   ├── competitionReview.vue 赛事审核页面
+│       │   ├── queryRefereeAnn.vue 查询裁判公告页面
+│       │   └── refereeAnnouncement.vue 设置裁判简介公告页面
+│       ├── equipment 器材模块
+│       │   ├── addEquipment.vue 新增器材页面
+│       │   ├── deleteEquipment.vue 删除器材页面
+│       │   ├── equipmentManagement.vue 器材管理首页
+│       │   ├── fixEquipment.vue 维修器材页面
+│       │   ├── price.vue 租用价格页面
+│       │   ├── recycleEquipment.vue 回收器材页面
+│       │   ├── rentEquipment.vue 租借器材页面
+│       │   └── returnEquipment.vue 归还器材页面
+│       ├── site 场地模块
+│       │   ├── appointPay.vue 场地付费入口页面
+│       │   ├── appointmentManagement.vue	预约审核页面
+│       │   ├── noticeManagement.vue 通知公告页面
+│       │   ├── siteAppointment.vue 场地预约页面
+│       │   ├── siteArrange.vue 场地安排页面
+│       │   ├── siteManagement.vue 场地管理首页
+│       │   ├── siteMessage.vue 场地信息页面
+│       │   └── siteTypeManagement.vue 场地类型选择页面
+│       └── user 用户模块
+│           ├── addManager.vue 添加管理员页面
+│           ├── delManager.vue 删除管理员页面
+│           ├── importInfo.vue 导入信息页面
+│           ├── queryManagerInfo.vue 查询管理员页面
+│           ├── queryUserInfo.vue 查询用户信息页面
+│           ├── updateManager.vue 修改管理员角色页面
+│           ├── updatePassword.vue 修改密码页面
+│           ├── updatePwdForce.vue 强制修改密码页面
+│           └── userManagement.vue 用户管理首页
+└── vue.config.js Vue配置文件
+
+13 directories, 56 files
