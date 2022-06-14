@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login'
+import { GetNewToken } from "@/request/api";
 
 Vue.use(VueRouter)
 
@@ -295,6 +296,7 @@ router.beforeEach((to,from,next)=>{
   }else{
     if(token){
       next()
+      GetNewToken()
     }else{
       Vue.prototype.$message.error("未登录，无法访问，请先登录")
       setTimeout(()=>{
