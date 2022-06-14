@@ -76,5 +76,9 @@ public class CompetitionField implements Serializable {
     @TableField(exist = false)
     private String name;
 
+    @ApiModelProperty("场地审核状态")
+    @TableField("fieldStatus")
+    private String fieldStatus;
+
 
 }
