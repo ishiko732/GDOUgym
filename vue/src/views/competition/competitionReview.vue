@@ -49,8 +49,19 @@
                         width="180">
                         </el-table-column>
                         <el-table-column
+                        prop="FieldName"
+                        label="场地信息"
+                        width="200">
+                        </el-table-column>
+                        <el-table-column
+                        prop="EquipmentName"
+                        label="器材信息"
+                        width="200">
+                        </el-table-column>
+                        <el-table-column
                         prop="competition.introduction"
-                        label="赛事内容">
+                        label="赛事内容"
+                        width="300">
                         </el-table-column>
                         <el-table-column
                         prop="status"
@@ -82,7 +93,7 @@
 </template>
 
 <script>
-import { QueryEventCheck,EventCheck } from "@/request/api";
+import { QueryEventCheck,EventCheck,queryEquipment } from "@/request/api";
 export default {
     data () {
         return {
@@ -92,6 +103,7 @@ export default {
             check_id:"",
             status:"",
             reason:"",
+            ids:[],
             type_options:[
                 {
                     value:"待审核",
@@ -117,10 +129,13 @@ export default {
         }
     },
     created(){
-        this.queryEventCheck()
+        queryEquipment().then(res=>{
+            this.ids=res.data[0]
+        })
     },
     methods:{
         queryEventCheck(){
+            this.EventCheckList=[]
             if(this.type==""){
                 this.$message.warning("未选择查询类型")
             }else{
@@ -130,8 +145,30 @@ export default {
                     // console.log(res);
                     if(res.data.length==0){
                         this.$message.warning("当前查询类型没有数据")
+                    }else{
+                        for(let i in res.data){
+                            if(res.data[i].competition.competitionFields.length==0){
+                                this.EventCheckList.push(res.data[i])
+                            }else{
+                                let FieldName = ""
+                                let EquipmentName=""
+                                for(let j in res.data[i].competition.competitionFields){
+                                    FieldName = FieldName+res.data[i].competition.competitionFields[j].name+";"
+                                    for(let g in res.data[i].competition.competitionFields[j].competitionEquipments){
+                                        for(let h in this.ids){
+                                            if(res.data[i].competition.competitionFields[j].competitionEquipments[g].eid==this.ids[h].id){
+                                                res.data[i].competition.competitionFields[j].competitionEquipments[g].name=this.ids[h].name
+                                            }
+                                        }
+                                        EquipmentName = EquipmentName+res.data[i].competition.competitionFields[j].competitionEquipments[g].name+res.data[i].competition.competitionFields[j].competitionEquipments[g].number+"个；"
+                                    }
+                                }
+                                res.data[i].EquipmentName = EquipmentName
+                                res.data[i].FieldName = FieldName
+                                this.EventCheckList.push(res.data[i])
+                            }
+                        }
                     }
-                    this.EventCheckList=res.data
                 }).catch(err=>{
                     this.$message.error(err.response.data.data+"，请重新登录")
                 })
@@ -164,7 +201,7 @@ export default {
  
 <style lang = "less" scoped>
     .form{
-        width: 1200px;
+        width: 1400px;
         margin: 50px 150px;
         h2{
             text-align: center;
