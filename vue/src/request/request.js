@@ -34,8 +34,10 @@ instance.interceptors.request.use(config=>{
 //响应拦截器
 instance.interceptors.response.use(res=>{
     // console.log(res);
-    localStorage.removeItem("token")
-    localStorage.setItem("token",res.headers.authorization)
+    if(res.headers.authorization!="undefined"){
+        localStorage.removeItem("token")
+        localStorage.setItem("token",res.headers.authorization)
+    }
     return res.data
 })
 

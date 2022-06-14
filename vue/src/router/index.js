@@ -286,8 +286,9 @@ router.beforeEach((to,from,next)=>{
       next()
       if(from.path != "/login"){
         GetNewToken().then(res=>{
-          localStorage.removeItem("token")
-          localStorage.setItem("token",res.data.new_token)
+          if(res.data.new_token!="undefined")
+            localStorage.removeItem("token")
+            localStorage.setItem("token",res.data.new_token)
         })
       }
     }else{
