@@ -10,11 +10,11 @@
 
       <div class="username_div">
         <span class="username">用户名</span>
-        <el-input v-model.trim="username" placeholder="请输入用户名"></el-input>
+        <el-input v-model.trim="username" placeholder="请输入用户名" @keyup.enter.native="login"></el-input>
       </div>
       <div class="password_div">
         <span class="password">密码&nbsp;&nbsp;&nbsp;</span>
-        <el-input type="password" v-model.trim="password" placeholder="请输入密码"></el-input>
+        <el-input type="password" v-model.trim="password" placeholder="请输入密码" @keyup.enter.native="login"></el-input>
       </div>
       <Vcode :show="isShow" @success="success" @close="close" ></Vcode>
       <el-button type="primary" @click="login">登录</el-button>
@@ -81,7 +81,11 @@ export default {
   },
   methods: {
     login() {
-      this.isShow = true;
+      if(this.username==""||this.password==""){
+        this.$message.warning("用户名或密码为空")
+      }else{
+        this.isShow = true;
+      }
     },
     // 用户通过了验证
     success(msg) {

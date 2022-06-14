@@ -62,8 +62,6 @@ export default {
             id:"",
             UserInfoList:[],
             formLabelWidth: '100px',
-            
- 
         }
     },
     methods:{
@@ -92,7 +90,7 @@ export default {
                 })
             }else if(this.id!=""){
                 QueryUserInfoById({ID:this.id}).then(res=>{
-                    console.log(res);
+                    // console.log(res);
                     if(res.code=="200"){
                         if(res.msg=="未获取到用户信息"){
                             this.$message.warning(res.msg)
@@ -121,9 +119,9 @@ export default {
                 size:1000,      // 每页最多显示条数
                 cnt:0
             }).then(res=>{
-                console.log(res);
+                // console.log(res);
                 this.UserInfoList = res.data.infos
-                console.log(this.UserInfoList);
+                // console.log(this.UserInfoList);
                 
             })
         }

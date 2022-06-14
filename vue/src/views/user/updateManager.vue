@@ -7,7 +7,7 @@
                     <el-input v-model.trim="id" autocomplete="off" placeholder="请输入用户id ( 不是学工号 )"></el-input>
                 </el-form-item>
                 <el-form-item label="角色：" :label-width="formLabelWidth">
-                    <el-select v-model="rid" placeholder="请选择">
+                    <el-select v-model="rid" placeholder="请选择" @change="$forceUpdate()">
                     <el-option
                         v-for="item in options"
                         :key="item.value"

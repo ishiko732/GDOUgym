@@ -87,7 +87,7 @@ export default {
     },
     methods:{
         submit(){
-            console.log(this.datalist);
+            // console.log(this.datalist);
             if(this.cfid==""){
                 this.$message.warning("场地id为空")
             }else{
