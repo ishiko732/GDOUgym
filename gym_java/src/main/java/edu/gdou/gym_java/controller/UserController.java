@@ -183,7 +183,7 @@ public class UserController {
         val currentUser = userService.currentUser();
         boolean isForced = currentUser.getRole().getPermissions().contains("修改密码_强制");
         String name = isForced?username:currentUser.getName();
-        val ret =userService.changePassword(username,prePassword,newPassword,isForced);
+        val ret =userService.changePassword(name,prePassword,newPassword,isForced);
         return new ResponseBean(200,ret?"修改成功":"验证原密码失败","修改的用户为:"+name);
     }
 
