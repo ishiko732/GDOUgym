@@ -74,7 +74,7 @@ export default {
     created(){
         // 获取日期
         loadingDate().then(res=>{
-            for(var i in res.data){
+            for(let i in res.data){
                 let type=[]
                 // 获取场地类型
                 queryType().then(res1=>{
