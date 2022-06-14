@@ -139,6 +139,7 @@ export default {
         res.data.fieldDateList.forEach((item, index) => {
           var obj = {}
           obj.name = res.data.name + (parseInt(index)+1)
+
           obj.state1 = item.timeArrangeList[0].status
           obj.state2 = item.timeArrangeList[1].status
           obj.state3 = item.timeArrangeList[2].status
@@ -288,6 +289,7 @@ export default {
       console.log(obj)
       updateStatusById(obj).then(res=>{
         this.$message(res.msg)
+
       }).catch(e => {
         console.log(e)
       })

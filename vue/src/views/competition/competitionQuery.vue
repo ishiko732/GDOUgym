@@ -104,7 +104,7 @@ export default {
                 name:this.name,
                 uname:this.uname
             }).then(res=>{
-                console.log(res);
+                // console.log(res);
                 res.data.forEach(item=>{
                     if(item.isCheck=="审核通过"){
                         let fieldName = ""

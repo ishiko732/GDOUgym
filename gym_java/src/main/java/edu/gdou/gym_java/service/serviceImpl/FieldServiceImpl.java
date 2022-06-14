@@ -439,4 +439,6 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field> implements
     public List<TimeArrange> queryTime(Date date, Integer tid, Integer fid, Integer index) {
         return getBaseMapper().queryTime(date,tid,fid,index);
     }
+
 }
+

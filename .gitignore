@@ -27,4 +27,6 @@ gym_java/src/main/resources/config/application.yml
 .idea
 
 ### doc ###
+
 document/private/*
+

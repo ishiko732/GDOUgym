@@ -223,3 +223,7 @@ export const ArrangeComReferee = (params) => request.post("/competition/updateUs
 
 // 查询场地id列表
 export const QueryComField = () => request.get("/competition/queryCompetitionField")
+
+// 请求新token
+export const GetNewToken = () => request.get("/user/newToken")
+

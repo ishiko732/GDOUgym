@@ -14,7 +14,9 @@
         </div>
       </nav>
     </div>
+
     <div style="display: flex;height:5000px;">
+
       <div class="home_nav">
         <el-row>
           <el-col>
@@ -125,7 +127,7 @@ export default {
 
     .router {
       flex-grow: 1;
-      height:1000px;
+
     }
   }
   .nav{

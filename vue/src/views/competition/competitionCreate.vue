@@ -60,7 +60,8 @@ export default {
                     money:this.money,
                     context:this.context
                 }).then(res=>{
-                    console.log(res);
+
+                    // console.log(res);
                     if(res.msg=="赛事审核id信息"){
                         this.$message.success("创建成功，等待审核")
                     }else{
