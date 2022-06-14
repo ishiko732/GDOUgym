@@ -2,7 +2,7 @@
 <div>
   <div class="top">
     <div class="top_top">
-      <div class="eventManager" v-show="roleId==4||roleId==1?true:false">
+      <div class="eventManager">
         <span class="top_text" @click="competitionReview" v-show="roleId==4||roleId==1?true:false"
               :class="$route.path=='/home/comManagement/competitionReview'?'active':''">赛事审核</span>
         <span class="top_text" @click="comFieldArrange" v-show="roleId==4||roleId==1?true:false"
