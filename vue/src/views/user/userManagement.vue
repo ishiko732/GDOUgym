@@ -2,29 +2,18 @@
 <div>
   <div class="top">
     <div class="top_top">
-      <div class="userManager" v-show="roleId==2||roleId==1?isShowUserManager=true:isShowUserManager=false">
-        <span class="top_text" @click="importInfo"
+      <div class="userManager">
+        <span class="top_text" @click="importInfo" v-show="roleId==2||roleId==1?isShowUserManager=true:isShowUserManager=false"
               :class="$route.path=='/home/userManagement/importInfo'?'active':''">导入信息</span>
-        <span class="top_text" @click="queryUserInfo"
+        <span class="top_text" @click="queryUserInfo" v-show="roleId==2||roleId==1?isShowUserManager=true:isShowUserManager=false"
               :class="$route.path=='/home/userManagement/queryUserInfo'?'active':''">查询用户个人信息</span>
-        <span class="top_text" @click="updatePwdForce"
+        <span class="top_text" @click="updatePwdForce" v-show="roleId==2||roleId==1?isShowUserManager=true:isShowUserManager=false"
               :class="$route.path=='/home/userManagement/updatePwdForce'?'active':''">修改密码(强制)</span>
-
-      </div>
-    </div>
-    <div class="top_bottom">
-      <div class="superManager" v-show="roleId==1?isShowSuperManager=true:isShowSuperManager=false">
-        <span class="top_text" @click="addManager"
+        <span class="top_text" @click="addManager" v-show="roleId==1?isShowSuperManager=true:isShowSuperManager=false"
               :class="$route.path=='/home/userManagement/addManager'?'active':''">添加管理员</span>
-        <span class="top_text" @click="delManager"
-              :class="$route.path=='/home/userManagement/delManager'?'active':''">删除管理员</span>
-        <span class="top_text" @click="updateManager"
-              :class="$route.path=='/home/userManagement/updateManager'?'active':''">更新管理员</span>
-      </div>
-      <div class="user" v-show="roleId<8?isShowUser=true:isShowUser=false">
-        <span class="top_text" @click="updatePassword"
+        <span class="top_text" @click="updatePassword" v-show="roleId<8?isShowUser=true:isShowUser=false"
               :class="$route.path=='/home/userManagement/updatePassword'?'active':''">修改密码</span>
-        <span class="top_text" @click="queryManagerInfo"
+        <span class="top_text" @click="queryManagerInfo" v-show="roleId<8?isShowUser=true:isShowUser=false"
               :class="$route.path=='/home/userManagement/queryManagerInfo'?'active':''">查询管理员信息</span>
       </div>
     </div>
@@ -53,12 +42,6 @@ export default {
   methods:{
     addManager(){
       this.$router.push({path:"/home/userManagement/addManager"})
-    },
-    delManager(){
-      this.$router.push({path:"/home/userManagement/delManager"})
-    },
-    updateManager(){
-      this.$router.push({path:"/home/userManagement/updateManager"})
     },
     updatePassword(){
       this.$router.push({path:"/home/userManagement/updatePassword"})

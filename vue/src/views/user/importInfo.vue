@@ -63,7 +63,7 @@ export default {
                     this.oneMap='{"id":"'+this.id+'","truename":"'+this.truename+'","class":"'+this.class1+'"}'
                 }
                 ExportUser({map:this.oneMap}).then(res=>{
-                    console.log(res);
+                    // console.log(res);
                     if(res.msg=="导入信息"){
                         this.$message.success(res.msg)
                     }else{

@@ -3,27 +3,21 @@
   <div class="top">
     <div class="top_top">
       <div class="eventManager" v-show="roleId==4||roleId==1?true:false">
-        <span class="top_text" @click="competitionReview"
+        <span class="top_text" @click="competitionReview" v-show="roleId==4||roleId==1?true:false"
               :class="$route.path=='/home/comManagement/competitionReview'?'active':''">赛事审核</span>
-        <span class="top_text" @click="comFieldArrange"
+        <span class="top_text" @click="comFieldArrange" v-show="roleId==4||roleId==1?true:false"
               :class="$route.path=='/home/comManagement/comFieldArrange'?'active':''">比赛场地安排</span>
-      </div>
-    </div>
-    <div class="top_bottom">
-      <div class="teacher" v-show="roleId==7||roleId<6?true:false">
-        <span class="top_text" @click="createCompetition"
+        <span class="top_text" @click="createCompetition" v-show="roleId==7||roleId<6?true:false"
               :class="$route.path=='/home/comManagement/competitionCreate'?'active':''">赛事创建(预告)</span>
-        <span class="top_text" @click="competitionCancel"
+        <span class="top_text" @click="competitionCancel" v-show="roleId==7||roleId<6?true:false"
               :class="$route.path=='/home/comManagement/competitionCancel'?'active':''">赛事取消</span>
-        <span class="top_text" @click="comEquipArrange"
+        <span class="top_text" @click="comEquipArrange" v-show="roleId==7||roleId<6?true:false"
               :class="$route.path=='/home/comManagement/comEquipArrange'?'active':''">赛事器材安排</span>
-        <span class="top_text" @click="refereeAnnouncement"
+        <span class="top_text" @click="refereeAnnouncement" v-show="roleId==7||roleId<6?true:false"
               :class="$route.path=='/home/comManagement/refereeAnnouncement'?'active':''">裁判简介公告</span>
-      </div>
-      <div class="user" v-show="roleId<8?true:false">
-        <span class="top_text" @click="competitionQuery"
+        <span class="top_text" @click="competitionQuery" v-show="roleId<8?true:false"
               :class="$route.path=='/home/comManagement/competitionQuery'?'active':''">赛事查询</span>
-        <span class="top_text" @click="queryRefereeAnn"
+        <span class="top_text" @click="queryRefereeAnn" v-show="roleId<8?true:false"
               :class="$route.path=='/home/comManagement/queryRefereeAnn'?'active':''">查询裁判公告</span>
       </div>
     </div>
@@ -77,7 +71,7 @@ export default {
 <style scoped lang="less">
 .top{
   width:100%;
-  .top_top,.top_bottom{
+  .top_top{
     display: flex;
     border-bottom: 1px solid #dcd8d8;
   }

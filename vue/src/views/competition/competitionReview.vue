@@ -54,6 +54,11 @@
                         width="200">
                         </el-table-column>
                         <el-table-column
+                        prop="FieldStatus"
+                        label="场地审核状态"
+                        width="120">
+                        </el-table-column>
+                        <el-table-column
                         prop="EquipmentName"
                         label="器材信息"
                         width="200">
@@ -151,9 +156,11 @@ export default {
                                 this.EventCheckList.push(res.data[i])
                             }else{
                                 let FieldName = ""
+                                let FieldStatus = ""
                                 let EquipmentName=""
                                 for(let j in res.data[i].competition.competitionFields){
                                     FieldName = FieldName+res.data[i].competition.competitionFields[j].name+";"
+                                    FieldStatus = FieldStatus+res.data[i].competition.competitionFields[j].fieldStatus+";"
                                     for(let g in res.data[i].competition.competitionFields[j].competitionEquipments){
                                         for(let h in this.ids){
                                             if(res.data[i].competition.competitionFields[j].competitionEquipments[g].eid==this.ids[h].id){
@@ -165,6 +172,7 @@ export default {
                                 }
                                 res.data[i].EquipmentName = EquipmentName
                                 res.data[i].FieldName = FieldName
+                                res.data[i].FieldStatus = FieldStatus
                                 this.EventCheckList.push(res.data[i])
                             }
                         }

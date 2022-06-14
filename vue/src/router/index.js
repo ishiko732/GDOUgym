@@ -147,18 +147,6 @@ const routes = [
             component:()=>import('../views/user/addManager.vue')
           },
           {
-            //删除管理员路由
-            path:'/home/userManagement/delManager',
-            name:'delManager',
-            component:()=>import('../views/user/delManager.vue')
-          },
-          {
-            //更新管理员路由
-            path:'/home/userManagement/updateManager',
-            name:'updateManager',
-            component:()=>import('../views/user/updateManager.vue')
-          },
-          {
             //修改密码路由
             path:'/home/userManagement/updatePassword',
             name:'updatePassword',
@@ -296,7 +284,12 @@ router.beforeEach((to,from,next)=>{
   }else{
     if(token){
       next()
-      GetNewToken()
+      if(from.path != "/login"){
+        GetNewToken().then(res=>{
+          localStorage.removeItem("token")
+          localStorage.setItem("token",res.data.new_token)
+        })
+      }
     }else{
       Vue.prototype.$message.error("未登录，无法访问，请先登录")
       setTimeout(()=>{

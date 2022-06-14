@@ -4,10 +4,16 @@
             <h2>添加管理员</h2>
             <el-form>
                 <el-form-item label="用户名：" :label-width="formLabelWidth">
-                    <el-input v-model.trim="username" autocomplete="off"></el-input>
+                    <el-input v-model.trim="username" autocomplete="off" placeholder="请输入用户名"></el-input>
                 </el-form-item>
                 <el-form-item label="密码：" :label-width="formLabelWidth">
-                    <el-input type="password" v-model.trim="password" autocomplete="off"></el-input>
+                    <el-input type="password" v-model.trim="password" autocomplete="off" placeholder="请输入密码"></el-input>
+                </el-form-item>
+                <el-form-item label="自定义号码：" :label-width="formLabelWidth">
+                    <el-input v-model.trim="id" autocomplete="off" placeholder="请输入学工号"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名：" :label-width="formLabelWidth">
+                    <el-input v-model.trim="truename" autocomplete="off" placeholder="请输入姓名"></el-input>
                 </el-form-item>
                 <el-form-item label="权限：" :label-width="formLabelWidth">
                     <el-select v-model="role" placeholder="请选择">
@@ -31,12 +37,15 @@
 </template>
 
 <script>
-import { AddManager } from "@/request/api";
+import { AddManager,ExportUser } from "@/request/api";
 export default {
     data () {
         return {
+            oneMap:"",
             username:"",
             password:"",
+            id:"",
+            truename:"",
             role:"",
             formLabelWidth: '150px',
             options: [{
@@ -60,6 +69,8 @@ export default {
             if(this.username==""||this.password==""){
                 this.$message.warning("用户名或者密码为空")
                 this.clear()
+            }else if(this.id==""||this.truename==""){
+                this.$message.warning("自定义号码或姓名为空")
             }else if(this.role == ""){
                 this.$message.warning("未选择管理员权限")
                 this.clear()
@@ -70,9 +81,20 @@ export default {
                     role:this.role
                 })
                 .then(res=>{
-                    console.log(res);
+                    // console.log(res);
                     if(res.code=="200"){
                         this.$message.success(res.msg)
+                        this.oneMap='{"id":"'+this.id+'","truename":"'+this.truename+'"}'
+                        ExportUser({map:this.oneMap}).then(res1=>{
+                            // console.log(res1);
+                            if(res1.msg=="导入信息"){
+                                this.$message.success(res1.msg)
+                            }else{
+                                this.$message.warning(res1.msg)
+                            }
+                        }).catch(err1=>{
+                            this.$message.error(err1.response.data.data+"，请重新登录")
+                        })
                     }else if(res.code=="401"){
                         this.$message.error(res.msg)
                     }else{
@@ -80,6 +102,7 @@ export default {
                     }
                     
                     this.clear()
+                    this.oneMap=""
                 })
                 .catch(err=>{
                     // console.log("err:",err.response.data);
@@ -91,6 +114,8 @@ export default {
         clear(){
             this.username = ""
             this.password = ""
+            this.id = ""
+            this.truename = ""
             this.role = ""
         },
     }
