@@ -122,7 +122,7 @@ export default {
         this.wholeData = res.data
         res.data.fieldDateList.forEach((item, index) => {
           var obj = {}
-          obj.name = res.data.name + index
+          obj.name = res.data.name + (parseInt(index) + 1)
           obj.state1 = item.timeArrangeList[0].status
           obj.state2 = item.timeArrangeList[1].status
           obj.state3 = item.timeArrangeList[2].status
@@ -226,6 +226,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+
 /deep/ *{
   overflow: hidden;
 }
@@ -233,4 +234,5 @@ export default {
   text-align: center;
   cursor: pointer;
 }
+
 </style>

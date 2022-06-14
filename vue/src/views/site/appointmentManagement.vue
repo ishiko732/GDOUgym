@@ -9,13 +9,13 @@
           <el-table :data="appointmentData[index]" style="width: 100%">
             <el-table-column prop="username" label="用户名" width="200">
             </el-table-column>
-            <el-table-column prop="site" label="场地" width="250">
+            <el-table-column prop="site" label="场地" width="100">
             </el-table-column>
-            <el-table-column prop="time" label="时间" width="250">
+            <el-table-column prop="time" label="时间" width="150">
             </el-table-column>
-            <el-table-column prop="date" label="日期" width="250">
+            <el-table-column prop="date" label="日期" width="100">
             </el-table-column>
-            <el-table-column prop="money" label="费用/小时" width="200">
+            <el-table-column prop="money" label="元/小时" width="200">
             </el-table-column>
             <el-table-column prop="state" label="状态" width="200">
             </el-table-column>
@@ -45,7 +45,7 @@ export default {
   },
   created () { 
     queryCheck().then(res => {
-      // console.log(res.data);
+      console.log(res.data);
       res.data.forEach((item,index) => {
         var obj = {}
         var arr = []
@@ -55,7 +55,10 @@ export default {
         obj.id = item.id
         obj.date = item.date
         obj.state = item.status
-        obj.time = item.timeArrangeList[0].startTime +"-"+item.timeArrangeList[0].endTime
+        obj.time=""
+        item.timeArrangeList.forEach(item2 => {
+          obj.time = obj.time + item2.startTime + "-" + item2.endTime + '\r' 
+        })
         obj.money = item.money
         arr.push(obj)
         this.appointmentData.push(arr)
@@ -102,8 +105,11 @@ export default {
 /deep/ *{
   overflow: hidden
 }
+/deep/ .cell{
+  text-align: center;
+}
 /deep/.box-card{ 
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
   .clearfix{
     font-size: 18px;
