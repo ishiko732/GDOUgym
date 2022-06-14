@@ -82,10 +82,6 @@
       </el-tab-pane>
     </el-tabs>
     <div style="display:flex;margin-top: 3%;justify-content: space-evenly;" v-show="msgData.length>0?true:false">
-      <span style="margin-top:6px;">你选中的是:</span>
-      <el-input v-model="row" style="width:10%;" disabled></el-input>
-      <el-input v-model="col" style="width:10%;" placeholder="校队预留，上课用地，维护"></el-input>
-      <el-input v-model="date" style="width:10%;" disabled></el-input>
       <el-button @click="submit">提交</el-button>
     </div>
   </div>
@@ -142,7 +138,7 @@ export default {
         this.wholeData = res.data
         res.data.fieldDateList.forEach((item, index) => {
           var obj = {}
-          obj.name = res.data.name + index
+          obj.name = res.data.name + (parseInt(index)+1)
           obj.state1 = item.timeArrangeList[0].status
           obj.state2 = item.timeArrangeList[1].status
           obj.state3 = item.timeArrangeList[2].status
@@ -291,7 +287,7 @@ export default {
       // console.log(JSON.stringify(obj))
       console.log(obj)
       updateStatusById(obj).then(res=>{
-        console.log(res)
+        this.$message(res.msg)
       }).catch(e => {
         console.log(e)
       })

@@ -7,7 +7,7 @@
             :class="typeShow&&$route.path=='/home/siteManagement/siteTypeManagement'?'active':''">场地类型管理</span>
           <span class="top_text" @click="appointment" v-show="roleId==1||roleId==3?true:false"
             :class="appointmentShow&&$route.path=='/home/siteManagement/appointmentManagement'?'active':''">预约审核</span>
-          <span class="top_text" @click="pay" v-show="roleId==1||roleId==3?false:true"
+          <span class="top_text" @click="pay"
             :class="payShow&&$route.path=='/home/siteManagement/appointPay'?'active':''">预约付费</span>
           <span class="top_text" @click="siteappointment"
             :class="siteAppointment&&$route.path=='/home/siteManagement/siteAppointment'?'active':''">场地预约</span>

@@ -6,13 +6,12 @@ import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-
 import java.sql.Date;
 import java.util.List;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author ylhy
@@ -21,71 +20,68 @@ import java.util.List;
 @Mapper
 public interface FieldMapper extends BaseMapper<Field> {
 
-    List<Field> queryFieldByType(Integer tid);
+  List<Field> queryFieldByType(Integer tid);
 
-    Field queryFieldById(Integer fid);
+  Field queryFieldById(Integer fid);
 
-    List<FieldDate> queryDateByField(Integer fid, java.sql.Date date, int inode);
+  List<FieldDate> queryDateByField(Integer fid, java.sql.Date date, int inode);
 
+  void addDate(FieldDate fieldDate);
 
-    void addDate(FieldDate fieldDate);
+  List<TimeArrange> queryTimeByFdId(Integer fdid);
 
-    List<TimeArrange> queryTimeByFdId(Integer fdid);
+  void addTime(TimeArrange timeArrange);
 
-    void addTime(TimeArrange timeArrange);
+  List<FieldType> queryType();
 
+  FieldType queryTypeById(Integer tid);
 
-    List<FieldType> queryType();
+  boolean addField(Field field);
 
-    FieldType queryTypeById(Integer tid);
+  List<Field> fillFieldInType(Integer tid);
 
-    boolean addField(Field field);
+  boolean updateField(Field field);
 
-    List<Field> fillFieldInType(Integer tid);
+  boolean updateStatus(Integer time_id, String status);
 
-    boolean updateField(Field field);
+  Boolean addCheck(FieldCheck fieldCheck);
 
-    boolean updateStatus(Integer time_id, String status);
+  TimeArrange queryTimeById(Integer timeId);
 
-    Boolean addCheck(FieldCheck fieldCheck);
+  Boolean addOrderItem(OrderItem orderItem);
 
-    TimeArrange queryTimeById(Integer timeId);
+  FieldCheck queryCheckById(Integer id);
 
-    Boolean addOrderItem(OrderItem orderItem);
+  Boolean updateCheck(FieldCheck fieldCheck);
 
-    FieldCheck queryCheckById(Integer id);
+  List<OrderItem> queryOrderItemByFcid(Integer id);
 
-    Boolean updateCheck(FieldCheck fieldCheck);
+  List<FieldCheck> queryCheck();
 
-    List<OrderItem> queryOrderItemByFcid(Integer id);
+  List<FieldCheck> queryCheckByUid(Integer uid);
 
+  Boolean updateCheckCardById(FieldCheck fieldCheck);
 
-    List<FieldCheck> queryCheck();
+  Boolean updateCheckStatusById(FieldCheck fieldCheck);
 
-    List<FieldCheck> queryCheckByUid(Integer uid);
+  FieldDate queryDateById(Integer fdid);
 
-    Boolean updateCheckCardById(FieldCheck fieldCheck);
+  User queryUserById(Integer uid);
 
-    Boolean updateCheckStatusById(FieldCheck fieldCheck);
+  Boolean addType(FieldType fieldType);
 
-    FieldDate queryDateById(Integer fdid);
+  Integer queryTypeByName(String typeName);
 
-    User queryUserById(Integer uid);
+  List<FieldCheck> queryCheckByTime(String beginDate, String endDate);
 
-    Boolean addType(FieldType fieldType);
+  Boolean deleteType(FieldType fieldType);
 
-    Integer queryTypeByName(String typeName);
+  Boolean deleteField(Field field);
 
-    List<FieldCheck> queryCheckByTime(String beginDate, String endDate);
+  Integer queryFieldByDes(Field field);
 
-    Boolean deleteType(FieldType fieldType);
+  @Select("select name from Field_check where id=#{fcid}")
+  String queryNameByFcid(@Param("fcid") Integer fcid);
 
-    Boolean deleteField(Field field);
-
-    Integer queryFieldByDes(Field field);
-
-    @Select("select name from Field_check where id=#{fcid}")
-    String queryNameByFcid(@Param("fcid")Integer fcid);
-
-    List<TimeArrange> queryTime(Date date, Integer tid, Integer fid, Integer index);
+  List<TimeArrange> queryTime(Date date, Integer tid, Integer fid, Integer index);
 }
