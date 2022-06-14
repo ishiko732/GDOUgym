@@ -82,6 +82,8 @@
       </el-tab-pane>
     </el-tabs>
     <div style="display:flex;margin-top: 3%;justify-content: space-evenly;" v-show="msgData.length>0?true:false">
+
+
       <el-button @click="submit">提交</el-button>
     </div>
   </div>
@@ -288,7 +290,9 @@ export default {
       // console.log(JSON.stringify(obj))
       console.log(obj)
       updateStatusById(obj).then(res=>{
+
         this.$message(res.msg)
+
 
       }).catch(e => {
         console.log(e)

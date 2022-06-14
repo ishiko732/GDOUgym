@@ -164,6 +164,7 @@ export const addEquipment = (params) => request.post("/equipment/addEquipment",p
 //租用器材
 export const addRentEquipment = (params) => request.post("/equipment/addRentEquipment",params)
 
+
 // 赛事创建
 export const CreateCompetition = (params) => request.post("/competition/create",params)
 
@@ -226,4 +227,19 @@ export const QueryComField = () => request.get("/competition/queryCompetitionFie
 
 // 请求新token
 export const GetNewToken = () => request.get("/user/newToken")
+=======
+//修改场地状态
+export const updateStatus = (params) => request.post("/field/updateStatus",params)
+
+//修改全部场地状态
+export const updateStatusById = (params) => request({
+    method: "post",
+    url:"/field/updateStatusById",
+    data:params,
+    headers: {"Content-Type": "application/json"},
+    transformRequest: [data => JSON.stringify(data)]
+})
+
+
+
 
