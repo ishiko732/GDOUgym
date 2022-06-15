@@ -114,3 +114,10 @@ select Competition_check.*
 from Competition_check
 left join Competition C on C.id = Competition_check.cid
 where C.uid=1;
+
+# 获取用户名和id列表
+select User.id,name,truename
+from User
+left join UserInfo  ui on uid=User.id
+# where User.id = 1
+order by User.id

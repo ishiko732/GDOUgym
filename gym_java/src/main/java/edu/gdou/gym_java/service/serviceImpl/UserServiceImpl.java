@@ -207,4 +207,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Map<String, Object> selectInfoById(@NonNull String id) {
         return getBaseMapper().selectInfoById(id);
     }
+
+    @Override
+    public Set<Map<String, Object>> getUserListBySingle(Integer uid,String name,String truename) {
+        return getBaseMapper().getUserListBySingle(uid,name,truename);
+    }
 }

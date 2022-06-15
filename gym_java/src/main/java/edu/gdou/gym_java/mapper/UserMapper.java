@@ -90,4 +90,24 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE table_name = 'UserInfo'")
     Set<String> getUserInfoRow();
+
+    @Select({
+            "<script>",
+            "select User.id,name,truename from User",
+            "left join UserInfo ui on uid=User.id ",
+            "<where>",
+            "<if test='uid !=null'>",
+            "uid=#{uid}",
+            "</if>",
+            "<if test='name !=null'>",
+            " and name=#{name}",
+            "</if>",
+            "<if test='truename !=null'>",
+            " and truename=#{truename}",
+            "</if>",
+            "</where>",
+            "order by User.id",
+            "</script>"
+    })
+    Set<Map<String,Object>> getUserListBySingle(Integer uid,String name,String truename);
 }
