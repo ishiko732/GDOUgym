@@ -351,4 +351,16 @@ public class UserController {
         hashMap.put("new_token_create_time",JWTUtil.getCreateTime(newToken));
         return new ResponseBean(200,"新token",hashMap);
     }
+
+    /**
+     * 获取简单的用户信息
+     */
+    @RequestMapping(value = "/getSingleUser",method = {RequestMethod.GET})
+    @RequiresAuthentication
+    public ResponseBean getSingle(@RequestParam(value = "uid",required = false)String uid,
+                                  @RequestParam(value = "username",required = false)String username,
+                                  @RequestParam(value = "truename",required = false)String truename){
+        return new ResponseBean(200,"用户数据",userService.getUserListBySingle(uid==null?null:Integer.parseInt(uid),username,truename));
+    }
 }
+

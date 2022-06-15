@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -34,4 +35,5 @@ public interface UserService extends IService<User> {
     Map<String,Object> selectInfoById(@NonNull String id);
     Map<String,Integer> exportInfo(List<Map<String,String>> mapList) ;
     Map<String,Integer> exportInfoByFile(MultipartFile excel);
+    Set<Map<String,Object>> getUserListBySingle(Integer uid,String name,String truename);
 }
