@@ -5,12 +5,18 @@
 </template>
 
 <script>
+import { GetNewToken } from "@/request/api";
 export default {
-  // mounted() {
-  //   window.onbeforeunload=function(e){
-  //     window.localStorage.clear()
-  //   }
-  // }
+  mounted(){
+    GetNewToken().then(res=>{
+      localStorage.setItem("token",res.data.new_token)
+    }).catch(err=>{
+      if(err.response.data.msg=="无权访问(Unauthorized)"){
+        localStorage.clear()
+        location.reload()
+      }
+    })
+  }
 }
 </script>
 <style lang="less">
