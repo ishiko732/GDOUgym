@@ -362,5 +362,17 @@ public class UserController {
                                   @RequestParam(value = "truename",required = false)String truename){
         return new ResponseBean(200,"用户数据",userService.getUserListBySingle(uid==null?null:Integer.parseInt(uid),username,truename));
     }
+
+    /**
+     * 获取用户信息通过用户名
+     */
+    @RequestMapping(value = "/getUserByName",method = {RequestMethod.GET})
+    @RequiresAuthentication
+    public ResponseBean getUserByName(@RequestParam("username")String username){
+        val user = userService.getUser(username);
+        user.setPassword(null);
+        return new ResponseBean(200,"用户数据", user);
+    }
+
 }
 

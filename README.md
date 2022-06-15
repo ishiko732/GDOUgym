@@ -52,6 +52,22 @@ swagger-ui：用于扫描API接口
 
 采用Postman写文档：[API接口文档](https://documenter.getpostman.com/view/18348648/Uz5GobTh)
 
+# 测试账号
+
+| 用户名      | 密码      | 权限       |
+| ----------- | --------- | ---------- |
+| superAdmin  | gdougdou  | 超级管理员 |
+| umAdmin     | gdougdou  | 用户管理员 |
+| fmAdmin     | gdougdou  | 场地管理员 |
+| cmAdmin     | gdougdou  | 赛事管理员 |
+| eqAdmin     | gdougdou  | 器材管理员 |
+| studentTest | gdougdou  | 学生       |
+| teacherTest | gdougdou  | 教师       |
+| lyf         | gdougdou2 | 学生       |
+| river       | gdougdou  | 学生       |
+
+
+
 ------
 
 #  文件结构
