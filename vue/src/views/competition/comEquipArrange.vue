@@ -9,8 +9,8 @@
                 <span class="span">场地id：</span>
                 <el-select v-model="cfid" placeholder="请选择">
                 <el-option
-                    v-for="item in options"
-                    :key="item.value"
+                    v-for="(item,index) in options"
+                    :key="index"
                     :label="item.label"
                     :value="item.value">
                 </el-option>

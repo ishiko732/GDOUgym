@@ -226,3 +226,6 @@ export const QueryComField = () => request.get("/competition/queryCompetitionFie
 
 // 请求新token
 export const GetNewToken = () => request.get("/user/newToken")
+
+// 查询所有用户信息
+export const GetUserInfo = () => request.get("/user/getSingleUser")

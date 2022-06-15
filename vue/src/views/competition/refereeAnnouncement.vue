@@ -5,17 +5,24 @@
             <h2>裁判简介公告(赛事绑定裁判)</h2>
             <el-form>
                 <el-form-item label="场地id：" :label-width="formLabelWidth">
-                    <el-select v-model="cfid" placeholder="请选择">
+                    <el-select v-model="cfid" placeholder="请选择场地">
                     <el-option
-                        v-for="item in options"
-                        :key="item.value"
+                        v-for="(item,index) in options"
+                        :key="index"
                         :label="item.label"
                         :value="item.value">
                     </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="用户id：" :label-width="formLabelWidth">
-                    <el-input v-model.trim="uid" autocomplete="off" placeholder="请输入用户id"></el-input>
+                <el-form-item label="裁判：" :label-width="formLabelWidth">
+                    <el-select v-model="uid" placeholder="请选择裁判">
+                    <el-option
+                        v-for="item in user_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="裁判公告：" :label-width="formLabelWidth">
                     <el-input type="textarea" v-model.trim="context" autocomplete="off"></el-input>
@@ -32,7 +39,7 @@
 </template>
 
 <script>
-import { ArrangeComReferee,QueryComField } from "@/request/api";
+import { ArrangeComReferee,QueryComField,GetUserInfo } from "@/request/api";
 export default {
     data () {
         return {
@@ -40,7 +47,8 @@ export default {
             uid:"",
             cfid:"",
             formLabelWidth: '150px',
-            options:[]
+            options:[],
+            user_options:[],
         }
     },
     created(){
@@ -49,6 +57,14 @@ export default {
                 this.options.push({
                     value:res.data[i].id,
                     label:res.data[i].id
+                })
+            }
+        })
+        GetUserInfo().then(res=>{
+            for(let i in res.data){
+                this.user_options.push({
+                    value:res.data[i].id,
+                    label:res.data[i].name
                 })
             }
         })
@@ -63,11 +79,11 @@ export default {
                     uid:this.uid,
                     context:this.context
                 }).then(res=>{
-                    console.log(res);
+                    // console.log(res);
                     this.$message.success(res.msg)
                     this.clear()
                 }).catch(err=>{
-                    this.$message.error("输入的用户id不存在")
+                    this.$message.error(err.response.data.data+"，请重新登录")
                 })
             }
         },

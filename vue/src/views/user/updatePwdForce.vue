@@ -5,7 +5,14 @@
             <h2>(强制)修改密码</h2>
             <el-form>
                 <el-form-item label="用户名：" :label-width="formLabelWidth">
-                    <el-input v-model.trim="username" autocomplete="off"></el-input>
+                    <el-select v-model="username" filterable placeholder="请选择">
+                    <el-option
+                        v-for="item in user_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="新密码：" :label-width="formLabelWidth">
                     <el-input type="password" v-model.trim="password" autocomplete="off"></el-input>
@@ -21,15 +28,26 @@
 </template>
 
 <script>
-import { UpdatePassword } from "@/request/api";
+import { UpdatePassword,GetUserInfo } from "@/request/api";
 export default {
     data () {
         return {
             username:"",
             password:"",
             formLabelWidth: '150px',
+            user_options:[],
  
         }
+    },
+    created(){
+        GetUserInfo().then(res=>{
+            for(let i in res.data){
+                this.user_options.push({
+                    value:res.data[i].name,
+                    label:res.data[i].name
+                })
+            }
+        })
     },
     methods:{
         updatePassword(){
@@ -42,7 +60,7 @@ export default {
                    pre:this.prepassword,
                    new:this.password
                 }).then(res=>{
-                    console.log(res);
+                    // console.log(res);
                     if(res.code=="200"){
                         if(res.msg=="修改成功"){
                             this.$message.success(res.msg)
