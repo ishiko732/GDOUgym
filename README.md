@@ -2,6 +2,8 @@
 
 > 2022年广东海洋大学软件工程实践课程设计
 
+[toc]
+
 # 操作环境
 
 前端
@@ -44,9 +46,17 @@
 
 ------
 
+# API接口文档
+
+swagger-ui：用于扫描API接口
+
+采用Postman写文档：[API接口文档](https://documenter.getpostman.com/view/18348648/Uz5GobTh)
+
+------
+
 #  文件结构
 
-vue
+## vue
 
 ```
 .
@@ -122,7 +132,7 @@ vue
 
 13 directories, 56 files
 ```
-java
+## java
 
 ```
 .
@@ -278,3 +288,36 @@ java
 27 directories, 121 files
 ```
 
+-----
+
+# 团队协作
+
+## Git合作开发信息
+```bash
+brew install gource
+```
+
+```bash
+gource -1280x720 -o - | ffmpeg -y -r 30 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 gource.mp4
+```
+
+## 画图工具
+
+| 工具                                                         | 解释                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [drawio](https://drawio-app.com/)                            | ER图(概念模型)，表与表关系，[SQL语句插入](https://desk.draw.io/support/solutions/articles/16000082007) |
+| [astash.uml](https://astah.change-vision.com/ja/product/astah-uml.html) | 时序图，活动图，[泳道图](https://astah.net/support/astah-pro/user-guide/activity-diagram/)，调用关系图，类图 |
+| [SequencePlugin](https://vanco.github.io/SequencePlugin/)    | 根据代码生成时序图                                           |
+| [tree](https://qiita.com/kanuma1984/items/c158162adfeb6b217973) | 生成文件列表                                                 |
+| [sql table](https://segmentfault.com/a/1190000023825452)     | 生成数据库表信息                                             |
+
+
+
+# MIT License
+
+- MIT是和BSD一样宽松的许可协议，作者保留版权,而无任何其他了限制。
+
+- 你必须在你的发行版里包含原许可协议的声明，无论你是以二进制发布的还是以源代码发布的。
+- 你可以使用，复制和修改软件
+- 你可以免费使用软件或出售
+- 唯一的限制是，它是必须附有MIT授权协议

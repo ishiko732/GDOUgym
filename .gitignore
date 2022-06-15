@@ -28,3 +28,5 @@ gym_java/src/main/resources/config/application.yml
 
 ### doc ###
 document/private/*
+document/public/*
+document/sql_table_ generator/*
