@@ -64,5 +64,7 @@ public class Constant {
     public static final long EXPIRE_TIME = 5*60*1000;
     // 过期时间5分钟
     public static final int accessTokenExpireTime = 5*60;
+    // 过期时间5分钟
+    public static final int cacheExpireTime = 5*60;
 
 }
