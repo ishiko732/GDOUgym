@@ -183,7 +183,7 @@ public class CompetitionController {
 
     // 审核部分
     @RequestMapping(value = "/queryCheck",method = RequestMethod.GET)
-    @RequiresPermissions("赛事审核")
+    @RequiresPermissions("赛事创建(预告)")
     public ResponseBean queryCheck(@RequestParam(value = "id",required = false)String id,
                                    @RequestParam(value = "uid",required = false)String uid,
                                    @RequestParam(value = "status",required = false)String status){
