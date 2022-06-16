@@ -140,7 +140,9 @@ export default {
     methods: {
         add(){
             if(this.changeFieldList.length==0){
-                this.$message.warning("暂未选择场地")
+                // this.$message.warning("暂未选择场地")
+                this.fieldInfoList=[]
+                this.submitList=[]
             }else{
                 this.fieldInfoList=[]
                 this.submitList=[]

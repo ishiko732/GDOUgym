@@ -4,6 +4,7 @@
         <div class="form">
             <h2>查询裁判公告</h2>
             <el-form>
+                <span>ps：赛事id为空查询，即查询全部信息</span>
                 <el-form-item label="赛事id：" :label-width="formLabelWidth">
                     <el-input v-model.trim="cid" autocomplete="off" placeholder="请输入赛事id"></el-input>
                     <el-button type="primary" @click="queryRefereeAnn">查 询</el-button>
@@ -69,7 +70,15 @@ export default {
     methods:{
         queryRefereeAnn(){
             if(this.cid==""){
-                this.$message.warning("赛事id为空")
+                 QueryRefereeAnn().then(res=>{
+                    // console.log(res);
+                    if(res.data.length==0){
+                        this.$message.warning("没有裁判信息")
+                    }
+                    this.RefereeAnnList=res.data
+                }).catch(err=>{
+                    this.$message.error(err.response.data.data+"，请重新登录")
+                })
             }else{
                 QueryRefereeAnn({cid:this.cid}).then(res=>{
                     // console.log(res);
@@ -104,6 +113,10 @@ export default {
         .el-button--primary{
             margin-left: 50px;
             transform: translateY(-15px);
+        }
+        span{
+            color: red;
+            margin-left: 130px;
         }
     }
 </style>

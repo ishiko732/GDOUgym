@@ -6,7 +6,7 @@
                 <span class="name">赛事器材安排</span>
             </div>
             <div style="display:flex">
-                <span class="span">场地id：</span>
+                <span class="span">场地：</span>
                 <el-select v-model="cfid" placeholder="请选择">
                 <el-option
                     v-for="(item,index) in options"
@@ -77,10 +77,11 @@ export default {
     created() {
         this.display()
         QueryComField().then(res=>{
+            console.log(res);
             for(let i in res.data){
                 this.options.push({
                     value:res.data[i].id,
-                    label:res.data[i].id
+                    label:res.data[i].name+res.data[i].startTime
                 })
             }
         })

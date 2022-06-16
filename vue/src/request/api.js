@@ -229,3 +229,6 @@ export const GetNewToken = () => request.get("/user/newToken")
 
 // 查询所有用户信息
 export const GetUserInfo = () => request.get("/user/getSingleUser")
+
+// 通过用户名查uid
+export const QueryUid = (params) => request.get("/user/getUserByName",{params})

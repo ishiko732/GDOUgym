@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { AddManager,ExportUser } from "@/request/api";
+import { AddManager,ExportUser,QueryUid } from "@/request/api";
 export default {
     data () {
         return {
@@ -45,6 +45,7 @@ export default {
             username:"",
             password:"",
             id:"",
+            uid:"",
             truename:"",
             role:"",
             formLabelWidth: '150px',
@@ -84,16 +85,24 @@ export default {
                     // console.log(res);
                     if(res.code=="200"){
                         this.$message.success(res.msg)
-                        this.oneMap='{"id":"'+this.id+'","truename":"'+this.truename+'"}'
-                        ExportUser({map:this.oneMap}).then(res1=>{
-                            // console.log(res1);
-                            if(res1.msg=="导入信息"){
-                                this.$message.success(res1.msg)
-                            }else{
-                                this.$message.warning(res1.msg)
-                            }
-                        }).catch(err1=>{
-                            this.$message.error(err1.response.data.data+"，请重新登录")
+                        let username = this.username
+                        let id = this.id
+                        let truename = this.truename
+                        QueryUid({username:this.username}).then(res=>{
+                            // console.log("QueryUid:",res.data);
+                            this.uid=res.data.id
+                            // console.log(this.uid);
+                            this.oneMap='{"id":"'+id+'","uid":"'+this.uid+'","uname":"'+username+'","truename":"'+truename+'"}'
+                            ExportUser({map:this.oneMap}).then(res1=>{
+                                // console.log("导入信息：",res1);
+                                if(res1.msg=="导入信息"){
+                                    this.$message.success(res1.msg)
+                                }else{
+                                    this.$message.warning(res1.msg)
+                                }
+                            }).catch(err1=>{
+                                this.$message.error(err1.response.data.data+"，请重新登录")
+                            })
                         })
                     }else if(res.code=="401"){
                         this.$message.error(res.msg)
@@ -115,6 +124,7 @@ export default {
             this.username = ""
             this.password = ""
             this.id = ""
+            this.uid = ""
             this.truename = ""
             this.role = ""
         },

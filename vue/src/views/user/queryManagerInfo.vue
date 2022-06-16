@@ -118,7 +118,7 @@ export default {
                         }else{
                             this.ManagerInfoList = res.data
                             for (let i = 0; i < this.ManagerInfoList.length; i++) {
-                                this.ManagerInfoList[i].rid = "8"
+                                this.ManagerInfoList[i].rid = ""
                             } 
                         }
                     }

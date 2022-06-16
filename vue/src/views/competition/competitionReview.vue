@@ -44,6 +44,11 @@
                         width="180">
                         </el-table-column>
                         <el-table-column
+                        prop="competition.eventLength"
+                        label="赛事时长(分钟)"
+                        width="80">
+                        </el-table-column>
+                        <el-table-column
                         prop="competition.createTime"
                         label="赛事创建时间"
                         width="180">

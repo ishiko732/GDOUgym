@@ -5,15 +5,15 @@
       <div class="eventManager">
         <span class="top_text" @click="competitionReview" v-show="roleId==4||roleId==1?true:false"
               :class="$route.path=='/home/comManagement/competitionReview'?'active':''">赛事审核</span>
-        <span class="top_text" @click="comFieldArrange" v-show="roleId==4||roleId==1?true:false"
+        <span class="top_text" @click="comFieldArrange" v-show="roleId==4||roleId==1||roleId==3?true:false"
               :class="$route.path=='/home/comManagement/comFieldArrange'?'active':''">比赛场地安排</span>
-        <span class="top_text" @click="createCompetition" v-show="roleId==7||roleId<6?true:false"
+        <span class="top_text" @click="createCompetition" v-show="roleId==7||roleId==1||roleId==4?true:false"
               :class="$route.path=='/home/comManagement/competitionCreate'?'active':''">赛事创建(预告)</span>
-        <span class="top_text" @click="competitionCancel" v-show="roleId==7||roleId<6?true:false"
+        <span class="top_text" @click="competitionCancel" v-show="roleId==7||roleId==1||roleId==4?true:false"
               :class="$route.path=='/home/comManagement/competitionCancel'?'active':''">赛事取消</span>
-        <span class="top_text" @click="comEquipArrange" v-show="roleId==7||roleId<6?true:false"
+        <span class="top_text" @click="comEquipArrange" v-show="roleId==7||roleId==4||roleId==5?true:false"
               :class="$route.path=='/home/comManagement/comEquipArrange'?'active':''">赛事器材安排</span>
-        <span class="top_text" @click="refereeAnnouncement" v-show="roleId==7||roleId<6?true:false"
+        <span class="top_text" @click="refereeAnnouncement" v-show="roleId==7||roleId==1||roleId==4?true:false"
               :class="$route.path=='/home/comManagement/refereeAnnouncement'?'active':''">裁判简介公告</span>
         <span class="top_text" @click="competitionQuery" v-show="roleId<8?true:false"
               :class="$route.path=='/home/comManagement/competitionQuery'?'active':''">赛事查询</span>
