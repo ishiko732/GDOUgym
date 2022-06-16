@@ -127,7 +127,7 @@ export default {
         },
         queryTime(){
             this.eventInfoList=[]
-            if(this.startTime==""||this.endTime==""){
+            if(this.startTime==""||this.endTime==""||this.startTime==null||this.endTime==null){
                 this.$message.warning("开始时间或者结束时间为空")
             }else{
                 this.startTime = this.startTime.toLocaleString()

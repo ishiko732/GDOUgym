@@ -148,10 +148,12 @@ export default {
 
         QueryEvent().then(res=>{
             res.data.forEach(item=>{
-                this.com_options.push({
-                    value:item.id,
-                    label:item.name+" "+item.competitionTime
-                })
+                if(item.isCancel==false && item.isCheck=="待审核"){
+                    this.com_options.push({
+                        value:item.id,
+                        label:item.name+" "+item.competitionTime
+                    })
+                }
             })
         })
     },
