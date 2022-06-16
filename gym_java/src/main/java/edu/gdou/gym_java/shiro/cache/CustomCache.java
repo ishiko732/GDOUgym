@@ -1,6 +1,7 @@
 package edu.gdou.gym_java.shiro.cache;
 
 
+import edu.gdou.gym_java.shiro.redis.Constant;
 import edu.gdou.gym_java.shiro.redis.JedisUtil;
 import edu.gdou.gym_java.shiro.jwt.JWTUtil;
 import edu.gdou.gym_java.utils.SerializableUtil;
@@ -20,10 +21,7 @@ public class CustomCache<K,V> implements Cache<K,V> {
      */
     public final static String PREFIX_SHIRO_CACHE = "shiro:cache:";
 
-    /**
-     * 过期时间-5分钟
-     */
-    private static final Integer EXPIRE_TIME = 5 * 60 * 1000;
+
 
     /**
      * 缓存的key名称获取为shiro:cache:username
@@ -51,7 +49,7 @@ public class CustomCache<K,V> implements Cache<K,V> {
     @Override
     public Object put(Object key, Object value) throws CacheException {
         // 设置Redis的Shiro缓存
-        return JedisUtil.setObject(this.getKey(key), value, EXPIRE_TIME);
+        return JedisUtil.setObject(this.getKey(key), value, Constant.cacheExpireTime);
     }
 
     /**
