@@ -222,7 +222,7 @@ export const EventArrangeEquip = (params) => request({
 export const ArrangeComReferee = (params) => request.post("/competition/updateUserEvent",params)
 
 // 查询场地id列表
-export const QueryComField = () => request.get("/competition/queryCompetitionField")
+export const QueryComField = (params) => request.get("/competition/queryCompetitionField",{params})
 
 // 请求新token
 export const GetNewToken = () => request.get("/user/newToken")

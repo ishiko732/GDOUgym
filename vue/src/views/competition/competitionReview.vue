@@ -22,7 +22,8 @@
                         :data="EventCheckList"
                         height="350"
                         border
-                        style="width: 100%">
+                        style="width: 100%"
+                        @row-click="clickData">
                         <el-table-column
                         prop="id"
                         label="审核id"
@@ -144,6 +145,10 @@ export default {
         })
     },
     methods:{
+        clickData(item){
+            // console.log(item);
+            this.check_id = item.id
+        },
         queryEventCheck(){
             this.EventCheckList=[]
             if(this.type==""){

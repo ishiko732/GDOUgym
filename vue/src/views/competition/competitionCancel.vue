@@ -41,11 +41,12 @@ export default {
     created(){
         QueryEvent().then(res=>{
             res.data.forEach(item=>{
-                if(item.isCancel==false && (item.isCheck=="审核通过"||item.isCheck=="待审核"))
-                this.com_options.push({
-                    value:item.id,
-                    label:item.name+" "+item.competitionTime
-                })
+                if(item.isCancel==false && (item.isCheck=="审核通过"||item.isCheck=="待审核")){
+                    this.com_options.push({
+                        value:item.id,
+                        label:item.name+" "+item.competitionTime
+                    })
+                }
             })
         })
     },

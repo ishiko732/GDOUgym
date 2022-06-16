@@ -4,6 +4,16 @@
         <div class="form">
             <h2>裁判简介公告(赛事绑定裁判)</h2>
             <el-form>
+                <el-form-item label="赛事：" :label-width="formLabelWidth"  style="margin-top:20px">
+                    <el-select v-model="cid" placeholder="请选择赛事" filterable @change="queryField">
+                    <el-option
+                        v-for="item in com_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="场地：" :label-width="formLabelWidth">
                     <el-select v-model="cfid" placeholder="请选择场地">
                     <el-option
@@ -39,27 +49,21 @@
 </template>
 
 <script>
-import { ArrangeComReferee,QueryComField,GetUserInfo } from "@/request/api";
+import { ArrangeComReferee,QueryComField,GetUserInfo,QueryEvent } from "@/request/api";
 export default {
     data () {
         return {
             context:"",
             uid:"",
             cfid:"",
+            cid:"",
             formLabelWidth: '150px',
             options:[],
             user_options:[],
+            com_options:[],
         }
     },
     created(){
-        QueryComField().then(res=>{
-            for(let i in res.data){
-                this.options.push({
-                    value:res.data[i].id,
-                    label:res.data[i].name+" "+res.data[i].startTime
-                })
-            }
-        })
         GetUserInfo().then(res=>{
             for(let i in res.data){
                 this.user_options.push({
@@ -67,6 +71,16 @@ export default {
                     label:res.data[i].name
                 })
             }
+        })
+        QueryEvent().then(res=>{
+            res.data.forEach(item=>{
+                if(item.isCancel==false && (item.isCheck=="审核通过"||item.isCheck=="待审核")){
+                    this.com_options.push({
+                        value:item.id,
+                        label:item.name+" "+item.competitionTime
+                    })
+                }
+            })
         })
     },
     methods:{
@@ -88,11 +102,23 @@ export default {
             }
         },
         clear(){
+            this.cid=""
             this.uid=""
             this.cfid=""
             this.context=""
+        },
+        queryField(val){
+            this.options=[]
+            QueryComField({cid:val}).then(res=>{
+                for(let i in res.data){
+                    this.options.push({
+                        value:res.data[i].id,
+                        label:res.data[i].name+" "+res.data[i].startTime
+                    })
+                }
+            })
         }
-    }
+    },
 }
 </script>
  
