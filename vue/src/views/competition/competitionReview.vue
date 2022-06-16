@@ -157,7 +157,9 @@ export default {
                         this.$message.warning("当前查询类型没有数据")
                     }else{
                         for(let i in res.data){
-                            if(res.data[i].competition.competitionFields.length==0){
+                            if(res.data[i].competition.isCancel==true){
+
+                            }else if(res.data[i].competition.competitionFields.length==0){
                                 this.EventCheckList.push(res.data[i])
                             }else{
                                 let FieldName = ""

@@ -106,7 +106,7 @@ export default {
             }).then(res=>{
                 // console.log(res);
                 res.data.forEach(item=>{
-                    if(item.isCheck=="审核通过"){
+                    if(item.isCheck=="审核通过"&&item.isCancel==false){
                         let fieldName = ""
                         let cfId = ""
                         item.competitionFields.forEach(item2=>{

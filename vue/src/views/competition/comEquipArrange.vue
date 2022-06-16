@@ -77,7 +77,7 @@ export default {
     created() {
         this.display()
         QueryComField().then(res=>{
-            console.log(res);
+            // console.log(res);
             for(let i in res.data){
                 this.options.push({
                     value:res.data[i].id,

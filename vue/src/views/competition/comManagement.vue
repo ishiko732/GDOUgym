@@ -11,7 +11,7 @@
               :class="$route.path=='/home/comManagement/competitionCreate'?'active':''">赛事创建(预告)</span>
         <span class="top_text" @click="competitionCancel" v-show="roleId==7||roleId==1||roleId==4?true:false"
               :class="$route.path=='/home/comManagement/competitionCancel'?'active':''">赛事取消</span>
-        <span class="top_text" @click="comEquipArrange" v-show="roleId==7||roleId==4||roleId==5?true:false"
+        <span class="top_text" @click="comEquipArrange" v-show="roleId==7||roleId==4||roleId==5||roleId==1?true:false"
               :class="$route.path=='/home/comManagement/comEquipArrange'?'active':''">赛事器材安排</span>
         <span class="top_text" @click="refereeAnnouncement" v-show="roleId==7||roleId==1||roleId==4?true:false"
               :class="$route.path=='/home/comManagement/refereeAnnouncement'?'active':''">裁判简介公告</span>
