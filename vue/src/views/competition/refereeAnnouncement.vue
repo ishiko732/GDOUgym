@@ -4,7 +4,7 @@
         <div class="form">
             <h2>裁判简介公告(赛事绑定裁判)</h2>
             <el-form>
-                <el-form-item label="场地id：" :label-width="formLabelWidth">
+                <el-form-item label="场地：" :label-width="formLabelWidth">
                     <el-select v-model="cfid" placeholder="请选择场地">
                     <el-option
                         v-for="(item,index) in options"
@@ -56,7 +56,7 @@ export default {
             for(let i in res.data){
                 this.options.push({
                     value:res.data[i].id,
-                    label:res.data[i].id
+                    label:res.data[i].name+" "+res.data[i].startTime
                 })
             }
         })
@@ -121,7 +121,7 @@ export default {
             width: 150px;
         }
         /deep/.el-input__inner,.el-input{
-            width: 200px;
+            width: 300px;
         }
     }
 </style>

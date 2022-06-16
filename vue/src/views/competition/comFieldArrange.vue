@@ -4,9 +4,17 @@
         <div class="form">
             <h2>比赛场地安排</h2>
             <el-form>
-                <el-form-item label="赛事id：" :label-width="formLabelWidth">
-                    <el-input v-model.trim="cid" autocomplete="off" placeholder="请输入赛事id"></el-input>
-                    <el-button type="primary" @click="submit">提交</el-button>
+                <el-form-item label="赛事：" :label-width="formLabelWidth"  style="margin-top:20px">
+                    <el-select v-model="cid" placeholder="请选择赛事" filterable>
+                    <el-option
+                        v-for="item in com_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                    </el-select>
+                    <el-button type="primary" @click="submit">提 交</el-button>
+                    <el-button type="primary" @click="clear">重 置</el-button>
                 </el-form-item>
                 <el-form-item label="选择场地和时间：" :label-width="formLabelWidth" class="elCascader">
                     <el-cascader
@@ -56,7 +64,7 @@
 </template>
 
 <script>
-import { loadingDate,queryType,queryFieldByType,QueryFid,QueryTime,ComArrangeField,EventSetFields } from "@/request/api";
+import { loadingDate,queryType,queryFieldByType,QueryFid,QueryTime,ComArrangeField,EventSetFields,QueryEvent } from "@/request/api";
 export default {
     data () {
         return {
@@ -68,6 +76,7 @@ export default {
             changeFieldList:[],
             submitList:[],
             ids:[],     // 审核id
+            com_options:[],
  
         }
     },
@@ -136,6 +145,15 @@ export default {
             // console.log("err:",err.response.data);
             this.$message.error(err.response.data.data+"，请重新登录")
         })
+
+        QueryEvent().then(res=>{
+            res.data.forEach(item=>{
+                this.com_options.push({
+                    value:item.id,
+                    label:item.name+" "+item.competitionTime
+                })
+            })
+        })
     },
     methods: {
         add(){
@@ -166,7 +184,7 @@ export default {
         },
         submit(){
             if(this.cid==""){
-                this.$message.warning("未填写赛事id")
+                this.$message.warning("未选择赛事")
             }else if(this.submitList.length==0){
                 this.$message.warning("未选择场地")
             }else{
@@ -184,6 +202,7 @@ export default {
                             // console.log(res);
                             if(res.msg=="返回成功绑定的赛事场地id信息"){
                                 this.$message.success("赛事绑定场地成功")
+                                this.clear()
                             }else{
                                 this.$message.warning(res.msg)
                             }
@@ -195,6 +214,12 @@ export default {
                     this.$message.error(err.response.data.data+"，请重新登录")
                 })
             }
+        },
+        clear(){
+            this.cid=""
+            this.changeFieldList=[]
+            this.submitList=[]
+            this.fieldInfoList=[]
         }
     },
 }

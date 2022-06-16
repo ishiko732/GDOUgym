@@ -4,9 +4,16 @@
         <div class="form">
             <h2>查询裁判公告</h2>
             <el-form>
-                <span>ps：赛事id为空查询，即查询全部信息</span>
-                <el-form-item label="赛事id：" :label-width="formLabelWidth">
-                    <el-input v-model.trim="cid" autocomplete="off" placeholder="请输入赛事id"></el-input>
+                <span>ps：未选择赛事查询，即查询全部信息</span>
+                <el-form-item label="赛事：" :label-width="formLabelWidth"  style="margin-top:20px">
+                    <el-select v-model="cid" placeholder="请选择赛事" filterable>
+                    <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                    </el-select>
                     <el-button type="primary" @click="queryRefereeAnn">查 询</el-button>
                 </el-form-item>
                 
@@ -58,14 +65,30 @@
 </template>
 
 <script>
-import { QueryRefereeAnn } from "@/request/api";
+import { QueryRefereeAnn,QueryEvent } from "@/request/api";
 export default {
     data () {
         return {
             formLabelWidth: '200px',
             cid:"",
-            RefereeAnnList:[]
+            RefereeAnnList:[],
+            options:[{
+                value:"",
+                label:"查询全部裁判信息"
+            }],
         }
+    },
+    created(){
+        QueryEvent().then(res=>{
+            res.data.forEach(item=>{
+                if(item.isCancel==false){
+                    this.options.push({
+                        value:item.id,
+                        label:item.name+" "+item.competitionTime
+                    })
+                }
+            })
+        })
     },
     methods:{
         queryRefereeAnn(){
@@ -104,11 +127,8 @@ export default {
             margin-bottom: 50px;
             margin-left: 80px;
         }
-        .el-input{
-            width: 200px;
-        }
-        /deep/.el-input__inner{
-            width: 200px;
+        /deep/.el-input__inner,.el-input{
+            width: 300px;
         }
         .el-button--primary{
             margin-left: 50px;
