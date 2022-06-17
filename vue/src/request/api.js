@@ -232,3 +232,6 @@ export const GetUserInfo = () => request.get("/user/getSingleUser")
 
 // 通过用户名查uid
 export const QueryUid = (params) => request.get("/user/getUserByName",{params})
+
+// 编辑收费
+export const updateEquipment = (params) => request.post("/equipment/updateEquipment",params)
