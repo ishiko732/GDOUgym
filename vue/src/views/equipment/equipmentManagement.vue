@@ -156,7 +156,7 @@
 
 <script>
 import {applyRecycleEquipment, availableEquipmentCount, queryEquipment, reduceEquipmentCount
-,applyFixEquipment} from "@/request/api";
+,applyFixEquipment,updateEquipment} from "@/request/api";
 
 export default {
   name: "equipmentManagement",
@@ -268,13 +268,19 @@ export default {
     edit(a,b){
       if(a.number!=0){
         this.edit_dialogVisible=true
-        this.eid=a.eid
+        this.eid=a.id
       }else{
         this.$message("数量为0，不能进行此操作")
       }
     },
     edit_pricebtn(){
-
+      console.log(this.eid,this.edit_price);
+        updateEquipment({eid:this.eid,rentPrice:this.edit_price,maxRentTime:this.maxRentTime}).then(res=>{
+          this.$message(res.msg)
+          setTimeout(()=>{
+          location.reload();
+        },1000)
+      })
     }
   },
   created() {
