@@ -74,7 +74,7 @@ public class EquipmentController {
         if (StringUtils.isNumeric(eid)) {
             Equipment equipment = equipmentService.queryEquipmentByEid(Integer.parseInt(eid));
             if (equipment!=null){
-                equipment.setPrice(NumberUtils.isNumber(rentPrice)?Double.parseDouble(rentPrice):equipment.getPrice());
+                equipment.setRentPrice(NumberUtils.isNumber(rentPrice)?Double.parseDouble(rentPrice):equipment.getRentPrice());
                 equipment.setMaxRentTime(StringUtils.isNumeric(maxRentTime)?Integer.parseInt(maxRentTime):equipment.getMaxRentTime());
                 Boolean flag = equipmentService.updateEquipment(equipment);
                 return new ResponseBean(200,flag?"器材更新成功":"器材更新失败",null);
